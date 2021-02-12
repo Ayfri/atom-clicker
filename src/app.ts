@@ -10,7 +10,6 @@ export const app = new PIXI.Application({
 	backgroundColor: 0xdddddd,
 });
 
-
 async function loadTextures() {
 	await new Promise(resolve => {
 		PIXI.Loader.shared.load(resolve);
