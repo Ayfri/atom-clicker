@@ -58,7 +58,7 @@ export default class Upgrade extends Clickable implements UpgradeOptions {
 	}
 	
 	get price(): number {
-		return this.startingPrice + this.priceMultiplier * this.ownedCount;
+		return Math.round(this.startingPrice * this.priceMultiplier ** (this.ownedCount) * 100) / 100;
 	}
 	
 	get canBeBought(): boolean {
