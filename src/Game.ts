@@ -2,6 +2,7 @@ import JSBI from 'jsbi';
 import * as PIXI from 'pixi.js';
 import { app } from './app.js';
 import Clickable from './Clickable.js';
+import Upgrade from './Upgrade.js';
 import { sleep } from './utils/utils.js';
 
 export default class Game {
@@ -10,6 +11,7 @@ export default class Game {
 	public atomsCount: JSBI = JSBI.BigInt(0);
 	public atomPerSeconds: JSBI = JSBI.BigInt(0);
 	public showedAPR: PIXI.Text;
+	public upgrades: Upgrade[] = [];
 
 	public constructor() {
 		this.mainAtom = new Clickable(PIXI.Texture.WHITE);
@@ -40,6 +42,12 @@ export default class Game {
 		this.mainAtom.on('click', () => {
 			this.atomsCount = JSBI.add(this.atomsCount, JSBI.BigInt(1));
 		});
+		
+		this.upgrades.push(new Upgrade({
+			name: 'cursor',
+			atomsPerSecond: 0.1,
+			startingPrice: 10
+		}));
 	}
 
 	public update() {
@@ -47,7 +55,13 @@ export default class Game {
 		this.showedAPR.text = `per second: ${this.atomPerSeconds.toString()}`;
 		this.mainAtom.sprite.position.x = window.innerWidth / 2 - this.mainAtom.sprite.width / 2;
 		this.showedCount.position.x = window.innerWidth / 2;
-		this.showedCount.position.x = window.innerWidth / 2;
+		
+		this.upgrades.forEach(upgrade => upgrade.update());
+		this.upgrades.forEach((upgrade, index) => {
+			upgrade.sprite.x = window.innerWidth - upgrade.sprite.width;
+			upgrade.sprite.y = index * upgrade.sprite.height;
+			app.stage.addChild(upgrade.sprite);
+		})
 	}
 
 	public async calculateAPR() {
