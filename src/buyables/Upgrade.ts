@@ -89,8 +89,9 @@ export default class Upgrade<T extends UpgradeType> extends Clickable implements
 	}
 	
 	public buy() {
-		if (this.canBeBought) {
+		if (this.canBeBought && !this.owned) {
 			this.owned = true;
+			game.atomsCount = game.atomsCount.sub(this.price);
 			
 			switch (this.effect.kind) {
 				case 'building':
