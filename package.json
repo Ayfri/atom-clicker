@@ -1,6 +1,7 @@
 {
 	"author": "Ayfri",
 	"dependencies": {
+		"jsbi": "^3.1.4",
 		"pixi.js": "^5.3.7"
 	},
 	"devDependencies": {
