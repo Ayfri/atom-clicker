@@ -51,12 +51,12 @@ export default class Game {
 		
 		this.mainAtom.on('click', async (_, position) => {
 			this.atomsCount = this.atomsCount.add(this.cookiesPerClicks);
-			const text = new PIXI.Text(this.cookiesPerClicks.toString());
+			const text = new PIXI.Text(`+${this.cookiesPerClicks.toString()}`);
 			text.position = position;
 			text.anchor.set(0.5);
 			text.x += Math.random() * 10 - 5;
 			app.stage.addChild(text);
-			for (let i = 0; i < 60; i++) {
+			for (let i = 0; i < 100; i++) {
 				text.y--;
 				text.alpha -= 1 / 60;
 				await sleep(PIXI.Ticker.shared.deltaMS);
