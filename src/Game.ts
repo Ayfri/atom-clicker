@@ -9,6 +9,7 @@ import { sleep } from './utils/utils.js';
 export default class Game {
 	public atomsCount: BigFloat = new BigFloat(0);
 	public atomsPerClicks: BigFloat = new BigFloat(1);
+	public atomsPerClicksAPSBoost: number = 1;
 	public atomsPerClicksText: PIXI.Text;
 	public atomsPerSecond: BigFloat = new BigFloat(0);
 	public buildings: Building[] = [];
@@ -50,7 +51,8 @@ export default class Game {
 		app.stage.addChild(this.atomsPerClicksText);
 
 		this.mainAtom.on('click', async (_, position) => {
-			this.atomsCount = this.atomsCount.add(this.atomsPerClicks);
+			this.atomsCount = this.atomsCount.add(this.atomsPerClicks.mul(this.atomsPerClicksAPSBoost));
+			
 			const text = new PIXI.Text(`+${this.atomsPerClicks.toString()}`);
 			text.position = position;
 			text.anchor.set(0.5);
@@ -101,6 +103,20 @@ export default class Game {
 				}
 			)
 		);
+		
+		this.upgrades.push(
+			new Upgrade(
+				{
+					name: 'You click fast',
+					description: 'Wow you click so fast !',
+					price: 2000,
+				},
+				{
+					kind: 'click',
+					multiplier: 2,
+				}
+			)
+		);
 
 		this.buildings.forEach(buildings => app.stage.addChild(buildings.container));
 		this.upgrades.forEach(upgrade => app.stage.addChild(upgrade.container));
@@ -128,7 +144,7 @@ export default class Game {
 		this.atomsCount = this.atomsCount.add(this.atomsPerSecond.dividedBy(PIXI.Ticker.shared.FPS));
 	}
 
-	public async calculateAPS() {
+	public calculateAPS() {
 		this.atomsPerSecond = new BigFloat(this.buildings.map(building => building.totalAtomPerSecond * this.buildingsGlobalBoost).reduce((previous, current) => previous + current));
 	}
 }
