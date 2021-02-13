@@ -21,7 +21,7 @@
 	"private": true,
 	"prettier": {
 		"arrowParens": "avoid",
-		"printWidth": 200,
+		"printWidth": 180,
 		"singleQuote": true,
 		"tabWidth": 4,
 		"useTabs": true
