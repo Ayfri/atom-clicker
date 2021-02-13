@@ -74,8 +74,8 @@ export default class Upgrade<T extends UpgradeType> extends Clickable implements
 		switch (this.effect.kind) {
 			case 'building':
 				result += this.effect.multiplier
-					? `Multiply by ${this.effect.multiplier * 100}% ${(this.effect as BuildingUpgrade).building}s.`
-					: `Add ${this.effect.addition} to ${(this.effect as BuildingUpgrade).building}s.`;
+					? `Multiply by ${this.effect.multiplier * 100}% ${(this.effect as BuildingUpgrade).building}.`
+					: `Add ${this.effect.addition} to ${(this.effect as BuildingUpgrade).building}.`;
 				break;
 			case 'click':
 				result += this.effect.multiplier ? `Multiply clicks by ${this.effect.multiplier * 100}%.` : `Add ${this.effect.addition * 100}% to clicks.`;
