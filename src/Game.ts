@@ -9,7 +9,7 @@ import { sleep } from './utils/utils.js';
 export default class Game {
 	public atomsCount: BigFloat = new BigFloat(0);
 	public atomsPerClicks: BigFloat = new BigFloat(1);
-	public atomsPerClicksAPSBoost: number = 1;
+	public atomsPerClicksAPSBoost: number = 0;
 	public atomsPerClicksText: PIXI.Text;
 	public atomsPerSecond: BigFloat = new BigFloat(0);
 	public buildings: Building[] = [];
@@ -51,7 +51,7 @@ export default class Game {
 		app.stage.addChild(this.atomsPerClicksText);
 
 		this.mainAtom.on('click', async (_, position) => {
-			this.atomsCount = this.atomsCount.add(this.atomsPerClicks.mul(this.atomsPerClicksAPSBoost));
+			this.atomsCount = this.atomsCount.add(this.atomsPerClicks.add(this.atomsPerSecond.mul(this.atomsPerClicksAPSBoost)));
 			
 			const text = new PIXI.Text(`+${this.atomsPerClicks.toString()}`);
 			text.position = position;
@@ -99,7 +99,7 @@ export default class Game {
 				},
 				{
 					kind: 'click',
-					multiplier: 2,
+					addition: 2,
 				}
 			)
 		);
@@ -112,7 +112,7 @@ export default class Game {
 					price: 2000,
 				},
 				{
-					kind: 'click',
+					kind: 'clickAPS',
 					multiplier: 2,
 				}
 			)

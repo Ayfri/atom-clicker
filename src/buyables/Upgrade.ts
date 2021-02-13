@@ -74,18 +74,23 @@ export default class Upgrade<T extends UpgradeType> extends Clickable implements
 		switch (this.effect.kind) {
 			case 'building':
 				result += this.effect.multiplier
-				          ? `Multiply by ${this.effect.multiplier}% ${(this.effect as BuildingUpgrade).building}s.`
+				          ? `Multiply by ${this.effect.multiplier * 100}% ${(this.effect as BuildingUpgrade).building}s.`
 				          : `Add ${this.effect.addition} to ${(this.effect as BuildingUpgrade).building}s.`;
 				break;
 			case 'click':
 				result += this.effect.multiplier
-				          ? `Multiply by ${this.effect.multiplier} clicks.`
-				          : `Add ${this.effect.addition} to clicks.`;
+				          ? `Multiply clicks by ${this.effect.multiplier * 100}%.`
+				          : `Add ${this.effect.addition * 100}% to clicks.`;
 				break;
 			case 'buildingGlobal':
 				result += this.effect.multiplier
-				          ? `Multiply by ${this.effect.multiplier} buildings.`
-				          : `Add ${this.effect.addition} to buildings.`;
+				          ? `Multiply buildings by ${this.effect.multiplier * 100}%.`
+				          : `Add ${this.effect.addition * 100}% to buildings.`;
+				break;
+			case 'clickAPS':
+				result += this.effect.multiplier
+						? `Multiply by ${this.effect.multiplier * 100}% boost of APS to clicks`
+				          : `Add ${this.effect.addition * 100}% of APS to clicks.`;
 				break;
 		}
 		
@@ -121,6 +126,7 @@ export default class Upgrade<T extends UpgradeType> extends Clickable implements
 				case 'buildingGlobal':
 					game.buildingsGlobalBoost = this.applyNumberedUpgrade(game.buildingsGlobalBoost);
 					break;
+					
 				case 'clickAPS':
 					game.atomsPerClicksAPSBoost = this.applyNumberedUpgrade(game.atomsPerClicksAPSBoost);
 					break;
