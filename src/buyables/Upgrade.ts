@@ -57,8 +57,8 @@ export default class Upgrade<T extends UpgradeType> extends Clickable implements
 		this.price = options.price;
 		this.effect = effect;
 		
-		this.sprite.width = window.innerWidth / 10;
-		this.sprite.height = window.innerWidth / 24;
+		this.sprite.width = 20 + window.innerWidth / 10;
+		this.sprite.height = window.innerHeight / 12;
 		this.nameText = new PIXI.Text(this.name, { fontSize: 18 });
 		this.effectText = new PIXI.Text(this.getEffectAsString, { fontSize: 12 });
 		this.priceText = new PIXI.Text(this.price.toString(), { fontSize: 12 });
@@ -89,8 +89,8 @@ export default class Upgrade<T extends UpgradeType> extends Clickable implements
 				break;
 			case 'clickAPS':
 				result += this.effect.multiplier
-						? `Multiply by ${this.effect.multiplier * 100}% boost of APS to clicks`
-				          : `Add ${this.effect.addition * 100}% of APS to clicks.`;
+						? `Multiply by ${this.effect.multiplier * 100}% boost of APS to clicks.`
+						: `Add ${this.effect.addition * 100}% of APS to clicks.`;
 				break;
 		}
 		
@@ -101,8 +101,8 @@ export default class Upgrade<T extends UpgradeType> extends Clickable implements
 		this.nameText.position.set(5, this.container.height / 10);
 		this.effectText.position.set(5, this.container.height / 2.5);
 		this.priceText.position.set(5, this.container.height - (this.container.height / 3.5));
-		this.sprite.width = window.innerWidth / 10;
-		this.sprite.height = window.innerWidth / 24;
+		this.sprite.width = 20 + window.innerWidth / 10;
+		this.sprite.height = window.innerHeight / 12;
 		
 		this.sprite.tint = this.owned ? 0x9dff9d : this.canBeBought ? 0xffffff : 0xdddddd;
 	}

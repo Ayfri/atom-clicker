@@ -51,9 +51,9 @@ export default class Game {
 		app.stage.addChild(this.atomsPerClicksText);
 
 		this.mainAtom.on('click', async (_, position) => {
-			this.atomsCount = this.atomsCount.add(this.atomsPerClicks.add(this.atomsPerSecond.mul(this.atomsPerClicksAPSBoost)));
+			this.atomsCount = this.atomsCount.add(this.totalAtomsPerClicks);
 			
-			const text = new PIXI.Text(`+${this.atomsPerClicks.toString()}`);
+			const text = new PIXI.Text(`+${this.totalAtomsPerClicks}`);
 			text.position = position;
 			text.anchor.set(0.5);
 			text.x += Math.random() * 10 - 5;
@@ -99,7 +99,7 @@ export default class Game {
 				},
 				{
 					kind: 'click',
-					addition: 2,
+					multiplier: 2,
 				}
 			)
 		);
@@ -113,7 +113,7 @@ export default class Game {
 				},
 				{
 					kind: 'clickAPS',
-					multiplier: 2,
+					addition: 0.1,
 				}
 			)
 		);
@@ -121,12 +121,16 @@ export default class Game {
 		this.buildings.forEach(buildings => app.stage.addChild(buildings.container));
 		this.upgrades.forEach(upgrade => app.stage.addChild(upgrade.container));
 	}
+	
+	get totalAtomsPerClicks(): BigFloat {
+		return this.atomsPerClicks.add(this.atomsPerSecond.mul(this.atomsPerClicksAPSBoost));
+	}
 
 	public update() {
 		this.showedCount.text = `${this.atomsCount.toString().split('.')[0]} atoms`;
 		this.showedCount.position.x = window.innerWidth / 2;
 		this.showedAPS.text = `per second: ${this.atomsPerSecond.toString().replace(/(\d+\.\d{2})\d+/g, '$1')}`;
-		this.atomsPerClicksText.text = this.atomsPerClicks.toString();
+		this.atomsPerClicksText.text = this.totalAtomsPerClicks.toString();
 		this.showedAPS.position.x = window.innerWidth / 2;
 		this.mainAtom.sprite.position.x = window.innerWidth / 2 - this.mainAtom.sprite.width / 2;
 
