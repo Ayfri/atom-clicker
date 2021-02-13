@@ -1,4 +1,4 @@
-import JSBI from 'jsbi';
+import { BigFloat } from 'bigfloat.js';
 import * as PIXI from 'pixi.js';
 import { app } from './app.js';
 import Clickable from './Clickable.js';
@@ -8,8 +8,8 @@ import { sleep } from './utils/utils.js';
 export default class Game {
 	public mainAtom: Clickable;
 	public showedCount: PIXI.Text;
-	public atomsCount: JSBI = JSBI.BigInt(0);
-	public atomPerSeconds: JSBI = JSBI.BigInt(0);
+	public atomsCount: BigFloat = new BigFloat(0);
+	public atomPerSeconds: BigFloat = new BigFloat(0);
 	public showedAPR: PIXI.Text;
 	public upgrades: Upgrade[] = [];
 
@@ -40,7 +40,7 @@ export default class Game {
 		app.stage.addChild(this.showedAPR);
 
 		this.mainAtom.on('click', () => {
-			this.atomsCount = JSBI.add(this.atomsCount, JSBI.BigInt(1));
+			this.atomsCount = this.atomsCount.add(1);
 		});
 		
 		this.upgrades.push(new Upgrade({
@@ -51,8 +51,8 @@ export default class Game {
 	}
 
 	public update() {
-		this.showedCount.text = `${this.atomsCount.toString()} atoms`;
-		this.showedAPR.text = `per second: ${this.atomPerSeconds.toString()}`;
+		this.showedCount.text = `${this.atomsCount.toString().split('.')[0]} atoms`;
+		this.showedAPR.text = `per second: ${this.atomPerSeconds.toString().replace(/(\d+\.\d{2})\d+/g, '$1')}`;
 		this.mainAtom.sprite.position.x = window.innerWidth / 2 - this.mainAtom.sprite.width / 2;
 		this.showedCount.position.x = window.innerWidth / 2;
 		
@@ -67,6 +67,6 @@ export default class Game {
 	public async calculateAPR() {
 		const oldAtoms = this.atomsCount;
 		await sleep(1000);
-		this.atomPerSeconds = JSBI.add(this.atomsCount, JSBI.BigInt(-oldAtoms));
+		this.atomPerSeconds = this.atomsCount.sub(oldAtoms);
 	}
 }

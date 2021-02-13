@@ -1,7 +1,7 @@
 {
 	"author": "Ayfri",
 	"dependencies": {
-		"jsbi": "^3.1.4",
+		"bigfloat.js": "^3.0.1",
 		"pixi.js": "^5.3.7"
 	},
 	"devDependencies": {

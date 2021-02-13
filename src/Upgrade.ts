@@ -1,3 +1,4 @@
+import { game } from './app.js';
 import Clickable from './Clickable.js';
 
 interface UpgradeOptions {
@@ -11,22 +12,18 @@ export default class Upgrade extends Clickable implements UpgradeOptions {
 	public readonly name: string;
 	public readonly startingPrice: number;
 	public readonly atomsPerSecond: number;
-	public ownedCount: number = 0;
 	public priceMultiplier: number = 1.2;
+	public ownedCount: number = 0;
 	public ownerCountText: PIXI.Text;
 	public priceText: PIXI.Text;
 	public nameText: PIXI.Text;
 	public container: PIXI.Container = new PIXI.Container();
 	
-	get price(): number {
-		return this.startingPrice + this.priceMultiplier * this.ownedCount;
-	}
-	
 	public constructor(options: UpgradeOptions) {
 		super(PIXI.Texture.WHITE);
 		this.name = options.name;
 		this.startingPrice = options.startingPrice;
-		this.atomsPerSecond = options.atomsPerSecond
+		this.atomsPerSecond = options.atomsPerSecond;
 		this.priceMultiplier = options.priceMultiplier ?? 1.2;
 		
 		this.sprite.height = window.innerHeight / 15;
@@ -51,13 +48,32 @@ export default class Upgrade extends Clickable implements UpgradeOptions {
 		this.nameText.position.set(this.sprite.width / 3, this.sprite.height / 4);
 		
 		this.container.addChild(this.sprite, this.ownerCountText, this.priceText, this.nameText);
+		
+		this.on('click', () => {
+			if (this.canBeBought) {
+				game.atomsCount = game.atomsCount.sub(this.price);
+				this.ownedCount++;
+			}
+		});
+	}
+	
+	get price(): number {
+		return this.startingPrice + this.priceMultiplier * this.ownedCount;
+	}
+	
+	get canBeBought(): boolean {
+		return game.atomsCount.greaterThanOrEqualTo(this.price);
 	}
 	
 	public update() {
+		this.sprite.tint = this.canBeBought ? 0xffffff : 0xdddddd;
+		
 		this.ownerCountText.text = this.ownedCount.toString();
 		this.priceText.text = `${this.price.toString()} atoms`;
 		
 		this.sprite.height = window.innerHeight / 15;
 		this.sprite.width = 50 + window.innerWidth / 10;
+		
+		game.atomsCount = game.atomsCount.add(this.atomsPerSecond / PIXI.Ticker.shared.FPS * this.ownedCount);
 	}
 }
