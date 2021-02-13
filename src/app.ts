@@ -23,10 +23,14 @@ async function loadTextures() {
 }
 
 setup().then(() => {
-	PIXI.Ticker.shared.add(async() => {
-		game.update();
-		await game.calculateAPR();
-	}, {}, PIXI.UPDATE_PRIORITY.HIGH);
+	PIXI.Ticker.shared.add(
+		async () => {
+			game.update();
+			await game.calculateAPR();
+		},
+		{},
+		PIXI.UPDATE_PRIORITY.HIGH
+	);
 	console.log('Game started.');
 });
 
