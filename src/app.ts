@@ -26,7 +26,7 @@ setup().then(() => {
 	PIXI.Ticker.shared.add(
 		async () => {
 			game.update();
-			await game.calculateAPR();
+			await game.calculateAPS();
 		},
 		{},
 		PIXI.UPDATE_PRIORITY.HIGH

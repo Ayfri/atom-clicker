@@ -10,7 +10,7 @@ export default class Game {
 	public showedCount: PIXI.Text;
 	public atomsCount: BigFloat = new BigFloat(0);
 	public atomPerSeconds: BigFloat = new BigFloat(0);
-	public showedAPR: PIXI.Text;
+	public showedAPS: PIXI.Text;
 	public upgrades: Upgrade[] = [];
 
 	public constructor() {
@@ -33,11 +33,11 @@ export default class Game {
 		this.showedCount.position.set(window.innerWidth / 2, 40);
 		app.stage.addChild(this.showedCount);
 
-		this.showedAPR = new PIXI.Text(this.atomPerSeconds.toString(), JSON.parse(JSON.stringify(style)));
-		this.showedAPR.style.fontSize = 30;
-		this.showedAPR.anchor.set(0.5);
-		this.showedAPR.position.set(window.innerWidth / 2, 80);
-		app.stage.addChild(this.showedAPR);
+		this.showedAPS = new PIXI.Text(this.atomPerSeconds.toString(), JSON.parse(JSON.stringify(style)));
+		this.showedAPS.style.fontSize = 30;
+		this.showedAPS.anchor.set(0.5);
+		this.showedAPS.position.set(window.innerWidth / 2, 80);
+		app.stage.addChild(this.showedAPS);
 
 		this.mainAtom.on('click', () => {
 			this.atomsCount = this.atomsCount.add(1);
@@ -65,8 +65,8 @@ export default class Game {
 	public update() {
 		this.showedCount.text = `${this.atomsCount.toString().split('.')[0]} atoms`;
 		this.showedCount.position.x = window.innerWidth / 2;
-		this.showedAPR.text = `per second: ${this.atomPerSeconds.toString().replace(/(\d+\.\d{2})\d+/g, '$1')}`;
-		this.showedAPR.position.x = window.innerWidth / 2;
+		this.showedAPS.text = `per second: ${this.atomPerSeconds.toString().replace(/(\d+\.\d{2})\d+/g, '$1')}`;
+		this.showedAPS.position.x = window.innerWidth / 2;
 		this.mainAtom.sprite.position.x = window.innerWidth / 2 - this.mainAtom.sprite.width / 2;
 		
 		this.upgrades.forEach(upgrade => upgrade.update());
@@ -77,7 +77,7 @@ export default class Game {
 		})
 	}
 
-	public async calculateAPR() {
+	public async calculateAPS() {
 		const oldAtoms = this.atomsCount;
 		await sleep(1000);
 		this.atomPerSeconds = this.atomsCount.sub(oldAtoms);

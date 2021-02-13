@@ -27,7 +27,7 @@ export default class Upgrade extends Clickable implements UpgradeOptions {
 		this.priceMultiplier = options.priceMultiplier ?? 1.2;
 		
 		this.sprite.height = window.innerHeight / 15;
-		this.sprite.width = 50 + window.innerWidth / 10;
+		this.sprite.width = 100 + window.innerWidth / 10;
 		
 		this.ownerCountText = new PIXI.Text(this.ownedCount.toString(), {
 			fontSize: 40
@@ -72,7 +72,7 @@ export default class Upgrade extends Clickable implements UpgradeOptions {
 		this.priceText.text = `${this.price.toString()} atoms`;
 		
 		this.sprite.height = window.innerHeight / 15;
-		this.sprite.width = 50 + window.innerWidth / 10;
+		this.sprite.width = 100 + window.innerWidth / 10;
 		
 		game.atomsCount = game.atomsCount.add(this.atomsPerSecond / PIXI.Ticker.shared.FPS * this.ownedCount);
 	}
