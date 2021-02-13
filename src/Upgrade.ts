@@ -16,6 +16,7 @@ export default class Upgrade extends Clickable implements UpgradeOptions {
 	public ownerCountText: PIXI.Text;
 	public priceText: PIXI.Text;
 	public nameText: PIXI.Text;
+	public container: PIXI.Container = new PIXI.Container();
 	
 	get price(): number {
 		return this.startingPrice + this.priceMultiplier * this.ownedCount;
@@ -28,31 +29,35 @@ export default class Upgrade extends Clickable implements UpgradeOptions {
 		this.atomsPerSecond = options.atomsPerSecond
 		this.priceMultiplier = options.priceMultiplier ?? 1.2;
 		
-		this.sprite.height = window.innerHeight / 10;
+		this.sprite.height = window.innerHeight / 15;
 		this.sprite.width = 50 + window.innerWidth / 10;
 		
-		const style = {
-			fontSize: 20
-		}
-		this.ownerCountText = new PIXI.Text(this.ownedCount.toString(), style);
+		this.ownerCountText = new PIXI.Text(this.ownedCount.toString(), {
+			fontSize: 40
+		});
 		this.ownerCountText.anchor.set(0.5);
-		this.sprite.addChild(this.ownerCountText);
+		this.ownerCountText.position.set(this.sprite.width - this.sprite.width / 4, this.sprite.height / 2);
 		
-		this.priceText = new PIXI.Text(this.price.toString(), style);
+		this.priceText = new PIXI.Text(this.price.toString(), {
+			fontSize: 15
+		});
 		this.priceText.anchor.set(0.5);
-		this.sprite.addChild(this.priceText);
+		this.priceText.position.set(this.sprite.width / 3, this.sprite.height - this.sprite.height / 5);
 		
-		this.nameText = new PIXI.Text(this.name, style);
+		this.nameText = new PIXI.Text(this.name, {
+			fontSize: 30
+		});
 		this.nameText.anchor.set(0.5);
-//		this.nameText.width = 10;
-		this.sprite.addChild(this.nameText);
+		this.nameText.position.set(this.sprite.width / 3, this.sprite.height / 4);
+		
+		this.container.addChild(this.sprite, this.ownerCountText, this.priceText, this.nameText);
 	}
 	
 	public update() {
 		this.ownerCountText.text = this.ownedCount.toString();
-		this.priceText.text = this.price.toString();
+		this.priceText.text = `${this.price.toString()} atoms`;
 		
-		this.sprite.height = window.innerHeight / 10;
+		this.sprite.height = window.innerHeight / 15;
 		this.sprite.width = 50 + window.innerWidth / 10;
 	}
 }

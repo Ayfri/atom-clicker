@@ -58,9 +58,9 @@ export default class Game {
 		
 		this.upgrades.forEach(upgrade => upgrade.update());
 		this.upgrades.forEach((upgrade, index) => {
-			upgrade.sprite.x = window.innerWidth - upgrade.sprite.width;
-			upgrade.sprite.y = index * upgrade.sprite.height;
-			app.stage.addChild(upgrade.sprite);
+			upgrade.container.x = window.innerWidth - upgrade.container.width;
+			upgrade.container.y = index * upgrade.container.height / 2;
+			app.stage.addChild(upgrade.container);
 		})
 	}
 
