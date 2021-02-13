@@ -34,41 +34,41 @@ export default class Upgrade<T extends UpgradeType> extends Clickable implements
 	public readonly name: string;
 	public readonly description: string;
 	public price: number;
-	
+
 	public get canBeBought(): boolean {
 		return game.atomsCount.greaterThanOrEqualTo(this.price);
 	}
-	
+
 	public container: PIXI.Container;
 	public nameText: PIXI.Text;
 	public effectText: PIXI.Text;
 	public owned: boolean = false;
 	public effect: T;
-	
+
 	public constructor(options: UpgradeOptions, effect: T) {
 		super(PIXI.Texture.WHITE);
 		this.name = options.name;
 		this.description = options.description ?? '';
 		this.price = options.price;
 		this.effect = effect;
-		
+
 		this.sprite.width = window.innerWidth / 10;
 		this.sprite.height = window.innerWidth / 30;
 		this.nameText = new PIXI.Text(this.name, { fontSize: 20 });
 		this.effectText = new PIXI.Text(this.getEffectAsString, { fontSize: 15 });
 		this.container = new PIXI.Container();
 		this.container.addChild(this.sprite, this.nameText, this.effectText);
-		
+
 		this.on('click', () => this.buy());
 	}
-	
+
 	public get getEffectAsString(): string {
 		let result = '';
 		switch (this.effect.kind) {
 			case 'building':
 				result += this.effect.multiplier
-				          ? `Multiply by ${this.effect.multiplier}% ${(this.effect as BuildingUpgrade).building}s.`
-				          : `Add ${this.effect.addition} to ${(this.effect as BuildingUpgrade).building}s.`;
+					? `Multiply by ${this.effect.multiplier}% ${(this.effect as BuildingUpgrade).building}s.`
+					: `Add ${this.effect.addition} to ${(this.effect as BuildingUpgrade).building}s.`;
 				break;
 			case 'click':
 				result += this.effect.multiplier ? `Multiply by ${this.effect.multiplier} clicks.` : `Add ${this.effect.addition} to clicks.`;
@@ -77,41 +77,35 @@ export default class Upgrade<T extends UpgradeType> extends Clickable implements
 				result += this.effect.multiplier ? `Multiply by ${this.effect.multiplier} buildings.` : `Add ${this.effect.addition} to buildings.`;
 				break;
 		}
-		
+
 		return result;
 	}
-	
+
 	public update() {
 		this.nameText.position.set(0, this.container.height / 10);
 		this.effectText.position.set(0, this.container.height / 2);
-		
+
 		this.sprite.tint = this.owned ? 0x9dff9d : this.canBeBought ? 0xffffff : 0xdddddd;
 	}
-	
+
 	public buy() {
 		if (this.canBeBought && !this.owned) {
 			this.owned = true;
 			game.atomsCount = game.atomsCount.sub(this.price);
-			
+
 			switch (this.effect.kind) {
 				case 'building':
 					const building = game.buildings.find(building => building.name === (this.effect as BuildingUpgrade).building);
 					if (!building) throw new Error(`Building '${(this.effect as BuildingUpgrade).building}' not found.`);
-					building.boost = this.effect.multiplier
-					                 ? building.boost * this.effect.multiplier
-					                 : building.boost + this.effect.addition;
+					building.boost = this.effect.multiplier ? building.boost * this.effect.multiplier : building.boost + this.effect.addition;
 					break;
-				
+
 				case 'click':
-					game.cookiesPerClicks = this.effect.multiplier
-					                        ? game.cookiesPerClicks.mul(this.effect.multiplier)
-					                        : game.cookiesPerClicks.add(this.effect.addition);
+					game.atomsPerClicks = this.effect.multiplier ? game.atomsPerClicks.mul(this.effect.multiplier) : game.atomsPerClicks.add(this.effect.addition);
 					break;
-				
+
 				case 'buildingGlobal':
-					game.buildingsGlobalBoost = this.effect.multiplier
-					                            ? game.buildingsGlobalBoost * this.effect.multiplier
-					                            : game.buildingsGlobalBoost + this.effect.addition;
+					game.buildingsGlobalBoost = this.effect.multiplier ? game.buildingsGlobalBoost * this.effect.multiplier : game.buildingsGlobalBoost + this.effect.addition;
 					break;
 			}
 		}
