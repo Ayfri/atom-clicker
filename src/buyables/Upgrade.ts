@@ -52,8 +52,14 @@ export default class Upgrade<T extends UpgradeType> extends Clickable implements
 		this.price = options.price;
 		this.effect = effect;
 		
-		this.nameText = new PIXI.Text(this.name, { fontSize: 15 });
-		this.effectText = new PIXI.Text(this.getEffectAsString);
+		this.sprite.width = window.innerWidth / 10;
+		this.sprite.height = window.innerWidth / 30;
+		this.nameText = new PIXI.Text(this.name, { fontSize: 20 });
+		this.effectText = new PIXI.Text(this.getEffectAsString, { fontSize: 15 });
+		this.container = new PIXI.Container();
+		this.container.addChild(this.sprite, this.nameText, this.effectText);
+		
+		this.on('click', () => this.buy());
 	}
 	
 	public get getEffectAsString(): string {
@@ -73,6 +79,13 @@ export default class Upgrade<T extends UpgradeType> extends Clickable implements
 		}
 		
 		return result;
+	}
+	
+	public update() {
+		this.nameText.position.set(0, this.container.height / 10);
+		this.effectText.position.set(0, this.container.height / 2);
+		
+		this.sprite.tint = this.owned ? 0x9dff9d : this.canBeBought ? 0xffffff : 0xdddddd;
 	}
 	
 	public buy() {

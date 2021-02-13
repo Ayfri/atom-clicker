@@ -78,6 +78,9 @@ export default class Game {
 			kind: 'click',
 			multiplier: 2
 		}));
+		
+		this.buildings.forEach(buildings => app.stage.addChild(buildings.container));
+		this.upgrades.forEach(upgrade => app.stage.addChild(upgrade.container));
 	}
 
 	public update() {
@@ -92,11 +95,10 @@ export default class Game {
 			building.update();
 			building.container.x = window.innerWidth - building.container.width;
 			building.container.y = index * (building.container.height + 5) + window.innerHeight / 4;
-			app.stage.addChild(building.container);
 		});
 		
 		this.upgrades.forEach((upgrade, index) => {
-			upgrade.container.x = upgrade.container.width;
+			upgrade.update();
 			upgrade.container.y = index * (upgrade.container.height + 5) + window.innerHeight / 4;
 		})
 		
