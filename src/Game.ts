@@ -95,6 +95,11 @@ export default class Game {
 			app.stage.addChild(building.container);
 		});
 		
+		this.upgrades.forEach((upgrade, index) => {
+			upgrade.container.x = upgrade.container.width;
+			upgrade.container.y = index * (upgrade.container.height + 5) + window.innerHeight / 4;
+		})
+		
 		this.atomsCount = this.atomsCount.add(this.atomsPerSecond.dividedBy(PIXI.Ticker.shared.FPS));
 	}
 
