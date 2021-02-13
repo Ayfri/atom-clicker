@@ -1,10 +1,6 @@
 import * as PIXI from 'pixi.js';
 
 export default class EventEmitter<Events extends Record<string, any[]>> extends PIXI.utils.EventEmitter {
-	public constructor() {
-		super();
-	}
-	
 	public emit<K extends keyof Events>(event: string | symbol, ...args: Events[K]): boolean {
 		return super.emit(event, ...args);
 	}
