@@ -84,9 +84,25 @@ export default class Game {
 
 		this.buildings.push(
 			new Building({
-				name: 'white hole',
+				name: 'hydrogen',
 				atomsPerSecond: 50,
 				startingPrice: 5000,
+			})
+		);
+
+		this.buildings.push(
+			new Building({
+				name: 'adn',
+				atomsPerSecond: 700,
+				startingPrice: 69000,
+			})
+		);
+
+		this.buildings.push(
+			new Building({
+				name: 'white hole',
+				atomsPerSecond: 2500,
+				startingPrice: 786000,
 			})
 		);
 
@@ -95,7 +111,7 @@ export default class Game {
 				{
 					name: 'First clicks.',
 					description: 'Yeah you clicked a bit.',
-					price: 100,
+					price: 200,
 				},
 				{
 					kind: 'click',
@@ -114,6 +130,48 @@ export default class Game {
 				{
 					kind: 'clickAPS',
 					addition: 0.1,
+				}
+			)
+		);
+
+		this.upgrades.push(
+			new Upgrade(
+				{
+					name: 'You quarks a lot.',
+					description: "It's over 9000.",
+					price: 9000,
+				},
+				{
+					kind: 'building',
+					building: 'quarks',
+					multiplier: 5,
+				}
+			)
+		);
+		
+		this.upgrades.push(
+			new Upgrade(
+				{
+					name: 'Transistor size.',
+					description: 'You can transit to a transistor.',
+					price: 42000,
+				},
+				{
+					kind: 'buildingGlobal',
+					multiplier: 2,
+				}
+			)
+		);
+		this.upgrades.push(
+			new Upgrade(
+				{
+					name: 'Click on a pixel.',
+					description: 'You have produces enough atoms to create pixels !',
+					price: 850000,
+				},
+				{
+					kind: 'click',
+					multiplier: 2.5,
 				}
 			)
 		);
