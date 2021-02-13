@@ -44,22 +44,35 @@ export default class Game {
 		});
 		
 		this.upgrades.push(new Upgrade({
-			name: 'cursor',
+			name: 'quarks',
 			atomsPerSecond: 0.1,
 			startingPrice: 10
+		}));
+		
+		this.upgrades.push(new Upgrade({
+			name: 'nucleons',
+			atomsPerSecond: 3,
+			startingPrice: 100
+		}));
+		
+		this.upgrades.push(new Upgrade({
+			name: 'white hole',
+			atomsPerSecond: 50,
+			startingPrice: 5000
 		}));
 	}
 
 	public update() {
 		this.showedCount.text = `${this.atomsCount.toString().split('.')[0]} atoms`;
-		this.showedAPR.text = `per second: ${this.atomPerSeconds.toString().replace(/(\d+\.\d{2})\d+/g, '$1')}`;
-		this.mainAtom.sprite.position.x = window.innerWidth / 2 - this.mainAtom.sprite.width / 2;
 		this.showedCount.position.x = window.innerWidth / 2;
+		this.showedAPR.text = `per second: ${this.atomPerSeconds.toString().replace(/(\d+\.\d{2})\d+/g, '$1')}`;
+		this.showedAPR.position.x = window.innerWidth / 2;
+		this.mainAtom.sprite.position.x = window.innerWidth / 2 - this.mainAtom.sprite.width / 2;
 		
 		this.upgrades.forEach(upgrade => upgrade.update());
 		this.upgrades.forEach((upgrade, index) => {
 			upgrade.container.x = window.innerWidth - upgrade.container.width;
-			upgrade.container.y = index * upgrade.container.height / 2;
+			upgrade.container.y = index * upgrade.container.height;
 			app.stage.addChild(upgrade.container);
 		})
 	}
