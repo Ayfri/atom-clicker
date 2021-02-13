@@ -1,10 +1,6 @@
 import * as PIXI from 'pixi.js';
 
-type EventMap = {
-	[k in string]: any[];
-};
-
-export default class EventEmitter<Events extends EventMap> extends PIXI.utils.EventEmitter {
+export default class EventEmitter<Events extends Record<string, any[]>> extends PIXI.utils.EventEmitter {
 	public constructor() {
 		super();
 	}
