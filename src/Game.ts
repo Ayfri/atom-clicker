@@ -2,16 +2,20 @@ import { BigFloat } from 'bigfloat.js';
 import * as PIXI from 'pixi.js';
 import { app } from './app.js';
 import Clickable from './Clickable.js';
-import Building from './Building.js';
-import { sleep } from './utils/utils.js';
+import Building from './buyables/Building.js';
+import Upgrade, { UpgradeType } from './buyables/Upgrade.js';
 
 export default class Game {
-	public mainAtom: Clickable;
-	public showedCount: PIXI.Text;
 	public atomsCount: BigFloat = new BigFloat(0);
-	public atomPerSeconds: BigFloat = new BigFloat(0);
-	public showedAPS: PIXI.Text;
+	public atomsPerSecond: BigFloat = new BigFloat(0);
 	public buildings: Building[] = [];
+	public buildingsGlobalBoost: number = 1;
+	public cookiesPerClicks: BigFloat = new BigFloat(1);
+	public cookiesPerClicksText: PIXI.Text;
+	public mainAtom: Clickable;
+	public showedAPS: PIXI.Text;
+	public showedCount: PIXI.Text;
+	public upgrades: Upgrade<UpgradeType>[] = [];
 
 	public constructor() {
 		this.mainAtom = new Clickable(PIXI.Texture.WHITE);
@@ -33,14 +37,19 @@ export default class Game {
 		this.showedCount.position.set(window.innerWidth / 2, 40);
 		app.stage.addChild(this.showedCount);
 
-		this.showedAPS = new PIXI.Text(this.atomPerSeconds.toString(), JSON.parse(JSON.stringify(style)));
+		this.showedAPS = new PIXI.Text(this.atomsPerSecond.toString(), JSON.parse(JSON.stringify(style)));
 		this.showedAPS.style.fontSize = 35;
 		this.showedAPS.anchor.set(0.5);
 		this.showedAPS.position.set(window.innerWidth / 2, 80);
 		app.stage.addChild(this.showedAPS);
 
+		this.cookiesPerClicksText = new PIXI.Text(this.cookiesPerClicks.toString());
+		this.cookiesPerClicksText.anchor.set(0.5);
+		this.cookiesPerClicksText.position.set(window.innerWidth / 10, window.innerHeight / 10);
+		app.stage.addChild(this.cookiesPerClicksText);
+		
 		this.mainAtom.on('click', () => {
-			this.atomsCount = this.atomsCount.add(1);
+			this.atomsCount = this.atomsCount.add(this.cookiesPerClicks);
 		});
 		
 		this.buildings.push(new Building({
@@ -60,24 +69,36 @@ export default class Game {
 			atomsPerSecond: 50,
 			startingPrice: 5000
 		}));
+		
+		this.upgrades.push(new Upgrade({
+			name: 'First clicks.',
+			description: 'Yeah you clicked a bit.',
+			price: 100
+		}, {
+			kind: 'click',
+			multiplier: 2
+		}));
 	}
 
 	public update() {
 		this.showedCount.text = `${this.atomsCount.toString().split('.')[0]} atoms`;
 		this.showedCount.position.x = window.innerWidth / 2;
-		this.showedAPS.text = `per second: ${this.atomPerSeconds.toString().replace(/(\d+\.\d{2})\d+/g, '$1')}`;
+		this.showedAPS.text = `per second: ${this.atomsPerSecond.toString().replace(/(\d+\.\d{2})\d+/g, '$1')}`;
+		this.cookiesPerClicksText.text = this.cookiesPerClicks.toString();
 		this.showedAPS.position.x = window.innerWidth / 2;
 		this.mainAtom.sprite.position.x = window.innerWidth / 2 - this.mainAtom.sprite.width / 2;
 		
-		this.buildings.forEach(building => building.update());
 		this.buildings.forEach((building, index) => {
+			building.update();
 			building.container.x = window.innerWidth - building.container.width;
 			building.container.y = index * (building.container.height + 5) + window.innerHeight / 4;
 			app.stage.addChild(building.container);
-		})
+		});
+		
+		this.atomsCount = this.atomsCount.add(this.atomsPerSecond.dividedBy(PIXI.Ticker.shared.FPS));
 	}
 
 	public async calculateAPS() {
-		this.atomPerSeconds = new BigFloat(this.buildings.map(building => building.totalAtomPerSecond).reduce((previous, current) => previous + current));
+		this.atomsPerSecond = new BigFloat(this.buildings.map(building => building.totalAtomPerSecond * this.buildingsGlobalBoost).reduce((previous, current) => previous + current));
 	}
 }

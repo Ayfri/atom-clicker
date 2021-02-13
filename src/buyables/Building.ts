@@ -1,5 +1,6 @@
-import { game } from './app.js';
-import Clickable from './Clickable.js';
+import { game } from '../app.js';
+import Clickable from '../Clickable.js';
+import { Buyable } from './Buyable.js';
 
 interface UpgradeOptions {
 	readonly name: string;
@@ -8,7 +9,7 @@ interface UpgradeOptions {
 	priceMultiplier?: number;
 }
 
-export default class Building extends Clickable implements UpgradeOptions {
+export default class Building extends Clickable implements UpgradeOptions, Buyable {
 	public readonly name: string;
 	public readonly startingPrice: number;
 	public readonly atomsPerSecond: number;
@@ -18,6 +19,7 @@ export default class Building extends Clickable implements UpgradeOptions {
 	public priceText: PIXI.Text;
 	public nameText: PIXI.Text;
 	public container: PIXI.Container = new PIXI.Container();
+	public boost: number = 1;
 	
 	public constructor(options: UpgradeOptions) {
 		super(PIXI.Texture.WHITE);
@@ -66,7 +68,7 @@ export default class Building extends Clickable implements UpgradeOptions {
 	}
 	
 	get totalAtomPerSecond(): number {
-		return this.atomsPerSecond * this.ownedCount
+		return this.atomsPerSecond * this.ownedCount * this.boost;
 	}
 	
 	public update() {
@@ -77,7 +79,5 @@ export default class Building extends Clickable implements UpgradeOptions {
 		
 		this.sprite.height = window.innerHeight / 15;
 		this.sprite.width = 100 + window.innerWidth / 8;
-		
-		game.atomsCount = game.atomsCount.add(this.totalAtomPerSecond / PIXI.Ticker.shared.FPS);
 	}
 }
