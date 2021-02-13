@@ -65,6 +65,10 @@ export default class Upgrade extends Clickable implements UpgradeOptions {
 		return game.atomsCount.greaterThanOrEqualTo(this.price);
 	}
 	
+	get totalAtomPerSecond(): number {
+		return this.atomsPerSecond * this.ownedCount
+	}
+	
 	public update() {
 		this.sprite.tint = this.canBeBought ? 0xffffff : 0xdddddd;
 		
@@ -74,6 +78,6 @@ export default class Upgrade extends Clickable implements UpgradeOptions {
 		this.sprite.height = window.innerHeight / 15;
 		this.sprite.width = 100 + window.innerWidth / 10;
 		
-		game.atomsCount = game.atomsCount.add(this.atomsPerSecond / PIXI.Ticker.shared.FPS * this.ownedCount);
+		game.atomsCount = game.atomsCount.add(this.totalAtomPerSecond / PIXI.Ticker.shared.FPS);
 	}
 }

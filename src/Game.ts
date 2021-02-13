@@ -25,7 +25,7 @@ export default class Game {
 			dropShadowBlur: 5,
 			dropShadowDistance: 0,
 			fill: '#ffffff',
-			fontSize: 50,
+			fontSize: 60,
 			padding: 20,
 		});
 		this.showedCount = new PIXI.Text(this.atomsCount.toString(), style);
@@ -34,7 +34,7 @@ export default class Game {
 		app.stage.addChild(this.showedCount);
 
 		this.showedAPS = new PIXI.Text(this.atomPerSeconds.toString(), JSON.parse(JSON.stringify(style)));
-		this.showedAPS.style.fontSize = 30;
+		this.showedAPS.style.fontSize = 35;
 		this.showedAPS.anchor.set(0.5);
 		this.showedAPS.position.set(window.innerWidth / 2, 80);
 		app.stage.addChild(this.showedAPS);
@@ -78,8 +78,6 @@ export default class Game {
 	}
 
 	public async calculateAPS() {
-		const oldAtoms = this.atomsCount;
-		await sleep(1000);
-		this.atomPerSeconds = this.atomsCount.sub(oldAtoms);
+		this.atomPerSeconds = new BigFloat(this.upgrades.map(upgrade => upgrade.totalAtomPerSecond).reduce((previous, current) => previous + current));
 	}
 }
