@@ -13,7 +13,7 @@ async function setup() {
 export const app = new PIXI.Application({
 	antialias: true,
 	resizeTo: window,
-	backgroundColor: 0xdddddd,
+	backgroundColor: 0xbbbbbb,
 });
 
 async function loadTextures() {
