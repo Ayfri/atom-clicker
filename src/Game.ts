@@ -2,7 +2,7 @@ import { BigFloat } from 'bigfloat.js';
 import * as PIXI from 'pixi.js';
 import { app } from './app.js';
 import Clickable from './Clickable.js';
-import Upgrade from './Upgrade.js';
+import Building from './Building.js';
 import { sleep } from './utils/utils.js';
 
 export default class Game {
@@ -11,7 +11,7 @@ export default class Game {
 	public atomsCount: BigFloat = new BigFloat(0);
 	public atomPerSeconds: BigFloat = new BigFloat(0);
 	public showedAPS: PIXI.Text;
-	public upgrades: Upgrade[] = [];
+	public buildings: Building[] = [];
 
 	public constructor() {
 		this.mainAtom = new Clickable(PIXI.Texture.WHITE);
@@ -43,19 +43,19 @@ export default class Game {
 			this.atomsCount = this.atomsCount.add(1);
 		});
 		
-		this.upgrades.push(new Upgrade({
+		this.buildings.push(new Building({
 			name: 'quarks',
 			atomsPerSecond: 0.1,
 			startingPrice: 10
 		}));
 		
-		this.upgrades.push(new Upgrade({
+		this.buildings.push(new Building({
 			name: 'nucleons',
 			atomsPerSecond: 3,
 			startingPrice: 100
 		}));
 		
-		this.upgrades.push(new Upgrade({
+		this.buildings.push(new Building({
 			name: 'white hole',
 			atomsPerSecond: 50,
 			startingPrice: 5000
@@ -69,15 +69,15 @@ export default class Game {
 		this.showedAPS.position.x = window.innerWidth / 2;
 		this.mainAtom.sprite.position.x = window.innerWidth / 2 - this.mainAtom.sprite.width / 2;
 		
-		this.upgrades.forEach(upgrade => upgrade.update());
-		this.upgrades.forEach((upgrade, index) => {
-			upgrade.container.x = window.innerWidth - upgrade.container.width;
-			upgrade.container.y = index * upgrade.container.height;
-			app.stage.addChild(upgrade.container);
+		this.buildings.forEach(building => building.update());
+		this.buildings.forEach((building, index) => {
+			building.container.x = window.innerWidth - building.container.width;
+			building.container.y = index * (building.container.height + 5) + window.innerHeight / 4;
+			app.stage.addChild(building.container);
 		})
 	}
 
 	public async calculateAPS() {
-		this.atomPerSeconds = new BigFloat(this.upgrades.map(upgrade => upgrade.totalAtomPerSecond).reduce((previous, current) => previous + current));
+		this.atomPerSeconds = new BigFloat(this.buildings.map(building => building.totalAtomPerSecond).reduce((previous, current) => previous + current));
 	}
 }
