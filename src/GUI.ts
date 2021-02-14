@@ -18,7 +18,7 @@ export default class GUI {
 			dropShadowDistance: 0,
 			fill: '#ffffff',
 			fontSize: 60,
-			padding: 20
+			padding: 20,
 		});
 		
 		this.atomsCountText = new PIXI.Text('', style);
@@ -68,18 +68,27 @@ export default class GUI {
 		this.atomsCountText.text = `${game.atomsCount.toString().split('.')[0]} atoms`;
 		this.atomsCountText.position.x = window.innerWidth / 2;
 		
-		this.APSText.text = `per second: ${game.atomsPerSecond.toString().replace(/(\d+\.\d{2})\d+/g, '$1')}`;
+		this.APSText.text = `per second: ${
+			game.atomsPerSecond
+				.add(game.atomsPerClicks.mul(this.clicksPerSeconds))
+				.toString()
+				.replace(/(\d+\.\d{2})\d+/g, '$1')
+		}`;
 		this.APSText.position.x = window.innerWidth / 2;
 		
 		this.atomsPerClicksText.text = `Atoms per clicks: ${game.totalAtomsPerClicks.toString()}`;
 		this.atomsPerClicksText.position.set(window.innerWidth / 40, window.innerHeight / 15);
 		
-		this.CPSText.text = `Clicks per second: ${this.clicksTexts.filter(text => text.visible).length}`;
+		this.CPSText.text = `Clicks per second: ${this.clicksPerSeconds}`;
 		this.CPSText.position.set(window.innerWidth / 40, window.innerHeight / 15 + 30);
 		
 		this.clicksTexts.filter(text => text.visible).forEach((text) => {
 			text.position.y--;
 			text.alpha -= 1/PIXI.Ticker.shared.FPS;
 		});
+	}
+	
+	public get clicksPerSeconds(): number {
+		return this.clicksTexts.filter(text => text.visible).length;
 	}
 }
