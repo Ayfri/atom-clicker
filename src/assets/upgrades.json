@@ -35,14 +35,5 @@
 			"kind": "buildingGlobal",
 			"multiplier": 2
 		}
-	},
-	{
-		"name": "Click on a pixel.",
-		"description": "You have produces enough atoms to create pixels !",
-		"price": 850000,
-		"effect": {
-			"kind": "click",
-			"multiplier": 2.5
-		}
 	}
 ]
