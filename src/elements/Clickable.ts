@@ -5,11 +5,11 @@ import { getTextureByName } from '../utils/utils.js';
 
 export type ClickableEvents = {
 	click: [button: Button, position: PIXI.Point];
-	update: [];
+	hover: [posiion: PIXI.Point];
 };
 
 export default class Clickable extends EventEmitter<ClickableEvents> {
-	sprite: PIXI.Sprite;
+	public sprite: PIXI.Sprite;
 
 	public constructor(textureName: string);
 	public constructor(texture: PIXI.Texture);
@@ -28,5 +28,9 @@ export default class Clickable extends EventEmitter<ClickableEvents> {
 		this.sprite.on('click', (event: PIXI.InteractionEvent) => {
 			this.emit('click', new Button(event.data.button), event.data.global);
 		});
+		
+		this.sprite.on('mouseover', (event: PIXI.InteractionEvent) => {
+			this.emit('hover', event.data.global);
+		})
 	}
 }
