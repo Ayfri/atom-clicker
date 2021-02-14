@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
-import { Button } from './client/MouseManager';
-import EventEmitter from './utils/EventEmitter';
-import { getTextureByName } from './utils/utils';
+import { Button } from '../client/MouseManager.js';
+import EventEmitter from '../utils/EventEmitter.js';
+import { getTextureByName } from '../utils/utils.js';
 
 export type ClickableEvents = {
 	click: [button: Button, position: PIXI.Point];

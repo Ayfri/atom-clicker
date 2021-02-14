@@ -1,7 +1,7 @@
 import {BigFloat} from 'bigfloat.js';
 import * as PIXI from 'pixi.js';
 import {game} from '../app.js';
-import Clickable from '../Clickable.js';
+import Clickable from '../elements/Clickable.js';
 import {Buyable} from './Buyable.js';
 
 interface UpgradeOptions {

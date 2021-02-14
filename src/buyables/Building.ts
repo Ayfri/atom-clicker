@@ -1,5 +1,5 @@
 import { game } from '../app.js';
-import Clickable from '../Clickable.js';
+import Clickable from '../elements/Clickable.js';
 import { Buyable } from './Buyable.js';
 
 export interface BuildingOptions {

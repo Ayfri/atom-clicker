@@ -1,10 +1,10 @@
 import {BigFloat} from 'bigfloat.js';
 import * as PIXI from 'pixi.js';
-import {app} from './app.js';
-import buildings from './assets/buildings.json';
-import upgrades from './assets/upgrades.json';
-import Building, {BuildingOptions} from './buyables/Building.js';
-import Upgrade, {ConditionType, UpgradeType} from './buyables/Upgrade.js';
+import {app} from '../app.js';
+import buildings from '../assets/buildings.json';
+import upgrades from '../assets/upgrades.json';
+import Building, {BuildingOptions} from '../buyables/Building.js';
+import Upgrade, {ConditionType, UpgradeType} from '../buyables/Upgrade.js';
 import Clickable from './Clickable.js';
 import GUI from './GUI.js';
 

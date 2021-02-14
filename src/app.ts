@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import Game from './Game.js';
+import Game from './elements/Game.js';
 
 export let game: Game;
 
