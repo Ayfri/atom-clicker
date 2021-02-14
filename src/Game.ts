@@ -6,25 +6,27 @@ import upgrades from './assets/upgrades.json';
 import Building, {BuildingOptions} from './buyables/Building.js';
 import Upgrade, {ConditionType, UpgradeType} from './buyables/Upgrade.js';
 import Clickable from './Clickable.js';
+import GUI from './GUI.js';
 import {sleep} from './utils/utils.js';
 
 export default class Game {
 	public atomsCount: BigFloat = new BigFloat(0);
 	public atomsPerClicks: BigFloat = new BigFloat(1);
 	public atomsPerClicksAPSBoost: number = 0;
-	public atomsPerClicksText: PIXI.Text;
 	public atomsPerSecond: BigFloat = new BigFloat(0);
 	public atomsPerSecondBoost: BigFloat = new BigFloat(0);
 	public buildings: Building[] = [];
 	public buildingsGlobalBoost: number = 1;
 	public mainAtom: Clickable;
-	public showedAPS: PIXI.Text;
-	public showedCount: PIXI.Text;
 	public totalAtomsProduced: BigFloat = new BigFloat(0);
 	public totalClicks: number = 0;
 	public upgrades: Upgrade<UpgradeType, ConditionType>[] = [];
+	public gui: GUI;
 	
 	public constructor() {
+		this.gui = new GUI();
+		app.stage.addChild(this.gui.container);
+		
 		this.mainAtom = new Clickable(PIXI.Texture.WHITE);
 		this.mainAtom.sprite.height = 400;
 		this.mainAtom.sprite.width = 400;
@@ -39,21 +41,7 @@ export default class Game {
 			fontSize: 60,
 			padding: 20
 		});
-		this.showedCount = new PIXI.Text(this.atomsCount.toString(), style);
-		this.showedCount.anchor.set(0.5);
-		this.showedCount.position.set(window.innerWidth / 2, 40);
-		app.stage.addChild(this.showedCount);
 		
-		this.showedAPS = new PIXI.Text(this.atomsPerSecond.toString(), JSON.parse(JSON.stringify(style)));
-		this.showedAPS.style.fontSize = 35;
-		this.showedAPS.anchor.set(0.5);
-		this.showedAPS.position.set(window.innerWidth / 2, 80);
-		app.stage.addChild(this.showedAPS);
-		
-		this.atomsPerClicksText = new PIXI.Text(this.atomsPerClicks.toString());
-		this.atomsPerClicksText.anchor.set(0.5);
-		this.atomsPerClicksText.position.set(window.innerWidth / 10, window.innerHeight / 10);
-		app.stage.addChild(this.atomsPerClicksText);
 		
 		this.mainAtom.on('click', async (_, position) => {
 			this.atomsCount = this.atomsCount.add(this.totalAtomsPerClicks);
@@ -146,11 +134,7 @@ export default class Game {
 	}
 	
 	public update() {
-		this.showedCount.text = `${this.atomsCount.toString().split('.')[0]} atoms`;
-		this.showedCount.position.x = window.innerWidth / 2;
-		this.showedAPS.text = `per second: ${this.atomsPerSecond.toString().replace(/(\d+\.\d{2})\d+/g, '$1')}`;
-		this.atomsPerClicksText.text = `Atoms per clicks: ${this.totalAtomsPerClicks.toString()}`;
-		this.showedAPS.position.x = window.innerWidth / 2;
+		this.gui.update();
 		this.mainAtom.sprite.position.x = window.innerWidth / 2 - this.mainAtom.sprite.width / 2;
 		
 		this.buildings.forEach((building, index) => {
