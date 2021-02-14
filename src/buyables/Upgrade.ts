@@ -76,7 +76,7 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		this.unlocked = !condition;
 		this.condition = condition;
 		
-		this.sprite.width = 20 + window.innerWidth / 10;
+		this.sprite.width = 50 + window.innerWidth / 10;
 		this.sprite.height = window.innerHeight / 12;
 		this.nameText = new PIXI.Text(this.name, { fontSize: 18 });
 		this.effectText = new PIXI.Text(this.getEffectAsString, { fontSize: 12 });
@@ -135,7 +135,7 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		this.nameText.position.set(5, this.container.height / 10);
 		this.effectText.position.set(5, this.container.height / 2.5);
 		this.priceText.position.set(5, this.container.height - this.container.height / 3.5);
-		this.sprite.width = 20 + window.innerWidth / 10;
+		this.sprite.width = 50 + window.innerWidth / 10;
 		this.sprite.height = window.innerHeight / 12;
 		
 		this.sprite.tint = this.canBeBought ? 0xffffff : 0xdddddd;
