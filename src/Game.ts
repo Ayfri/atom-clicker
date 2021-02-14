@@ -1,7 +1,9 @@
 import { BigFloat } from 'bigfloat.js';
 import * as PIXI from 'pixi.js';
 import { app } from './app.js';
-import Building from './buyables/Building.js';
+import buildings from './assets/buildings.json';
+import upgrades from './assets/upgrades.json';
+import Building, { BuildingOptions } from './buyables/Building.js';
 import Upgrade, { UpgradeType } from './buyables/Upgrade.js';
 import Clickable from './Clickable.js';
 import { sleep } from './utils/utils.js';
@@ -66,113 +68,18 @@ export default class Game {
 			app.stage.removeChild(text);
 		});
 
-		this.buildings.push(
-			new Building({
-				name: 'quarks',
-				atomsPerSecond: 0.1,
-				startingPrice: 10,
-			})
-		);
+		buildings.forEach((building: BuildingOptions) => this.buildings.push(new Building(building)));
 
-		this.buildings.push(
-			new Building({
-				name: 'nucleons',
-				atomsPerSecond: 3,
-				startingPrice: 100,
-			})
-		);
-
-		this.buildings.push(
-			new Building({
-				name: 'hydrogen',
-				atomsPerSecond: 50,
-				startingPrice: 5000,
-			})
-		);
-
-		this.buildings.push(
-			new Building({
-				name: 'adn',
-				atomsPerSecond: 700,
-				startingPrice: 69000,
-			})
-		);
-
-		this.buildings.push(
-			new Building({
-				name: 'white hole',
-				atomsPerSecond: 2500,
-				startingPrice: 786000,
-			})
-		);
-
-		this.upgrades.push(
-			new Upgrade(
-				{
-					name: 'First clicks.',
-					description: 'Yeah you clicked a bit.',
-					price: 200,
-				},
-				{
-					kind: 'click',
-					multiplier: 2,
-				}
-			)
-		);
-
-		this.upgrades.push(
-			new Upgrade(
-				{
-					name: 'You click fast.',
-					description: 'Wow you click so fast !',
-					price: 2000,
-				},
-				{
-					kind: 'clickAPS',
-					addition: 0.1,
-				}
-			)
-		);
-
-		this.upgrades.push(
-			new Upgrade(
-				{
-					name: 'You quarks a lot.',
-					description: "It's over 9000.",
-					price: 9000,
-				},
-				{
-					kind: 'building',
-					building: 'quarks',
-					multiplier: 5,
-				}
-			)
-		);
-		
-		this.upgrades.push(
-			new Upgrade(
-				{
-					name: 'Transistor size.',
-					description: 'You can transit to a transistor.',
-					price: 42000,
-				},
-				{
-					kind: 'buildingGlobal',
-					multiplier: 2,
-				}
-			)
-		);
-		this.upgrades.push(
-			new Upgrade(
-				{
-					name: 'Click on a pixel.',
-					description: 'You have produces enough atoms to create pixels !',
-					price: 850000,
-				},
-				{
-					kind: 'click',
-					multiplier: 2.5,
-				}
+		upgrades.forEach((upgrade: any) =>
+			this.upgrades.push(
+				new Upgrade(
+					{
+						name: upgrade.name,
+						description: upgrade.description,
+						price: upgrade.price,
+					},
+					upgrade.effect
+				)
 			)
 		);
 

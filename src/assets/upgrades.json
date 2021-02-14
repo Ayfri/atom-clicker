@@ -1,0 +1,48 @@
+[
+	{
+		"name": "First clicks.",
+		"description": "Yeah you clicked a bit.",
+		"price": 200,
+		"effect": {
+			"kind": "click",
+			"multiplier": 2
+		}
+	},
+	{
+		"name": "You click fast.",
+		"description": "Wow you click so fast !",
+		"price": 2000,
+		"effect": {
+			"kind": "clickAPS",
+			"addition": 0.1
+		}
+	},
+	{
+		"name": "You quarks a lot.",
+		"description": "It's over 9000.",
+		"price": 9000,
+		"effect": {
+			"multiplier": 5,
+			"building": "quarks",
+			"kind": "building"
+		}
+	},
+	{
+		"name": "Transistor size.",
+		"description": "You can transit to a transistor.",
+		"price": 42000,
+		"effect": {
+			"kind": "buildingGlobal",
+			"multiplier": 2
+		}
+	},
+	{
+		"name": "Click on a pixel.",
+		"description": "You have produces enough atoms to create pixels !",
+		"price": 850000,
+		"effect": {
+			"kind": "click",
+			"multiplier": 2.5
+		}
+	}
+]

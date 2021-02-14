@@ -1,0 +1,27 @@
+[
+	{
+		"name": "quarks",
+		"atomsPerSecond": 0.1,
+		"startingPrice": 10
+	},
+	{
+		"name": "nucleons",
+		"atomsPerSecond": 3,
+		"startingPrice": 100
+	},
+	{
+		"name": "hydrogen",
+		"atomsPerSecond": 50,
+		"startingPrice": 5000
+	},
+	{
+		"name": "adn",
+		"atomsPerSecond": 700,
+		"startingPrice": 69000
+	},
+	{
+		"name": "white hole",
+		"atomsPerSecond": 2500,
+		"startingPrice": 786000
+	}
+]

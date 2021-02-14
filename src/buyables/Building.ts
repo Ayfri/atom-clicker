@@ -2,14 +2,14 @@ import { game } from '../app.js';
 import Clickable from '../Clickable.js';
 import { Buyable } from './Buyable.js';
 
-interface UpgradeOptions {
+export interface BuildingOptions {
 	readonly name: string;
 	readonly startingPrice: number;
 	readonly atomsPerSecond: number;
 	priceMultiplier?: number;
 }
 
-export default class Building extends Clickable implements UpgradeOptions, Buyable {
+export default class Building extends Clickable implements BuildingOptions, Buyable {
 	public readonly name: string;
 	public readonly startingPrice: number;
 	public readonly atomsPerSecond: number;
@@ -21,7 +21,7 @@ export default class Building extends Clickable implements UpgradeOptions, Buyab
 	public container: PIXI.Container = new PIXI.Container();
 	public boost: number = 1;
 
-	public constructor(options: UpgradeOptions) {
+	public constructor(options: BuildingOptions) {
 		super(PIXI.Texture.WHITE);
 		this.name = options.name;
 		this.startingPrice = options.startingPrice;

@@ -5,6 +5,8 @@
 		"module": "commonjs",
 		"noImplicitAny": true,
 		"outDir": "cache",
+		"esModuleInterop": true,
+		"resolveJsonModule": true,
 		"rootDir": "src",
 		"sourceMap": true,
 		"target": "ESNext"
