@@ -114,7 +114,7 @@ export default class Upgrade<T extends UpgradeType, L extends UpgradeLockedOptio
 		this.sprite.width = 20 + window.innerWidth / 10;
 		this.sprite.height = window.innerHeight / 12;
 		
-		this.sprite.tint = this.owned ? 0x9dff9d : this.canBeBought ? 0xffffff : 0xdddddd;
+		this.sprite.tint = this.canBeBought ? 0xffffff : 0xdddddd;
 		
 		switch (this.unlockOptions?.kind) {
 			case 'building':

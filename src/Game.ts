@@ -124,9 +124,9 @@ export default class Game {
 		});
 
 		for (const upgrade of this.upgrades) {
-			const index = this.upgrades.filter(upgrade => upgrade.unlocked).indexOf(upgrade);
+			const index = this.upgrades.filter(upgrade => upgrade.unlocked && !upgrade.owned).indexOf(upgrade);
 			upgrade.update();
-			upgrade.container.visible = upgrade.unlocked;
+			upgrade.container.visible = upgrade.unlocked && !upgrade.owned;
 			upgrade.container.y = index * (upgrade.container.height + 5) + window.innerHeight / 4;
 		}
 		
