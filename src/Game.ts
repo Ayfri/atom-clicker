@@ -96,7 +96,7 @@ export default class Game {
 				this.upgrades.push(new Upgrade({
 					name: `${level} ${building.name}.`,
 					description: `Buy ${level} ${building.name}.`,
-					price: building.price * level * 2
+					price: Math.round(building.startingPrice * building.priceMultiplier ** level * Math.log(level * 10))
 				}, {
 					kind: 'building',
 					building: building.name,
@@ -142,7 +142,7 @@ export default class Game {
 	}
 	
 	get totalAtomsPerClicks(): BigFloat {
-		return this.atomsPerClicks.add(this.atomsPerSecond.mul(this.atomsPerClicksAPSBoost));
+		return this.atomsPerClicks.add(this.atomsPerSecond.mul(this.atomsPerClicksAPSBoost)).mul(100).ceil().div(100);
 	}
 	
 	public update() {
