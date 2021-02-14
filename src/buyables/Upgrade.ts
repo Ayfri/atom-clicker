@@ -15,7 +15,7 @@ type NumberedUpgrade = {
 	addition?: number;
 }
 
-type UnlockUpgradeCount = {
+type ConditionCount = {
 	count: number;
 }
 
@@ -35,12 +35,21 @@ type ClickUpgrade = {
 type BuildingGlobalUpgrade = {
 	kind: 'buildingGlobal';
 }
-type Upgrades = (BuildingUpgrade | ClickUpgrade | BuildingGlobalUpgrade | ClickAPSUpgrade);
 
-export type UpgradeLockedOptions = UnlockUpgradeCount & Upgrades;
+type AtomsUpgrade = {
+	kind: 'atoms'
+}
+
+type APSUpgrade = {
+	kind: 'aps'
+}
+
+type Upgrades = BuildingUpgrade | ClickUpgrade | BuildingGlobalUpgrade | ClickAPSUpgrade | APSUpgrade | AtomsUpgrade;
+
+export type ConditionType = ConditionCount & Upgrades;
 export type UpgradeType = NumberedUpgrade & Upgrades;
 
-export default class Upgrade<T extends UpgradeType, L extends UpgradeLockedOptions> extends Clickable implements UpgradeOptions, Buyable {
+export default class Upgrade<T extends UpgradeType, L extends ConditionType> extends Clickable implements UpgradeOptions, Buyable {
 	public readonly name: string;
 	public readonly description: string;
 	public price: number;
@@ -49,7 +58,7 @@ export default class Upgrade<T extends UpgradeType, L extends UpgradeLockedOptio
 		return game.atomsCount.greaterThanOrEqualTo(this.price);
 	}
 	
-	public unlockOptions?: L;
+	public condition?: L;
 	public unlocked: boolean;
 	public container: PIXI.Container;
 	public effectText: PIXI.Text;
@@ -58,14 +67,14 @@ export default class Upgrade<T extends UpgradeType, L extends UpgradeLockedOptio
 	public owned: boolean = false;
 	public effect: T;
 	
-	public constructor(options: UpgradeOptions, effect: T, unlockOptions?: L) {
+	public constructor(options: UpgradeOptions, effect: T, condition?: L) {
 		super(PIXI.Texture.WHITE);
 		this.name = options.name;
 		this.description = options.description ?? '';
 		this.price = options.price;
 		this.effect = effect;
-		this.unlocked = !unlockOptions;
-		this.unlockOptions = unlockOptions;
+		this.unlocked = !condition;
+		this.condition = condition;
 		
 		this.sprite.width = 20 + window.innerWidth / 10;
 		this.sprite.height = window.innerHeight / 12;
@@ -87,20 +96,35 @@ export default class Upgrade<T extends UpgradeType, L extends UpgradeLockedOptio
 				          ? `Multiply by ${this.effect.multiplier * 100}% ${(this.effect as BuildingUpgrade).building}.`
 				          : `Add ${this.effect.addition} to ${(this.effect as BuildingUpgrade).building}.`;
 				break;
+			
 			case 'click':
 				result += this.effect.multiplier
 				          ? `Multiply clicks by ${this.effect.multiplier * 100}%.`
 				          : `Add ${this.effect.addition * 100}% to clicks.`;
 				break;
+			
 			case 'buildingGlobal':
 				result += this.effect.multiplier
 				          ? `Multiply buildings by ${this.effect.multiplier * 100}%.`
 				          : `Add ${this.effect.addition * 100}% to buildings.`;
 				break;
+			
 			case 'clickAPS':
 				result += this.effect.multiplier
-				          ? `Multiply by ${this.effect.multiplier * 100}% boost of APS to clicks.`
+				          ? `Multiply boost of APS to clicks by ${this.effect.multiplier * 100}%.`
 				          : `Add ${this.effect.addition * 100}% of APS to clicks.`;
+				break;
+			
+			case 'aps':
+				result += this.effect.multiplier
+				          ? `Multiply atoms by ${this.effect.multiplier * 100}% per second.`
+				          : `Add ${this.effect.addition} atoms per seconds.`;
+				break;
+			
+			case 'atoms':
+				result += this.effect.multiplier
+				          ? `Multiply atoms by ${this.effect.multiplier * 100}%.`
+				          : `Add ${this.effect.addition * 100} atoms.`;
 				break;
 		}
 		
@@ -116,28 +140,36 @@ export default class Upgrade<T extends UpgradeType, L extends UpgradeLockedOptio
 		
 		this.sprite.tint = this.canBeBought ? 0xffffff : 0xdddddd;
 		
-		switch (this.unlockOptions?.kind) {
+		switch (this.condition?.kind) {
 			case 'building':
 				if (
 					game.buildings
-						.find(building => building.name === (this.unlockOptions as BuildingUpgrade).building).ownedCount >= this.unlockOptions.count
+						.find(building => building.name === (this.condition as BuildingUpgrade).building).ownedCount >= this.condition.count
 				) this.unlocked = true;
 				break;
 			
 			case 'click':
-				if (game.totalClicks >= this.unlockOptions.count) this.unlocked = true;
+				if (game.totalClicks >= this.condition.count) this.unlocked = true;
 				break;
 			
 			case 'buildingGlobal':
 				if (
 					game.buildings
 						.map(building => building.ownedCount)
-						.reduce((previousValue, currentValue) => previousValue + currentValue) >= this.unlockOptions.count
+						.reduce((previousValue, currentValue) => previousValue + currentValue) >= this.condition.count
 				) this.unlocked = true;
 				break;
 			
 			case 'clickAPS':
-				if (game.atomsPerClicks.greaterThanOrEqualTo(this.unlockOptions.count)) this.unlocked = true;
+				if (game.atomsPerClicks.greaterThanOrEqualTo(this.condition.count)) this.unlocked = true;
+				break;
+			
+			case 'atoms':
+				if (game.totalAtomsProduced.greaterThanOrEqualTo(this.condition.count)) this.unlocked = true;
+				break;
+			
+			case 'aps':
+				if (game.atomsPerSecond.greaterThanOrEqualTo(this.condition.count)) this.unlocked = true;
 				break;
 		}
 	}
@@ -164,6 +196,14 @@ export default class Upgrade<T extends UpgradeType, L extends UpgradeLockedOptio
 				
 				case 'clickAPS':
 					game.atomsPerClicksAPSBoost = this.applyNumberedUpgrade(game.atomsPerClicksAPSBoost);
+					break;
+				case 'aps':
+					game.atomsPerSecondBoost = this.effect.multiplier
+					                           ? game.atomsPerSecondBoost.add(game.atomsPerSecond.mul(this.effect.multiplier - 1))
+					                           : game.atomsPerSecond.add(this.effect.addition);
+					break;
+				case 'atoms':
+					game.atomsCount = this.applyNumberedUpgrade(game.atomsCount);
 					break;
 			}
 		}
