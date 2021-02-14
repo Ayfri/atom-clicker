@@ -33,16 +33,6 @@ export default class Game {
 		this.mainAtom.sprite.position.set(window.innerWidth / 2 - this.mainAtom.sprite.width / 2, 150);
 		app.stage.addChild(this.mainAtom.sprite);
 		
-		const style = new PIXI.TextStyle({
-			dropShadow: true,
-			dropShadowBlur: 5,
-			dropShadowDistance: 0,
-			fill: '#ffffff',
-			fontSize: 60,
-			padding: 20
-		});
-		
-		
 		this.mainAtom.on('click', async (_, position) => {
 			this.atomsCount = this.atomsCount.add(this.totalAtomsPerClicks);
 			this.totalAtomsProduced = this.totalAtomsProduced.add(this.totalAtomsPerClicks);
