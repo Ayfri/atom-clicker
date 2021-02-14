@@ -4,7 +4,7 @@ import { app } from './app.js';
 import buildings from './assets/buildings.json';
 import upgrades from './assets/upgrades.json';
 import Building, { BuildingOptions } from './buyables/Building.js';
-import Upgrade, { UpgradeType } from './buyables/Upgrade.js';
+import Upgrade, {UpgradeLockedOptions, UpgradeType} from './buyables/Upgrade.js';
 import Clickable from './Clickable.js';
 import { sleep } from './utils/utils.js';
 
@@ -19,7 +19,8 @@ export default class Game {
 	public mainAtom: Clickable;
 	public showedAPS: PIXI.Text;
 	public showedCount: PIXI.Text;
-	public upgrades: Upgrade<UpgradeType>[] = [];
+	public totalClicks: number = 0;
+	public upgrades: Upgrade<UpgradeType, UpgradeLockedOptions>[] = [];
 
 	public constructor() {
 		this.mainAtom = new Clickable(PIXI.Texture.WHITE);
@@ -54,6 +55,7 @@ export default class Game {
 
 		this.mainAtom.on('click', async (_, position) => {
 			this.atomsCount = this.atomsCount.add(this.totalAtomsPerClicks);
+			this.totalClicks++;
 
 			const text = new PIXI.Text(`+${this.totalAtomsPerClicks}`);
 			text.position = position;
@@ -82,6 +84,22 @@ export default class Game {
 				)
 			)
 		);
+		
+		this.buildings.forEach((building) => {
+			this.upgrades.push(new Upgrade({
+				name: `15 ${building.name}.`,
+				description: `Buy 15 ${building.name}.`,
+				price: building.price * 30
+			}, {
+				kind: 'building',
+				building: building.name,
+				multiplier: 1.5
+			}, {
+				kind: 'building',
+				building: building.name,
+				count: 15
+			}));
+		})
 
 		this.buildings.forEach(buildings => app.stage.addChild(buildings.container));
 		this.upgrades.forEach(upgrade => app.stage.addChild(upgrade.container));
@@ -105,11 +123,13 @@ export default class Game {
 			building.container.y = index * (building.container.height + 5) + window.innerHeight / 4;
 		});
 
-		this.upgrades.forEach((upgrade, index) => {
+		for (const upgrade of this.upgrades) {
+			const index = this.upgrades.filter(upgrade => upgrade.unlocked).indexOf(upgrade);
 			upgrade.update();
+			upgrade.container.visible = upgrade.unlocked;
 			upgrade.container.y = index * (upgrade.container.height + 5) + window.innerHeight / 4;
-		});
-
+		}
+		
 		this.atomsCount = this.atomsCount.add(this.atomsPerSecond.dividedBy(PIXI.Ticker.shared.FPS));
 	}
 
