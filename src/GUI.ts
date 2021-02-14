@@ -36,7 +36,7 @@ export default class GUI {
 		this.atomsPerClicksText.position.set(window.innerWidth / 10, window.innerHeight / 10);
 		this.container.addChild(this.atomsPerClicksText);
 		
-		for (let i = 0; i < 100; i++) {
+		for (let i = 0; i < 50; i++) {
 			const text: PIXI.Text = new PIXI.Text('');
 			text.visible = false;
 			text.zIndex = 100;
