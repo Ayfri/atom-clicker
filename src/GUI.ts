@@ -7,6 +7,7 @@ export default class GUI {
 	public APSText: PIXI.Text;
 	public container: PIXI.Container;
 	public clicksTexts: PIXI.Text[] = [];
+	public CPSText: PIXI.Text;
 	
 	public constructor() {
 		this.container = new PIXI.Container();
@@ -32,9 +33,14 @@ export default class GUI {
 		this.container.addChild(this.APSText);
 		
 		this.atomsPerClicksText = new PIXI.Text('');
-		this.atomsPerClicksText.anchor.set(0.5);
-		this.atomsPerClicksText.position.set(window.innerWidth / 10, window.innerHeight / 10);
+		this.atomsPerClicksText.anchor.set(0, 0.5);
+		this.atomsPerClicksText.position.set(window.innerWidth / 40, window.innerHeight / 15);
 		this.container.addChild(this.atomsPerClicksText);
+		
+		this.CPSText = new PIXI.Text('');
+		this.CPSText.anchor.set(0, 0.5);
+		this.CPSText.position.set(window.innerWidth / 40, window.innerHeight / 15 + 30);
+		this.container.addChild(this.CPSText);
 		
 		for (let i = 0; i < 50; i++) {
 			const text: PIXI.Text = new PIXI.Text('');
@@ -66,6 +72,10 @@ export default class GUI {
 		this.APSText.position.x = window.innerWidth / 2;
 		
 		this.atomsPerClicksText.text = `Atoms per clicks: ${game.totalAtomsPerClicks.toString()}`;
+		this.atomsPerClicksText.position.set(window.innerWidth / 40, window.innerHeight / 15);
+		
+		this.CPSText.text = `Clicks per second: ${this.clicksTexts.filter(text => text.visible).length}`;
+		this.CPSText.position.set(window.innerWidth / 40, window.innerHeight / 15 + 30);
 		
 		this.clicksTexts.filter(text => text.visible).forEach((text) => {
 			text.position.y--;
