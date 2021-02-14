@@ -117,7 +117,7 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 			
 			case 'aps':
 				result += this.effect.multiplier
-				          ? `Multiply atoms by ${this.effect.multiplier * 100}% per second.`
+				          ? `Multiply atoms per second by ${this.effect.multiplier * 100}% .`
 				          : `Add ${this.effect.addition} atoms per seconds.`;
 				break;
 			
