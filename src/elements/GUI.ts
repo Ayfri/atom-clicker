@@ -24,23 +24,19 @@ export default class GUI {
 		this.atomsCountText = new PIXI.Text('', style);
 		this.atomsCountText.anchor.set(0.5);
 		this.atomsCountText.position.set(window.innerWidth / 2, 40);
-		this.container.addChild(this.atomsCountText);
 		
 		this.APSText = new PIXI.Text('', JSON.parse(JSON.stringify(style)));
 		this.APSText.style.fontSize = 35;
 		this.APSText.anchor.set(0.5);
 		this.APSText.position.set(window.innerWidth / 2, 80);
-		this.container.addChild(this.APSText);
 		
 		this.atomsPerClicksText = new PIXI.Text('');
 		this.atomsPerClicksText.anchor.set(0, 0.5);
 		this.atomsPerClicksText.position.set(window.innerWidth / 40, window.innerHeight / 15);
-		this.container.addChild(this.atomsPerClicksText);
 		
 		this.CPSText = new PIXI.Text('');
 		this.CPSText.anchor.set(0, 0.5);
 		this.CPSText.position.set(window.innerWidth / 40, window.innerHeight / 15 + 30);
-		this.container.addChild(this.CPSText);
 		
 		for (let i = 0; i < 50; i++) {
 			const text: PIXI.Text = new PIXI.Text('');
@@ -50,7 +46,13 @@ export default class GUI {
 			this.clicksTexts.push(text);
 		}
 		
-		this.container.addChild(...this.clicksTexts);
+		this.container.addChild(
+			this.atomsCountText,
+			this.APSText,
+			this.atomsPerClicksText,
+			this.CPSText,
+			...this.clicksTexts
+		);
 	}
 	
 	public click(position: PIXI.Point) {
