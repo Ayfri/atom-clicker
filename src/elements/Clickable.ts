@@ -7,6 +7,7 @@ export type ClickableEvents = {
 	click: [button: Button, position: PIXI.Point];
 	hover: [posiion: PIXI.Point];
 	hoverEnd: [posiion: PIXI.Point];
+	hoverMove: [posiion: PIXI.Point];
 };
 
 export default class Clickable extends EventEmitter<ClickableEvents> {
@@ -29,13 +30,17 @@ export default class Clickable extends EventEmitter<ClickableEvents> {
 		this.sprite.on('click', (event: PIXI.InteractionEvent) => {
 			this.emit('click', new Button(event.data.button), event.data.global);
 		});
-		
+
 		this.sprite.on('mouseover', (event: PIXI.InteractionEvent) => {
 			this.emit('hover', event.data.global);
-		})
-		
+		});
+
 		this.sprite.on('mouseout', (event: PIXI.InteractionEvent) => {
 			this.emit('hoverEnd', event.data.global);
-		})
+		});
+
+		this.sprite.on('mouseover', (event: PIXI.InteractionEvent) => {
+			if (event.currentTarget === this.sprite) this.emit('hoverMove', event.data.global);
+		});
 	}
 }
