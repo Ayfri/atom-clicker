@@ -7,7 +7,6 @@ import Building, {BuildingOptions} from './buyables/Building.js';
 import Upgrade, {ConditionType, UpgradeType} from './buyables/Upgrade.js';
 import Clickable from './Clickable.js';
 import GUI from './GUI.js';
-import {sleep} from './utils/utils.js';
 
 export default class Game {
 	public atomsCount: BigFloat = new BigFloat(0);
@@ -30,6 +29,7 @@ export default class Game {
 		this.mainAtom = new Clickable(PIXI.Texture.WHITE);
 		this.mainAtom.sprite.height = 400;
 		this.mainAtom.sprite.width = 400;
+		this.mainAtom.sprite.zIndex = -100;
 		this.mainAtom.sprite.position.set(window.innerWidth / 2 - this.mainAtom.sprite.width / 2, 150);
 		app.stage.addChild(this.mainAtom.sprite);
 		
@@ -37,18 +37,7 @@ export default class Game {
 			this.atomsCount = this.atomsCount.add(this.totalAtomsPerClicks);
 			this.totalAtomsProduced = this.totalAtomsProduced.add(this.totalAtomsPerClicks);
 			this.totalClicks++;
-			
-			const text = new PIXI.Text(`+${this.totalAtomsPerClicks}`);
-			text.position = position;
-			text.anchor.set(0.5);
-			text.x += Math.random() * 10 - 5;
-			app.stage.addChild(text);
-			for (let i = 0; i < 100; i++) {
-				text.y--;
-				text.alpha -= 1 / 60;
-				await sleep(PIXI.Ticker.shared.deltaMS);
-			}
-			app.stage.removeChild(text);
+			this.gui.click(position);
 		});
 		
 		buildings.forEach((building: BuildingOptions) => this.buildings.push(new Building(building)));
@@ -124,6 +113,7 @@ export default class Game {
 	}
 	
 	public update() {
+		app.stage.sortChildren();
 		this.gui.update();
 		this.mainAtom.sprite.position.x = window.innerWidth / 2 - this.mainAtom.sprite.width / 2;
 		
