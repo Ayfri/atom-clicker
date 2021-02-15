@@ -28,7 +28,7 @@ export default class Overlay {
 		this.container.zIndex = 100;
 
 		this.sprite = PIXI.Sprite.from(PIXI.Texture.WHITE);
-		this.sprite.height = 30 + Object.keys(options.stats).length * 50;
+		this.sprite.height = 20 + Object.keys(options.stats).length * 50;
 		this.sprite.width = 400;
 
 		this.title = new PIXI.Text(options.title);
@@ -79,7 +79,7 @@ export default class Overlay {
 		this.description.position.set(10, this.container.height / 3.2);
 
 		for (let i = 0; i < this.stats.size; i++) {
-			const stat: PIXI.Text = [...this.stats.values()][i];
+			const stat: PIXI.Text = [...this.stats.values()].sort((stat1, stat2) => stat1.text.localeCompare(stat2.text))[i];
 			stat.position.set(this.container.width / 10, this.container.height / 1.9 + i * (stat.height + 7));
 		}
 	}
