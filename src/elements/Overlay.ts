@@ -1,3 +1,6 @@
+import { BigFloat } from 'bigfloat.js';
+import { game } from '../app.js';
+
 interface OverlayOptions {
 	description: string;
 	title: string;
@@ -56,6 +59,14 @@ export default class Overlay {
 
 	public update(position?: PIXI.Point) {
 		this.setPositions(position);
+	}
+
+	public setAPSWaitFromPrice(price: BigFloat | number) {
+		const timeToWaitForBuy: BigFloat = new BigFloat(price).minus(game.atomsCount).div(game.totalAtomsPerSecond);
+		this.stats.get(StatsType.APS_WAIT_TIME).text =
+			timeToWaitForBuy.equals(0) && game.atomsCount.lessThan(price)
+			? "Can't be bough."
+			: `Can be bought${timeToWaitForBuy.lessThan(0) ?? game.atomsCount.greaterThanOrEqualTo(price) ? '' : ` in ${timeToWaitForBuy.ceil()} seconds`}.`;
 	}
 
 	private setPositions(position: PIXI.Point) {
