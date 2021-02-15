@@ -10,11 +10,24 @@
 	},
 	{
 		"name": "You click fast.",
-		"description": "Wow you click so fast !",
+		"description": "Wow, you click so fast !",
 		"price": 2000,
 		"effect": {
 			"kind": "clickAPS",
-			"addition": 0.1
+			"addition": 0.05
+		}
+	},
+	{
+		"name": "Atom production.",
+		"description": "Generating atoms is so easy for you now.",
+		"price": 2000,
+		"effect": {
+			"kind": "clickAPS",
+			"addition": 0.01
+		},
+		"condition": {
+			"kind": "aps",
+			"count": 1000
 		}
 	},
 	{

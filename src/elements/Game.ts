@@ -157,7 +157,7 @@ export default class Game {
 	}
 
 	public calculateAPS() {
-		this.atomsPerSecond =this.buildings
+		this.atomsPerSecond = this.buildings
 			.map(building => building.totalAtomPerSecond.mul(this.buildingsGlobalBoost))
 			.reduce((previous, current) => previous.add(current))
 			.add(this.atomsPerSecondBoost);
