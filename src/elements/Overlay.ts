@@ -28,11 +28,11 @@ export default class Overlay {
 		this.container.zIndex = 100;
 
 		this.sprite = PIXI.Sprite.from(PIXI.Texture.WHITE);
-		this.sprite.height = 20 + Object.keys(options.stats).length * 50;
+		this.sprite.height = 80 + Object.keys(options.stats).length * 25;
 		this.sprite.width = 400;
 
 		this.title = new PIXI.Text(options.title);
-		this.title.anchor.set(0.5);
+		this.title.anchor.set(0.5, 0);
 
 		this.description = new PIXI.Text(options.description, {
 			fontSize: 18,
@@ -75,12 +75,12 @@ export default class Overlay {
 	}
 
 	private setPositions() {
-		this.title.position.set(this.container.width / 2, this.container.height / 10);
-		this.description.position.set(10, this.container.height / 3.2);
+		this.title.position.x = this.container.width / 2;
+		this.description.position.set(10, 45);
 
 		for (let i = 0; i < this.stats.size; i++) {
 			const stat: PIXI.Text = [...this.stats.values()].sort((stat1, stat2) => stat1.text.localeCompare(stat2.text))[i];
-			stat.position.set(this.container.width / 10, this.container.height / 1.9 + i * (stat.height + 7));
+			stat.position.set(this.container.width / 10, 80 + i * (stat.height + 7));
 		}
 	}
 }
