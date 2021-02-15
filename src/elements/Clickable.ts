@@ -27,19 +27,21 @@ export default class Clickable extends EventEmitter<ClickableEvents> {
 		this.sprite = PIXI.Sprite.from(texture);
 		this.sprite.interactive = true;
 		this.sprite.buttonMode = true;
-		this.sprite.on('click', (event: PIXI.InteractionEvent) => {
+		this.sprite.on('pointertap', (event: PIXI.InteractionEvent) => {
 			this.emit('click', new Button(event.data.button), event.data.global);
 		});
 
-		this.sprite.on('mouseover', (event: PIXI.InteractionEvent) => {
-			this.emit('hover', event.data.global);
-		});
+		this.sprite.on('pointerover', (event: PIXI.InteractionEvent) => this.emit('hover', event.data.global));
+		this.sprite.on('touchstart', (event: PIXI.InteractionEvent) => this.emit('hover', event.data.global));
 
-		this.sprite.on('mouseout', (event: PIXI.InteractionEvent) => {
-			this.emit('hoverEnd', event.data.global);
-		});
+		this.sprite.on('pointerout', (event: PIXI.InteractionEvent) => this.emit('hoverEnd', event.data.global));
+		this.sprite.on('touchend', (event: PIXI.InteractionEvent) => this.emit('hoverEnd', event.data.global));
+		this.sprite.on('touchendoutside', (event: PIXI.InteractionEvent) => this.emit('hoverEnd', event.data.global));
 
-		this.sprite.on('mousemove', (event: PIXI.InteractionEvent) => {
+		this.sprite.on('pointermove', (event: PIXI.InteractionEvent) => {
+			if (event.currentTarget && event.target === this.sprite) this.emit('hoverMove', event.data.global);
+		});
+		this.sprite.on('touchmove', (event: PIXI.InteractionEvent) => {
 			if (event.currentTarget && event.target === this.sprite) this.emit('hoverMove', event.data.global);
 		});
 	}
