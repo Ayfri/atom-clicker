@@ -83,7 +83,10 @@ export default class Building extends Clickable implements BuildingOptions, Buya
 			}
 		});
 
-		this.on('hover', () => this.overlay.show());
+		this.on('hover', (position) => {
+			this.overlay.show();
+			this.overlay.update(position);
+		});
 		this.on('hoverMove', position => this.overlay.update(position));
 		this.on('hoverEnd', () => this.overlay.hide());
 	}
