@@ -13,5 +13,5 @@ export function sleep(ms: number): Promise<unknown> {
 (window as any).utils = {
 	getTextureByName,
 	deepCopy,
-	sleep
-}
+	sleep,
+};

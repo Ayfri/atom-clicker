@@ -40,10 +40,10 @@ export default class Game {
 			this.gui.click(position);
 		});
 
-		buildings.forEach((building: BuildingOptions) => this.buildings.push(new Building(building)));
+		buildings.forEach((building: BuildingOptions) => this.addBuilding(new Building(building)));
 
 		upgrades.forEach((upgrade: any) =>
-			this.upgrades.push(
+			this.addUpgrade(
 				new Upgrade(
 					{
 						name: upgrade.name,
@@ -60,7 +60,7 @@ export default class Game {
 			const levels = [15, 25, 50, 100, 200, 300, 400, 500, 750, 1000, 1500, 2000];
 
 			for (let level of levels) {
-				this.upgrades.push(
+				this.addUpgrade(
 					new Upgrade(
 						{
 							name: `${level} ${building.name}.`,
@@ -83,7 +83,7 @@ export default class Game {
 		});
 
 		for (let level = 100; level < 10e7; level *= 10) {
-			this.upgrades.push(
+			this.addUpgrade(
 				new Upgrade(
 					{
 						name: `${level} clicks !`,
@@ -103,7 +103,7 @@ export default class Game {
 		}
 
 		for (let level = 1000; level < 10e20; level *= 100) {
-			this.upgrades.push(
+			this.addUpgrade(
 				new Upgrade(
 					{
 						name: `${level} atoms generated.`,
@@ -123,7 +123,6 @@ export default class Game {
 		}
 
 		this.buildings.forEach(buildings => app.stage.addChild(buildings.container));
-		this.upgrades.forEach(upgrade => app.stage.addChild(upgrade.container));
 	}
 
 	get totalAtomsPerClicks(): BigFloat {
@@ -161,5 +160,15 @@ export default class Game {
 			.map(building => building.totalAtomPerSecond.mul(this.buildingsGlobalBoost))
 			.reduce((previous, current) => previous.add(current))
 			.add(this.atomsPerSecondBoost);
+	}
+
+	public addBuilding(building: Building) {
+		this.buildings.push(building);
+		app.stage.addChild(building.container);
+	}
+
+	public addUpgrade(upgrade: Upgrade<UpgradeType, ConditionType>) {
+		this.upgrades.push(upgrade);
+		app.stage.addChild(upgrade.container);
 	}
 }
