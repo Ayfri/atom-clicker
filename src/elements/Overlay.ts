@@ -1,5 +1,5 @@
 import { BigFloat } from 'bigfloat.js';
-import { app, game } from '../app.js';
+import { game } from '../app.js';
 
 interface OverlayOptions {
 	description: string;

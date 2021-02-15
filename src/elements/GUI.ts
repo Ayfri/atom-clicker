@@ -49,6 +49,10 @@ export default class GUI {
 		this.container.addChild(this.atomsCountText, this.APSText, this.atomsPerClicksText, this.CPSText, ...this.clicksTexts);
 	}
 
+	public get clicksPerSeconds(): number {
+		return this.clicksTexts.filter(text => text.visible).length;
+	}
+
 	public click(position: PIXI.Point) {
 		const text = this.clicksTexts.find(text => !text.visible);
 		if (!text) return;
@@ -79,9 +83,5 @@ export default class GUI {
 				text.position.y--;
 				text.alpha -= 1 / PIXI.Ticker.shared.FPS;
 			});
-	}
-
-	public get clicksPerSeconds(): number {
-		return this.clicksTexts.filter(text => text.visible).length;
 	}
 }

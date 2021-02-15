@@ -2,7 +2,7 @@ import { BigFloat } from 'bigfloat.js';
 import * as PIXI from 'pixi.js';
 import { app, game } from '../app.js';
 import Clickable from '../elements/Clickable.js';
-import Overlay, { StatsType } from '../elements/Overlay.js';
+import Overlay from '../elements/Overlay.js';
 import { Buyable } from './Buyable.js';
 
 interface UpgradeOptions {
