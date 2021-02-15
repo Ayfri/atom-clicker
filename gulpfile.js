@@ -1,6 +1,6 @@
 const gulp = require('gulp');
 const esbuild = require('gulp-esbuild');
-const { exec } = require("child_process");
+const { exec } = require('child_process');
 
 function bundle() {
 	return gulp
@@ -21,8 +21,8 @@ function bundle() {
 }
 
 function watch() {
-	exec("reload -b --dir=dist --port=5000", (err, stdout) => {
-		if (err) throw err
+	exec('reload -b --dir=dist --port=5000', (err) => {
+		if (err) throw err;
 	});
 
 	return gulp.watch('src/**/*.ts', bundle);

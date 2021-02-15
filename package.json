@@ -28,7 +28,7 @@
 	},
 	"scripts": {
 		"bundle": "npm run prettier && gulp bundle",
-		"prettier": "prettier ./ --write",
+		"prettier": "prettier **.json **.ts **.md gulpfile.js --write",
 		"start": "npm run bundle && gulp watch"
 	},
 	"version": "1.0.0"
