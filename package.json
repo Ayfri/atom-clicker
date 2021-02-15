@@ -18,14 +18,16 @@
 	"homepage": "https://github.com/Ayfri/atom-clicker#readme",
 	"license": "GNU",
 	"name": "atom-clicker",
-	"private": true,
 	"prettier": {
 		"arrowParens": "avoid",
+		"bracketSpacing": false,
 		"printWidth": 180,
 		"singleQuote": true,
 		"tabWidth": 4,
+		"trailingComma": "es5",
 		"useTabs": true
 	},
+	"private": true,
 	"scripts": {
 		"bundle": "npm run prettier && gulp bundle",
 		"prettier": "prettier **.json **.ts **.md gulpfile.js --write",
