@@ -51,6 +51,8 @@ export const LeftClick = new Button(0);
 export const RightClick = new Button(2);
 export let mousePosition: PIXI.Point = new PIXI.Point();
 
+(window as any).mousePosition = mousePosition;
+
 document.addEventListener('mousemove', (event: MouseEvent) => {
 	mousePosition.set(event.x, event.y);
 });

@@ -84,3 +84,5 @@ export default class Overlay {
 		}
 	}
 }
+
+(window as any).Overlay = Overlay;

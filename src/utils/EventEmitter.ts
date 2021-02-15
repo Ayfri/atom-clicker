@@ -13,3 +13,5 @@ export default class EventEmitter<Events extends Record<string, any[]>> extends 
 		return super.once(event, fn, context);
 	}
 }
+
+(window as any).EventEmitter = EventEmitter;

@@ -220,3 +220,5 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		}
 	}
 }
+
+(window as any).Upgrade = Upgrade;

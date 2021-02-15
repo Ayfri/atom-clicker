@@ -115,3 +115,5 @@ export default class Building extends Clickable implements BuildingOptions, Buya
 			.div(100)}%`;
 	}
 }
+
+(window as any).Building = Building;

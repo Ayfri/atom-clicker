@@ -44,3 +44,5 @@ export default class Clickable extends EventEmitter<ClickableEvents> {
 		});
 	}
 }
+
+(window as any).Clickable = Clickable;

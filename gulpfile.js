@@ -29,8 +29,8 @@ function watch() {
 		if (err) throw err;
 	});
 
-	return gulp.watch(['src/**/*.ts', 'src/assets/**/*.json'], copyPublic, bundle);
+	return gulp.watch(['src/**/*.ts', 'src/assets/**/*.json'], bundle);
 }
 
 exports.bundle = gulp.series(copyPublic, bundle);
-exports.watch = watch;
+exports.watch = gulp.series(copyPublic, watch);

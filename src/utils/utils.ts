@@ -9,3 +9,9 @@ export function deepCopy<T>(source: T): T {
 export function sleep(ms: number): Promise<unknown> {
 	return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+(window as any).utils = {
+	getTextureByName,
+	deepCopy,
+	sleep
+}
