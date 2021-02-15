@@ -20,13 +20,17 @@ function bundle() {
 		.pipe(gulp.dest('./dist/'));
 }
 
+function copyPublic() {
+	return gulp.src(['./public/index.html', './public/style.css']).pipe(gulp.dest('./dist'));
+}
+
 function watch() {
 	exec('reload -b --dir=dist --port=5000', err => {
 		if (err) throw err;
 	});
 
-	return gulp.watch(['src/**/*.ts', 'src/assets/**/*.json'], bundle);
+	return gulp.watch(['src/**/*.ts', 'src/assets/**/*.json'], copyPublic, bundle);
 }
 
-exports.bundle = bundle;
+exports.bundle = gulp.series(copyPublic, bundle);
 exports.watch = watch;
