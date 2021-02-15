@@ -1,6 +1,7 @@
 import Overlay from '../elements/Overlay.js';
 
 export interface Buyable {
+	readonly name: string;
 	readonly price: number;
 	readonly canBeBought: boolean;
 	container: PIXI.Container;
