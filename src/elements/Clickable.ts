@@ -40,7 +40,7 @@ export default class Clickable extends EventEmitter<ClickableEvents> {
 		});
 
 		this.sprite.on('mousemove', (event: PIXI.InteractionEvent) => {
-			if (event.currentTarget === this.sprite) this.emit('hoverMove', event.data.global);
+			if (event.currentTarget && event.target === this.sprite) this.emit('hoverMove', event.data.global);
 		});
 	}
 }
