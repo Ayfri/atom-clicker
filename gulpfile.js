@@ -21,7 +21,7 @@ function bundle() {
 }
 
 function watch() {
-	exec('reload -b --dir=dist --port=5000', (err) => {
+	exec('reload -b --dir=dist --port=5000', err => {
 		if (err) throw err;
 	});
 

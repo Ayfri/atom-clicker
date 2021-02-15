@@ -29,7 +29,6 @@ export default class Overlay {
 
 		this.sprite = PIXI.Sprite.from(PIXI.Texture.WHITE);
 		this.sprite.height = 80 + Object.keys(options.stats).length * 25;
-		this.sprite.width = 400;
 
 		this.title = new PIXI.Text(options.title);
 		this.title.anchor.set(0.5, 0);
@@ -48,6 +47,7 @@ export default class Overlay {
 		}
 
 		this.container.addChild(this.sprite, this.title, this.description, ...this.stats.values());
+		this.sprite.width = this.container.width + 50;
 	}
 
 	public show() {
