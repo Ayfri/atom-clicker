@@ -102,7 +102,7 @@ export default class Game {
 			);
 		}
 
-		for (let level = 1000; level < 10e20; level *= 10) {
+		for (let level = 1000; level < 10e20; level *= 100) {
 			this.upgrades.push(
 				new Upgrade(
 					{
@@ -157,8 +157,9 @@ export default class Game {
 	}
 
 	public calculateAPS() {
-		this.atomsPerSecond = new BigFloat(
-			this.buildings.map(building => building.totalAtomPerSecond * this.buildingsGlobalBoost).reduce((previous, current) => previous + current)
-		).add(this.atomsPerSecondBoost);
+		this.atomsPerSecond =this.buildings
+			.map(building => building.totalAtomPerSecond.mul(this.buildingsGlobalBoost))
+			.reduce((previous, current) => previous.add(current))
+			.add(this.atomsPerSecondBoost);
 	}
 }
