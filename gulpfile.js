@@ -8,7 +8,7 @@ function bundle() {
 		.pipe(
 			esbuild({
 				outfile: 'bundle.js',
-				sourcemap: 'inline',
+				sourcemap: 'both',
 				bundle: true,
 				target: ['chrome58', 'firefox57', 'safari11', 'edge16'],
 				loader: {
@@ -24,7 +24,7 @@ function watch() {
 	exec("reload -b --dir=dist --port=5000", (err, stdout) => {
 		if (err) throw err
 	});
-	
+
 	return gulp.watch('src/**/*.ts', bundle);
 }
 
