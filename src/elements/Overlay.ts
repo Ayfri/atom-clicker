@@ -1,5 +1,5 @@
 import { BigFloat } from 'bigfloat.js';
-import { game } from '../app.js';
+import { app, game } from '../app.js';
 
 interface OverlayOptions {
 	description: string;
@@ -28,7 +28,7 @@ export default class Overlay {
 		this.container.zIndex = 100;
 
 		this.sprite = PIXI.Sprite.from(PIXI.Texture.WHITE);
-		this.sprite.height = 60 + Object.keys(options.stats).length * 30;
+		this.sprite.height = 30 + Object.keys(options.stats).length * 50;
 		this.sprite.width = 400;
 
 		this.title = new PIXI.Text(options.title);
@@ -42,6 +42,7 @@ export default class Overlay {
 		this.stats = new Map();
 		for (const stat in options.stats) {
 			const text: PIXI.Text = options.stats[stat as StatsType];
+			text.style.fontSize = 15;
 			text.anchor.set(0, 0.5);
 			this.stats.set(stat as StatsType, text);
 		}
@@ -58,25 +59,28 @@ export default class Overlay {
 	}
 
 	public update(position?: PIXI.Point) {
-		this.setPositions(position);
+		this.container.position = position;
+		this.setPositions();
+
+		if (position.x + this.container.width > window.innerWidth) this.container.x -= this.container.width;
+		if (position.y + this.container.height > window.innerHeight) this.container.y -= this.container.height;
 	}
 
 	public setAPSWaitFromPrice(price: BigFloat | number) {
 		const timeToWaitForBuy: BigFloat = new BigFloat(price).minus(game.atomsCount).div(game.totalAtomsPerSecond);
 		this.stats.get(StatsType.APS_WAIT_TIME).text =
 			timeToWaitForBuy.equals(0) && game.atomsCount.lessThan(price)
-			? "Can't be bough."
-			: `Can be bought${timeToWaitForBuy.lessThan(0) ?? game.atomsCount.greaterThanOrEqualTo(price) ? '' : ` in ${timeToWaitForBuy.ceil()} seconds`}.`;
+				? "Can't be bough."
+				: `Can be bought${timeToWaitForBuy.lessThan(0) ?? game.atomsCount.greaterThanOrEqualTo(price) ? '' : ` in ${timeToWaitForBuy.ceil()} seconds`}.`;
 	}
 
-	private setPositions(position: PIXI.Point) {
-		this.container.position = position;
+	private setPositions() {
 		this.title.position.set(this.container.width / 2, this.container.height / 10);
 		this.description.position.set(10, this.container.height / 3.2);
 
 		for (let i = 0; i < this.stats.size; i++) {
 			const stat: PIXI.Text = [...this.stats.values()][i];
-			stat.position.set(this.container.width / 10, this.container.height / 1.9 + i * (stat.height + 10));
+			stat.position.set(this.container.width / 10, this.container.height / 1.9 + i * (stat.height + 7));
 		}
 	}
 }
