@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { game } from '../app.js';
+import {game} from '../app.js';
 
 export default class GUI {
 	public atomsCountText: PIXI.Text;

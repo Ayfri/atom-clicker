@@ -1,6 +1,6 @@
 const gulp = require('gulp');
 const esbuild = require('gulp-esbuild');
-const { exec } = require('child_process');
+const {exec} = require('child_process');
 
 function bundle() {
 	return gulp

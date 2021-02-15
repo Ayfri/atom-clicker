@@ -1,9 +1,9 @@
-import { BigFloat } from 'bigfloat.js';
+import {BigFloat} from 'bigfloat.js';
 import * as PIXI from 'pixi.js';
-import { app, game } from '../app.js';
+import {app, game} from '../app.js';
 import Clickable from '../elements/Clickable.js';
 import Overlay from '../elements/Overlay.js';
-import { Buyable } from './Buyable.js';
+import {Buyable} from './Buyable.js';
 
 interface UpgradeOptions {
 	readonly name: string;
@@ -78,9 +78,9 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		this.unlocked = !condition;
 		this.condition = condition;
 
-		this.nameText = new PIXI.Text(this.name, { fontSize: 18 });
-		this.effectText = new PIXI.Text(this.getEffectAsString, { fontSize: 12 });
-		this.priceText = new PIXI.Text(this.price.toString(), { fontSize: 12 });
+		this.nameText = new PIXI.Text(this.name, {fontSize: 18});
+		this.effectText = new PIXI.Text(this.getEffectAsString, {fontSize: 12});
+		this.priceText = new PIXI.Text(this.price.toString(), {fontSize: 12});
 
 		this.container = new PIXI.Container();
 

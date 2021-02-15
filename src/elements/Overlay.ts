@@ -1,10 +1,10 @@
-import { BigFloat } from 'bigfloat.js';
-import { game } from '../app.js';
+import {BigFloat} from 'bigfloat.js';
+import {game} from '../app.js';
 
 interface OverlayOptions {
 	description: string;
 	title: string;
-	stats?: { [k in StatsType]?: PIXI.Text };
+	stats?: {[k in StatsType]?: PIXI.Text};
 }
 
 export enum StatsType {

@@ -1,8 +1,8 @@
-import { BigFloat } from 'bigfloat.js';
-import { app, game } from '../app.js';
+import {BigFloat} from 'bigfloat.js';
+import {app, game} from '../app.js';
 import Clickable from '../elements/Clickable.js';
-import Overlay, { StatsType } from '../elements/Overlay.js';
-import { Buyable } from './Buyable.js';
+import Overlay, {StatsType} from '../elements/Overlay.js';
+import {Buyable} from './Buyable.js';
 
 export interface BuildingOptions {
 	readonly name: string;
