@@ -6,8 +6,7 @@ export let game: Game;
 async function setup() {
 	await loadTextures();
 	game = new Game();
-	//@ts-ignore
-	window['game'] = game;
+	(window as any).game = game;
 }
 
 export const app = new PIXI.Application({
@@ -35,6 +34,6 @@ setup().then(() => {
 });
 
 document.body.appendChild(app.view);
-//@ts-ignore
-window['app'] = app;
-window['PIXI'] = PIXI;
+
+(window as any).app = app;
+(window as any).PIXI = PIXI;
