@@ -1,16 +1,18 @@
 import * as PIXI from 'pixi.js';
+import * as PUXI from '@puxi/core';
 import {game} from '../app.js';
+import Window from './Window.js';
 
-export default class GUI {
+export default class GUI extends Window {
 	public atomsCountText: PIXI.Text;
 	public atomsPerClicksText: PIXI.Text;
 	public APSText: PIXI.Text;
-	public container: PIXI.Container;
 	public clicksTexts: PIXI.Text[] = [];
 	public CPSText: PIXI.Text;
+	public saveButton: PUXI.Button;
 
 	public constructor() {
-		this.container = new PIXI.Container();
+		super();
 
 		const style = new PIXI.TextStyle({
 			dropShadow: true,
@@ -46,7 +48,10 @@ export default class GUI {
 			this.clicksTexts.push(text);
 		}
 
-		this.container.addChild(this.atomsCountText, this.APSText, this.atomsPerClicksText, this.CPSText, ...this.clicksTexts);
+		this.saveButton = new PUXI.Button({
+			text: "Save"
+		});
+		this.addElement(this.saveButton, this.atomsCountText, this.APSText, this.atomsPerClicksText, this.CPSText, ...this.clicksTexts);
 	}
 
 	public get clicksPerSeconds(): number {
