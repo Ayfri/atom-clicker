@@ -1,6 +1,7 @@
 {
 	"author": "Ayfri",
 	"dependencies": {
+		"@puxi/core": "^1.0.2",
 		"bigfloat.js": "^3.0.1",
 		"pixi.js": "^5.3.7"
 	},
