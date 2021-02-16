@@ -1,6 +1,6 @@
 import Overlay from '../elements/Overlay.js';
 
-export interface Buyable {
+export interface Buyable extends JSONable {
 	readonly name: string;
 	readonly price: number;
 	readonly canBeBought: boolean;

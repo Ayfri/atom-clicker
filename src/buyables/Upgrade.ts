@@ -111,28 +111,38 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		switch (this.effect.kind) {
 			case 'building':
 				result += this.effect.multiplier
-					? `Multiply by ${this.effect.multiplier * 100}% ${(this.effect as BuildingUpgrade).building}.`
-					: `Add ${this.effect.addition} to ${(this.effect as BuildingUpgrade).building}.`;
+				          ? `Multiply by ${this.effect.multiplier * 100}% ${(this.effect as BuildingUpgrade).building}.`
+				          : `Add ${this.effect.addition} to ${(this.effect as BuildingUpgrade).building}.`;
 				break;
 
 			case 'click':
-				result += this.effect.multiplier ? `Multiply clicks by ${this.effect.multiplier * 100}%.` : `Add ${this.effect.addition * 100}% to clicks.`;
+				result += this.effect.multiplier
+				          ? `Multiply clicks by ${this.effect.multiplier * 100}%.`
+				          : `Add ${this.effect.addition * 100}% to clicks.`;
 				break;
 
 			case 'buildingGlobal':
-				result += this.effect.multiplier ? `Multiply buildings by ${this.effect.multiplier * 100}%.` : `Add ${this.effect.addition * 100}% to buildings.`;
+				result += this.effect.multiplier
+				          ? `Multiply buildings by ${this.effect.multiplier * 100}%.`
+				          : `Add ${this.effect.addition * 100}% to buildings.`;
 				break;
 
 			case 'clickAPS':
-				result += this.effect.multiplier ? `Multiply the boost of APS to clicks by ${this.effect.multiplier * 100}%.` : `Add ${this.effect.addition * 100}% of APS to clicks.`;
+				result += this.effect.multiplier
+				          ? `Multiply the boost of APS to clicks by ${this.effect.multiplier * 100}%.`
+				          : `Add ${this.effect.addition * 100}% of APS to clicks.`;
 				break;
 
 			case 'aps':
-				result += this.effect.multiplier ? `Multiply atoms per second by ${this.effect.multiplier * 100}% .` : `Add ${this.effect.addition} atoms per seconds.`;
+				result += this.effect.multiplier
+				          ? `Multiply atoms per second by ${this.effect.multiplier * 100}% .`
+				          : `Add ${this.effect.addition} atoms per seconds.`;
 				break;
 
 			case 'atoms':
-				result += this.effect.multiplier ? `Multiply atoms by ${this.effect.multiplier * 100}%.` : `Add ${this.effect.addition * 100} atoms.`;
+				result += this.effect.multiplier
+				          ? `Multiply atoms by ${this.effect.multiplier * 100}%.`
+				          : `Add ${this.effect.addition * 100} atoms.`;
 				break;
 		}
 
@@ -203,14 +213,26 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 					break;
 				case 'aps':
 					game.atomsPerSecondBoost = this.effect.multiplier
-						? game.atomsPerSecondBoost.add(game.atomsPerSecond.mul(this.effect.multiplier - 1))
-						: game.atomsPerSecond.add(this.effect.addition);
+					                           ? game.atomsPerSecondBoost.add(game.atomsPerSecond.mul(this.effect.multiplier - 1))
+					                           : game.atomsPerSecond.add(this.effect.addition);
 					break;
 				case 'atoms':
 					game.atomsCount = this.applyNumberedUpgrade(game.atomsCount);
 					break;
 			}
 		}
+	}
+
+	public toJSON() {
+		return {
+			name: this.name,
+			description: this.description,
+			condition: this.condition,
+			effect: this.effect,
+			price: this.price,
+			unlocked: this.unlocked,
+			owned: this.owned,
+		};
 	}
 
 	private applyNumberedUpgrade(value: number): number;

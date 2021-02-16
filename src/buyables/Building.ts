@@ -117,6 +117,18 @@ export default class Building extends Clickable implements BuildingOptions, Buya
 			.floor()
 			.div(100)}%`;
 	}
+
+	public toJSON() {
+		return {
+			name: this.name,
+			description: this.description,
+			boost: this.boost,
+			atomsPerSecond: this.atomsPerSecond,
+			priceMultiplier: this.priceMultiplier,
+			ownedCount: this.ownedCount,
+			startingPrice: this.startingPrice
+		}
+	}
 }
 
 (window as any).Building = Building;

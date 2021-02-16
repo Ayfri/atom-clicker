@@ -8,7 +8,7 @@ import Upgrade, {ConditionType, UpgradeType} from '../buyables/Upgrade.js';
 import Clickable from './Clickable.js';
 import GUI from './GUI.js';
 
-export default class Game {
+export default class Game implements JSONable {
 	public atomsCount: BigFloat = new BigFloat(0);
 	public atomsPerClicks: BigFloat = new BigFloat(1);
 	public atomsPerClicksAPSBoost: number = 0;
@@ -170,5 +170,19 @@ export default class Game {
 	public addUpgrade(upgrade: Upgrade<UpgradeType, ConditionType>) {
 		this.upgrades.push(upgrade);
 		app.stage.addChild(upgrade.container);
+	}
+
+	public toJSON() {
+		return {
+			atomsCount: this.atomsCount,
+			totalClicks: this.totalClicks,
+			atomsPerClicks: this.atomsPerClicks,
+			atomsPerClicksAPSBoost: this.atomsPerClicksAPSBoost,
+			atomsPerSecondBoost: this.atomsPerSecondBoost,
+			totalAtomsProduced: this.totalAtomsProduced,
+			buildingsGlobalBoost: this.buildingsGlobalBoost,
+			buildings: this.buildings.map(building => building.toJSON()),
+			upgrades: this.upgrades.map(upgrade => upgrade.toJSON())
+		};
 	}
 }
