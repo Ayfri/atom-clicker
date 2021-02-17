@@ -2,6 +2,7 @@
 	"author": "Ayfri",
 	"dependencies": {
 		"bigfloat.js": "^3.0.1",
+		"pixi-textinput-v5": "4.0.0-beta.10",
 		"pixi.js": "^5.3.7"
 	},
 	"devDependencies": {

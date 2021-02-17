@@ -1,17 +1,23 @@
 import * as PIXI from 'pixi.js';
 import {game} from '../app.js';
+import Button from '../components/Button.js';
+import {TextInput} from 'pixi-textinput-v5';
+import SaveGUI from './SaveGUI.js';
+import Window from './Window.js';
 
-export default class GUI {
+export default class GUI extends Window {
 	public atomsCountText: PIXI.Text;
 	public atomsPerClicksText: PIXI.Text;
 	public APSText: PIXI.Text;
 	public clicksTexts: PIXI.Text[] = [];
 	public CPSText: PIXI.Text;
-	public container: PIXI.Container;
-	//	public saveButton: PUXI.Button;
+	public saveButton: Button;
+	public saveGUI: SaveGUI;
 
 	public constructor() {
-		this.container = new PIXI.Container();
+		super({
+			texture: PIXI.Texture.EMPTY
+		});
 
 		const style = new PIXI.TextStyle({
 			dropShadow: true,
@@ -47,7 +53,44 @@ export default class GUI {
 			this.clicksTexts.push(text);
 		}
 
-		this.container.addChild(this.atomsCountText, this.APSText, this.atomsPerClicksText, this.CPSText, ...this.clicksTexts);
+		this.saveButton = new Button(PIXI.Texture.WHITE, 'Save');
+
+		this.container.addChild(this.atomsCountText, this.APSText, this.atomsPerClicksText, this.CPSText, this.saveButton.container, ...this.clicksTexts);
+
+		this.saveButton.on('click', () => {
+			this.saveGUI = new SaveGUI();
+			this.container.addChild(this.saveGUI.container);
+/*
+			const textInput = new TextInput({
+				input: {
+					fontSize: '18px',
+				},
+				box: {
+					default: {
+						fill: 0xf9f9f9,
+						rounded: 10,
+						stroke: {
+							color: 0x404040,
+							width: 2,
+						},
+					},
+				},
+			});
+
+			(textInput._dom_input as HTMLInputElement).value = 'test \n'.repeat(10);
+			//			textInput._disabled = true;
+			//			textInput._setState('DISABLED');
+			textInput.setInputStyle('padding', '5px');
+			(textInput._dom_input as HTMLInputElement).readOnly = true;
+			textInput.position.set(window.innerWidth / 2, window.innerHeight / 2);
+			this.container.addChild(textInput);
+			console.log(textInput);*/
+
+			this.saveGUI.exitButton.on('click', () => {
+				this.saveGUI.close();
+				this.container.removeChild(this.saveGUI.container);
+			})
+		});
 	}
 
 	public get clicksPerSeconds(): number {

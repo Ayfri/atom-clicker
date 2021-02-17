@@ -24,6 +24,10 @@ function copyPublic() {
 	return gulp.src(['./public/index.html', './public/style.css']).pipe(gulp.dest('./dist'));
 }
 
+function copyTextures() {
+	return gulp.src('./src/assets/textures/**').pipe(gulp.dest('./dist/textures'));
+}
+
 function watch() {
 	exec('reload -b --dir=dist --port=5000', err => {
 		if (err) throw err;
@@ -32,5 +36,5 @@ function watch() {
 	return gulp.watch(['src/**/*.ts', 'src/assets/**/*.json'], bundle);
 }
 
-exports.bundle = gulp.series(copyPublic, bundle);
-exports.watch = gulp.series(copyPublic, watch);
+exports.bundle = gulp.series(copyPublic, copyTextures, bundle);
+exports.watch = gulp.series(copyPublic, copyTextures, watch);

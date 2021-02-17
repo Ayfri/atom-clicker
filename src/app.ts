@@ -18,6 +18,7 @@ export const app = new PIXI.Application({
 
 async function loadTextures() {
 	await new Promise(resolve => {
+		PIXI.Loader.shared.add('x', 'textures/x.png');
 		PIXI.Loader.shared.load(resolve);
 	});
 }
