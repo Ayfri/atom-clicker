@@ -6,6 +6,7 @@ import upgrades from '../assets/upgrades.json';
 import Building, {BuildingOptions} from '../components/Building.js';
 import Upgrade, {ConditionType, UpgradeType} from '../components/Upgrade.js';
 import Clickable from '../components/Clickable.js';
+import {JSONable, JSONObject} from '../types.js';
 import GUI from './GUI.js';
 
 export default class Game implements JSONable {
@@ -172,15 +173,15 @@ export default class Game implements JSONable {
 		app.stage.addChild(upgrade.container);
 	}
 
-	public toJSON() {
+	public toJSON(): JSONObject {
 		return {
-			atomsCount: this.atomsCount,
-			totalClicks: this.totalClicks,
-			atomsPerClicks: this.atomsPerClicks,
-			atomsPerClicksAPSBoost: this.atomsPerClicksAPSBoost,
-			atomsPerSecondBoost: this.atomsPerSecondBoost,
-			totalAtomsProduced: this.totalAtomsProduced,
-			buildingsGlobalBoost: this.buildingsGlobalBoost,
+			atomsCount: this.atomsCount.toString(),
+			totalClicks: this.totalClicks.toString(),
+			atomsPerClicks: this.atomsPerClicks.toString(),
+			atomsPerClicksAPSBoost: this.atomsPerClicksAPSBoost.toString(),
+			atomsPerSecondBoost: this.atomsPerSecondBoost.toString(),
+			totalAtomsProduced: this.totalAtomsProduced.toString(),
+			buildingsGlobalBoost: this.buildingsGlobalBoost.toString(),
 			buildings: this.buildings.map(building => building.toJSON()),
 			upgrades: this.upgrades.map(upgrade => upgrade.toJSON()),
 		};
