@@ -1,6 +1,6 @@
 import {BigFloat} from 'bigfloat.js';
 import {app, game} from '../app.js';
-import Clickable from './Clickable.js';
+import ClickableContainer from './ClickableContainer.js';
 import Overlay, {StatsType} from './Overlay.js';
 import {Buyable} from './Buyable.js';
 
@@ -12,7 +12,7 @@ export interface BuildingOptions {
 	priceMultiplier?: number;
 }
 
-export default class Building extends Clickable implements BuildingOptions, Buyable {
+export default class Building extends ClickableContainer implements BuildingOptions, Buyable {
 	public readonly name: string;
 
 	get price(): number {
@@ -23,7 +23,6 @@ export default class Building extends Clickable implements BuildingOptions, Buya
 		return game.atomsCount.greaterThanOrEqualTo(this.price);
 	}
 
-	public container: PIXI.Container = new PIXI.Container();
 	public overlay: Overlay;
 	public priceText: PIXI.Text;
 	public nameText: PIXI.Text;
@@ -73,7 +72,7 @@ export default class Building extends Clickable implements BuildingOptions, Buya
 			},
 		});
 
-		this.container.addChild(this.sprite, this.ownerCountText, this.priceText, this.nameText);
+		this.container.addChild(this.ownerCountText, this.priceText, this.nameText);
 		app.stage.addChild(this.overlay.container);
 
 		this.on('click', () => {

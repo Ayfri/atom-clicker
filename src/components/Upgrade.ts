@@ -1,7 +1,7 @@
 import {BigFloat} from 'bigfloat.js';
 import * as PIXI from 'pixi.js';
 import {app, game} from '../app.js';
-import Clickable from './Clickable.js';
+import ClickableContainer from './ClickableContainer.js';
 import Overlay from './Overlay.js';
 import {Buyable} from './Buyable.js';
 
@@ -50,7 +50,7 @@ type Upgrades = BuildingUpgrade | ClickUpgrade | BuildingGlobalUpgrade | ClickAP
 export type ConditionType = ConditionCount & Upgrades;
 export type UpgradeType = NumberedUpgrade & Upgrades;
 
-export default class Upgrade<T extends UpgradeType, L extends ConditionType> extends Clickable implements UpgradeOptions, Buyable {
+export default class Upgrade<T extends UpgradeType, L extends ConditionType> extends ClickableContainer implements UpgradeOptions, Buyable {
 	public readonly name: string;
 	public readonly description: string;
 	public price: number;
@@ -59,7 +59,6 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		return game.atomsCount.greaterThanOrEqualTo(this.price);
 	}
 
-	public container: PIXI.Container;
 	public overlay: Overlay;
 	public priceText: PIXI.Text;
 	public nameText: PIXI.Text;
@@ -82,8 +81,6 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		this.effectText = new PIXI.Text(this.getEffectAsString, {fontSize: 12});
 		this.priceText = new PIXI.Text(this.price.toString(), {fontSize: 12});
 
-		this.container = new PIXI.Container();
-
 		this.overlay = new Overlay({
 			title: this.name,
 			description: this.description,
@@ -93,7 +90,7 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 			},
 		});
 
-		this.container.addChild(this.sprite, this.nameText, this.effectText, this.priceText);
+		this.container.addChild(this.nameText, this.effectText, this.priceText);
 		app.stage.addChild(this.overlay.container);
 
 		this.on('click', () => this.buy());
