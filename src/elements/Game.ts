@@ -112,7 +112,7 @@ export default class Game implements JSONable {
 					},
 					{
 						kind: 'aps',
-						multiplier: Math.log10(level),
+						multiplier: Math.ceil(Math.log10(level) / 2),
 					},
 					{
 						kind: 'atoms',
@@ -182,7 +182,7 @@ export default class Game implements JSONable {
 			totalAtomsProduced: this.totalAtomsProduced,
 			buildingsGlobalBoost: this.buildingsGlobalBoost,
 			buildings: this.buildings.map(building => building.toJSON()),
-			upgrades: this.upgrades.map(upgrade => upgrade.toJSON())
+			upgrades: this.upgrades.map(upgrade => upgrade.toJSON()),
 		};
 	}
 }
