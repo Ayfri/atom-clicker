@@ -3,9 +3,9 @@ import * as PIXI from 'pixi.js';
 import {app} from '../app.js';
 import buildings from '../assets/buildings.json';
 import upgrades from '../assets/upgrades.json';
-import Building, {BuildingOptions} from '../buyables/Building.js';
-import Upgrade, {ConditionType, UpgradeType} from '../buyables/Upgrade.js';
-import Clickable from './Clickable.js';
+import Building, {BuildingOptions} from '../components/Building.js';
+import Upgrade, {ConditionType, UpgradeType} from '../components/Upgrade.js';
+import Clickable from '../components/Clickable.js';
 import GUI from './GUI.js';
 
 export default class Game implements JSONable {

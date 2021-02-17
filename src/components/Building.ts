@@ -1,7 +1,7 @@
 import {BigFloat} from 'bigfloat.js';
 import {app, game} from '../app.js';
-import Clickable from '../elements/Clickable.js';
-import Overlay, {StatsType} from '../elements/Overlay.js';
+import Clickable from './Clickable.js';
+import Overlay, {StatsType} from './Overlay.js';
 import {Buyable} from './Buyable.js';
 
 export interface BuildingOptions {
@@ -83,7 +83,7 @@ export default class Building extends Clickable implements BuildingOptions, Buya
 			}
 		});
 
-		this.on('hover', (position) => {
+		this.on('hover', position => {
 			this.overlay.show();
 			this.overlay.update(position);
 		});
@@ -126,8 +126,8 @@ export default class Building extends Clickable implements BuildingOptions, Buya
 			atomsPerSecond: this.atomsPerSecond,
 			priceMultiplier: this.priceMultiplier,
 			ownedCount: this.ownedCount,
-			startingPrice: this.startingPrice
-		}
+			startingPrice: this.startingPrice,
+		};
 	}
 }
 
