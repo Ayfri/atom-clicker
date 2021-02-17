@@ -52,6 +52,7 @@ export default class Overlay {
 
 	public show() {
 		this.container.visible = true;
+		this.sprite.width = this.container.width + 50;
 	}
 
 	public hide() {
