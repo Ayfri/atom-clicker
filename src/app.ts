@@ -1,3 +1,4 @@
+import {BigFloat} from 'bigfloat.js';
 import * as PIXI from 'pixi.js';
 import Game from './elements/Game.js';
 
@@ -35,5 +36,6 @@ setup().then(() => {
 
 document.body.appendChild(app.view);
 
+(window as any).bigfloat = BigFloat;
 (window as any).app = app;
 (window as any).PIXI = PIXI;
