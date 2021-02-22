@@ -4,7 +4,7 @@
 		"description": "Yeah you clicked a bit.",
 		"price": 200,
 		"effect": {
-			"kind": "click",
+			"kind": "clicks",
 			"multiplier": 2
 		}
 	},
