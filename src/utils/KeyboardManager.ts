@@ -1,43 +1,23 @@
 import EventEmitter from './EventEmitter';
 
-export type Key = string;
+const pressed:Set<string> = new Set();
 
-epxort class KeyboardManager extends EventEmitter {
+export const events:EventEmitter = new EventEmitter();
 
-    private static _instance:KeyboardManager = new KeyboardManager();
-
-    private _pressed:Set<Key>;
-    
-    constructor() {
-        if(KeyboardManager._instance){
-            throw new Error("Error: Instantiation failed: Use KeyboardManager.getInstance() instead of new.");
-        }
-        KeyboardManager._instance = this;
-        window.onkeydown = this.onKeyDown;
-        window.onkeyup   = this.onKeyUp;
-    }
-
-    public static getInstance(): KeyboardManager
-    {
-        return KeyboardManager._instance;
-    }
-    
-    private onKeyDown(e: KeyboardEvent) {
-      if(!this.isPressed(e.key)) {
-        this.emit(e.key);
-      }
-      this._pressed.add(e.key);
-
-    }
-    
-    private onKeyUp(e: KeyboardEvent) {
-      if(this.isPressed(e.key)) {
-        this.emit(e.key);
-      }
-      this.emit('keyDown', e);
-    }
-    
-    public isPressed(key: string): boolean {
-      return this._pressed.has(key);
-    }
+export function isPressed(key: string): boolean {
+    return pressed.has(key);
 }
+
+function onKeyDown(e: KeyboardEvent) {
+    if(!isPressed(e.key)) events.emit("down", e.key);
+    pressed.add(e.key);
+}
+
+function onKeyUp(e: KeyboardEvent) {
+    if(isPressed(e.key)) events.emit("up", e.key);
+    pressed.delete(e.key);
+}
+
+
+window.onkeydown = onKeyDown;
+window.onkeyup = onKeyUp;
