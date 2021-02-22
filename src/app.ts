@@ -1,12 +1,19 @@
 import {BigFloat} from 'bigfloat.js';
 import * as PIXI from 'pixi.js';
 import Game from './elements/Game.js';
+import {JSONObject} from './types.js';
 
 export let game: Game;
 
 async function setup() {
 	await loadTextures();
 	game = new Game();
+	(window as any).game = game;
+}
+
+export function loadGameFromSave(save: JSONObject) {
+	app.stage.removeChildren();
+	game = new Game(save);
 	(window as any).game = game;
 }
 
@@ -24,14 +31,7 @@ async function loadTextures() {
 }
 
 setup().then(() => {
-	PIXI.Ticker.shared.add(
-		async () => {
-			game.update();
-			game.calculateAPS();
-		},
-		{},
-		PIXI.UPDATE_PRIORITY.HIGH
-	);
+	PIXI.Ticker.shared.add(async () => game.update(), {}, PIXI.UPDATE_PRIORITY.HIGH);
 	console.log('Game started.');
 });
 
