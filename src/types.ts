@@ -1,5 +1,5 @@
-export type JSONObject = {[k: string]: string | number | boolean | JSONObject | JSONObject[]};
+export type JSONObject = {[k: string]: string | number | boolean | JSONObject | Array<string | number | boolean | JSONObject>};
 
 export interface JSONable {
-	toJSON(): JSONObject;
+	toJSON(): JSONObject | number;
 }
