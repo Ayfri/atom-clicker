@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import {game} from '../app.js';
 import Button from '../components/Button.js';
-import {TextInput} from 'pixi-textinput-v5';
+import LoadGUI from './LoadGUI.js';
 import SaveGUI from './SaveGUI.js';
 import Window from './Window.js';
 
@@ -12,11 +12,13 @@ export default class GUI extends Window {
 	public clicksTexts: PIXI.Text[] = [];
 	public CPSText: PIXI.Text;
 	public saveButton: Button;
+	public loadButton: Button;
 	public saveGUI: SaveGUI;
+	public loadGUI: LoadGUI;
 
 	public constructor() {
 		super({
-			texture: PIXI.Texture.EMPTY
+			texture: PIXI.Texture.EMPTY,
 		});
 
 		const style = new PIXI.TextStyle({
@@ -54,42 +56,38 @@ export default class GUI extends Window {
 		}
 
 		this.saveButton = new Button(PIXI.Texture.WHITE, 'Save');
+		this.loadButton = new Button(PIXI.Texture.WHITE, 'Load');
 
-		this.container.addChild(this.atomsCountText, this.APSText, this.atomsPerClicksText, this.CPSText, this.saveButton.container, ...this.clicksTexts);
+		this.container.addChild(
+			this.atomsCountText,
+			this.APSText,
+			this.atomsPerClicksText,
+			this.CPSText,
+			this.saveButton.container,
+			this.loadButton.container,
+			...this.clicksTexts
+		);
 
 		this.saveButton.on('click', () => {
-			this.saveGUI = new SaveGUI();
+			if (!this.saveGUI) this.saveGUI = new SaveGUI();
+			this.saveGUI.open();
 			this.container.addChild(this.saveGUI.container);
-/*
-			const textInput = new TextInput({
-				input: {
-					fontSize: '18px',
-				},
-				box: {
-					default: {
-						fill: 0xf9f9f9,
-						rounded: 10,
-						stroke: {
-							color: 0x404040,
-							width: 2,
-						},
-					},
-				},
-			});
-
-			(textInput._dom_input as HTMLInputElement).value = 'test \n'.repeat(10);
-			//			textInput._disabled = true;
-			//			textInput._setState('DISABLED');
-			textInput.setInputStyle('padding', '5px');
-			(textInput._dom_input as HTMLInputElement).readOnly = true;
-			textInput.position.set(window.innerWidth / 2, window.innerHeight / 2);
-			this.container.addChild(textInput);
-			console.log(textInput);*/
 
 			this.saveGUI.exitButton.on('click', () => {
 				this.saveGUI.close();
 				this.container.removeChild(this.saveGUI.container);
-			})
+			});
+		});
+
+		this.loadButton.on('click', () => {
+			if (!this.loadGUI) this.loadGUI = new LoadGUI();
+			this.loadGUI.open();
+			this.container.addChild(this.loadGUI.container);
+
+			this.loadGUI.exitButton.on('click', () => {
+				this.loadGUI.close();
+				this.container.removeChild(this.loadGUI.container);
+			});
 		});
 	}
 
@@ -120,6 +118,10 @@ export default class GUI extends Window {
 
 		this.CPSText.text = `Clicks per second: ${this.clicksPerSeconds}`;
 		this.CPSText.position.set(window.innerWidth / 40, window.innerHeight / 15 + 30);
+		this.saveGUI?.update();
+		this.loadGUI?.update();
+		this.saveButton.container.position.set(0, window.innerHeight - this.saveButton.container.height);
+		this.loadButton.container.position.set(this.saveButton.container.width + 5, window.innerHeight - this.loadButton.container.height);
 
 		this.clicksTexts
 			.filter(text => text.visible)
