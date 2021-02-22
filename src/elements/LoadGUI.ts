@@ -46,33 +46,36 @@ export default class LoadGUI extends Window {
 
 	public static decompressSave(save: string) {
 		if (!save) return;
-		save = atob(save);
-		let decompressSave: JSONObject;
-		save = save.replace(/([{,])([iubctonpsde]|ac|acb|asb|bb|ta)(:)/g, '$1"$2"$3');
-		decompressSave = JSON.parse(save);
-		decompressSave.b = (decompressSave.b as JSONObject[]).map(b => {
-			return typeof b === 'number'
-				? {i: Game.getBuyableFromIndex(b, 'building').name}
-				: typeof b.i === 'number'
-				? {
-						...b,
-						i: Game.getBuyableFromIndex(b.i, 'building')?.name,
-				  }
-				: b;
-		}) as JSONObject[];
-		decompressSave.u = (decompressSave.u as JSONObject[]).map(u => {
-			return typeof u === 'number'
-				? {i: Game.getBuyableFromIndex(u, 'upgrade')?.name}
-				: typeof u.i === 'number'
-				? {
-						...u,
-						i: Game.getBuyableFromIndex(u.i, 'upgrade')?.name,
-				  }
-				: u;
-		}) as JSONObject[];
-		game.gui.loadGUI?.close();
-		game.gui.saveGUI?.close();
-		loadGameFromSave(decompressSave);
+		try {
+			save = atob(save);
+			let decompressSave: JSONObject;
+			save = save.replace(/([{,])([iubctonpsde]|ac|acb|asb|bb|ta)(:)/g, '$1"$2"$3');
+			decompressSave = JSON.parse(save);
+			decompressSave.b = (decompressSave.b as JSONObject[]).map(b => {
+				return typeof b === 'number'
+				       ? {i: Game.getBuyableFromIndex(b, 'building').name}
+				       : typeof b.i === 'number'
+				         ? {
+							...b,
+							i: Game.getBuyableFromIndex(b.i, 'building')?.name,
+						}
+				         : b;
+			}) as JSONObject[];
+			decompressSave.u = (decompressSave.u as JSONObject[]).map(u => {
+				return typeof u === 'number'
+				       ? {i: Game.getBuyableFromIndex(u, 'upgrade')?.name}
+				       : typeof u.i === 'number'
+				         ? {
+							...u,
+							i: Game.getBuyableFromIndex(u.i, 'upgrade')?.name,
+						}
+				         : u;
+			}) as JSONObject[];
+			game.gui.loadGUI?.close();
+			game.gui.saveGUI?.close();
+			loadGameFromSave(decompressSave);
+		} catch(ignored) {}
+
 	}
 
 	public open() {
