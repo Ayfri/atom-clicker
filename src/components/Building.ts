@@ -1,5 +1,7 @@
 import {BigFloat} from 'bigfloat.js';
 import {app, game} from '../app.js';
+import Game from '../elements/Game.js';
+import {JSONObject} from '../types.js';
 import ClickableContainer from './ClickableContainer.js';
 import Overlay, {StatsType} from './Overlay.js';
 import {Buyable} from './Buyable.js';
@@ -118,15 +120,28 @@ export default class Building extends ClickableContainer implements BuildingOpti
 	}
 
 	public toJSON() {
-		return {
-			name: this.name,
-			description: this.description,
-			boost: this.boost,
-			atomsPerSecond: this.atomsPerSecond,
-			priceMultiplier: this.priceMultiplier,
-			ownedCount: this.ownedCount,
-			startingPrice: this.startingPrice,
+		let content: JSONObject = {
+			i: game.buildings.indexOf(this),
 		};
+
+		if (this.boost > 1) content.b = this.boost;
+		if (this.ownedCount > 0) content.o = this.ownedCount;
+
+		if (!Game.isDefaultBuyable(this)) {
+			content = {
+				n: this.name,
+				a: this.atomsPerSecond,
+				s: this.startingPrice,
+			};
+
+			if (this.priceMultiplier !== 1.2) content.p = this.priceMultiplier;
+
+			if (this.description) content.d = this.description;
+		}
+
+		if (Object.keys(content).join('') === 'i') return game.buildings.indexOf(this);
+
+		return content;
 	}
 }
 

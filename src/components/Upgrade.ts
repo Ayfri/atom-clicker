@@ -1,6 +1,8 @@
 import {BigFloat} from 'bigfloat.js';
 import * as PIXI from 'pixi.js';
 import {app, game} from '../app.js';
+import Game from '../elements/Game.js';
+import {JSONObject} from '../types.js';
 import ClickableContainer from './ClickableContainer.js';
 import Overlay from './Overlay.js';
 import {Buyable} from './Buyable.js';
@@ -30,7 +32,7 @@ type ClickAPSUpgrade = {
 };
 
 type ClickUpgrade = {
-	kind: 'click';
+	kind: 'clicks';
 };
 
 type BuildingGlobalUpgrade = {
@@ -112,7 +114,7 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 					: `Add ${this.effect.addition} to ${(this.effect as BuildingUpgrade).building}.`;
 				break;
 
-			case 'click':
+			case 'clicks':
 				result += this.effect.multiplier ? `Multiply clicks by ${this.effect.multiplier * 100}%.` : `Add ${this.effect.addition * 100}% to clicks.`;
 				break;
 
@@ -148,30 +150,34 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		this.overlay.setAPSWaitFromPrice(this.price);
 		this.sprite.tint = this.canBeBought ? 0xffffff : 0xdddddd;
 
+		this.checkUnlock();
+	}
+
+	public checkUnlock(): void {
+		if (!this.condition) this.unlocked = true;
 		switch (this.condition?.kind) {
 			case 'building':
-				if (game.buildings.find(building => building.name === (this.condition as BuildingUpgrade).building).ownedCount >= this.condition.count) this.unlocked = true;
+				this.unlocked = game.buildings?.find(building => building.name === (this.condition as BuildingUpgrade).building)?.ownedCount >= this.condition.count;
 				break;
 
-			case 'click':
-				if (game.totalClicks >= this.condition.count) this.unlocked = true;
+			case 'clicks':
+				this.unlocked = game.totalClicks >= this.condition.count;
 				break;
 
 			case 'buildingGlobal':
-				if (game.buildings.map(building => building.ownedCount).reduce((previousValue, currentValue) => previousValue + currentValue) >= this.condition.count)
-					this.unlocked = true;
+				this.unlocked = game.buildings.map(building => building.ownedCount).reduce((previousValue, currentValue) => previousValue + currentValue) >= this.condition.count;
 				break;
 
 			case 'clickAPS':
-				if (game.atomsPerClicks.greaterThanOrEqualTo(this.condition.count)) this.unlocked = true;
+				this.unlocked = game.atomsPerClicks.greaterThanOrEqualTo(this.condition.count);
 				break;
 
 			case 'atoms':
-				if (game.totalAtomsProduced.greaterThanOrEqualTo(this.condition.count)) this.unlocked = true;
+				this.unlocked = game.totalAtomsProduced.greaterThanOrEqualTo(this.condition.count);
 				break;
 
 			case 'aps':
-				if (game.atomsPerSecond.greaterThanOrEqualTo(this.condition.count)) this.unlocked = true;
+				this.unlocked = game.atomsPerSecond.greaterThanOrEqualTo(this.condition.count);
 				break;
 		}
 	}
@@ -189,7 +195,7 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 					building.boost = this.applyNumberedUpgrade(building.boost);
 					break;
 
-				case 'click':
+				case 'clicks':
 					game.atomsPerClicks = this.applyNumberedUpgrade(game.atomsPerClicks);
 					break;
 
@@ -200,6 +206,7 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 				case 'clickAPS':
 					game.atomsPerClicksAPSBoost = this.applyNumberedUpgrade(game.atomsPerClicksAPSBoost);
 					break;
+
 				case 'aps':
 					game.atomsPerSecondBoost = this.effect.multiplier
 						? game.atomsPerSecondBoost.add(game.atomsPerSecond.mul(this.effect.multiplier - 1))
@@ -212,16 +219,37 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		}
 	}
 
-	public toJSON() {
-		return {
-			name: this.name,
-			description: this.description,
-			condition: this.condition,
-			effect: this.effect,
-			price: this.price,
-			unlocked: this.unlocked,
-			owned: this.owned,
+	public toJSON(): JSONObject | number {
+		let content: JSONObject = {
+			i: game.upgrades.indexOf(this),
 		};
+
+		if (this.owned) content.o = this.owned;
+		else {
+			switch (this.condition?.kind) {
+				case 'aps':
+				case 'building':
+				case 'buildingGlobal':
+				case 'clickAPS':
+					content.u = this.unlocked;
+					break;
+			}
+		}
+
+		if (!Game.isDefaultBuyable(this)) {
+			content = {
+				n: this.name,
+				p: this.price,
+				e: this.effect,
+				c: this.condition,
+			};
+
+			if (this.description) content.d = this.description;
+		}
+
+		if (Object.keys(content).join('') === 'i') return game.upgrades.indexOf(this);
+
+		return content;
 	}
 
 	private applyNumberedUpgrade(value: number): number;
