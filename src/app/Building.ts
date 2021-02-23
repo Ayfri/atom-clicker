@@ -1,9 +1,9 @@
 import {BigFloat} from 'bigfloat.js';
 import {app, game} from '../app.js';
-import Game from '../elements/Game.js';
+import Game from './Game.js';
 import {JSONObject} from '../types.js';
-import ClickableContainer from './ClickableContainer.js';
-import Overlay, {StatsType} from './Overlay.js';
+import ClickableContainer from '../components/ClickableContainer.js';
+import Overlay, {StatsType} from '../components/Overlay.js';
 import {Buyable} from './Buyable.js';
 import * as KeyboardManager from '../utils/KeyboardManager.js';
 

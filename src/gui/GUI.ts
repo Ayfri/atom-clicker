@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import {game} from '../app.js';
-import Button from '../components/Button.js';
+import Button from './Button.js';
 import LoadGUI from './LoadGUI.js';
 import SaveGUI from './SaveGUI.js';
 import Window from './Window.js';

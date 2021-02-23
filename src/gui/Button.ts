@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import ClickableContainer from './ClickableContainer.js';
+import ClickableContainer from '../components/ClickableContainer.js';
 
 export default class Button extends ClickableContainer {
 	public label: PIXI.Text;

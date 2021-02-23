@@ -1,5 +1,5 @@
 import {JSONable} from '../types.js';
-import Overlay from './Overlay.js';
+import Overlay from '../components/Overlay.js';
 
 export interface Buyable extends JSONable {
 	readonly name: string;

@@ -1,9 +1,9 @@
 import {game, loadGameFromSave} from '../app.js';
-import Button from '../components/Button.js';
+import Button from './Button.js';
 import Clickable from '../components/Clickable.js';
 import {JSONObject} from '../types.js';
 import {getTextureByName} from '../utils/utils.js';
-import Game from './Game.js';
+import Game from '../app/Game.js';
 import Window from './Window.js';
 
 export default class LoadGUI extends Window {

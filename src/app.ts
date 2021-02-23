@@ -1,6 +1,6 @@
 import {BigFloat} from 'bigfloat.js';
 import * as PIXI from 'pixi.js';
-import Game from './elements/Game.js';
+import Game from './app/Game.js';
 import {JSONObject} from './types.js';
 
 export let game: Game;
