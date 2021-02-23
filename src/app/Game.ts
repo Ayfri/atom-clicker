@@ -8,7 +8,7 @@ import {Buyable} from './Buyable.js';
 import Clickable from '../components/Clickable.js';
 import Upgrade, {ConditionType, UpgradeType} from './Upgrade.js';
 import {JSONable, JSONObject} from '../types.js';
-import GUI from '../gui/GUI.js';
+import MainGUI from '../gui/MainGUI.js';
 
 export default class Game implements JSONable {
 	private static defaultBuyables: [buildings: Building[], upgrades: Upgrade<UpgradeType, ConditionType>[]] = [[], []];
@@ -23,10 +23,10 @@ export default class Game implements JSONable {
 	public totalAtomsProduced: BigFloat = new BigFloat(0);
 	public totalClicks: number = 0;
 	public upgrades: Upgrade<UpgradeType, ConditionType>[] = [];
-	public gui: GUI;
+	public gui: MainGUI;
 
 	public constructor(save?: JSONObject) {
-		this.gui = new GUI();
+		this.gui = new MainGUI();
 		app.stage.addChild(this.gui.container);
 
 		this.mainAtom = new Clickable(PIXI.Texture.WHITE);
