@@ -79,14 +79,11 @@ export default class Building extends Clickable implements BuildingOptions, Buya
 
 		this.on('click', () => {
 			if (this.canBeBought) {
-				if (KeyboardManager.isPressed('Shift')) {
-					while (this.canBeBought) {
-						game.atomsCount = game.atomsCount.sub(this.price);
-						this.ownedCount++;
-					}
+				do {
+					game.atomsCount = game.atomsCount.sub(this.price);
+					this.ownedCount++;
 				}
-				game.atomsCount = game.atomsCount.sub(this.price);
-				this.ownedCount++;
+				while (this.canBeBought && KeyboardManager.isPressed('Shift')) 
 			}
 		});
 
