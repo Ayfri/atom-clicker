@@ -98,7 +98,7 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 
 		this.on('click', () => this.buy());
 
-		this.on('hover', (position) => {
+		this.on('hover', position => {
 			this.overlay.show();
 			this.overlay.update(position);
 		});
@@ -124,7 +124,9 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 				break;
 
 			case 'clickAPS':
-				result += this.effect.multiplier ? `Multiply the boost of APS to clicks by ${this.effect.multiplier * 100}%.` : `Add ${this.effect.addition * 100}% of APS to clicks.`;
+				result += this.effect.multiplier
+					? `Multiply the boost of APS to clicks by ${this.effect.multiplier * 100}%.`
+					: `Add ${this.effect.addition * 100}% of APS to clicks.`;
 				break;
 
 			case 'aps':

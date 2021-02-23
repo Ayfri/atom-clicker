@@ -3,7 +3,7 @@ import {app, game} from '../app.js';
 import Clickable from '../elements/Clickable.js';
 import Overlay, {StatsType} from '../elements/Overlay.js';
 import {Buyable} from './Buyable.js';
-import KeyboardManager from '../utils/KeyboardManager.js';
+import * as KeyboardManager from '../utils/KeyboardManager.js';
 
 export interface BuildingOptions {
 	readonly name: string;
@@ -79,8 +79,8 @@ export default class Building extends Clickable implements BuildingOptions, Buya
 
 		this.on('click', () => {
 			if (this.canBeBought) {
-				if(KeyboardManager.isPressed('Shift')) {
-					while(this.canBeBought) {
+				if (KeyboardManager.isPressed('Shift')) {
+					while (this.canBeBought) {
 						game.atomsCount = game.atomsCount.sub(this.price);
 						this.ownedCount++;
 					}
@@ -90,7 +90,7 @@ export default class Building extends Clickable implements BuildingOptions, Buya
 			}
 		});
 
-		this.on('hover', (position) => {
+		this.on('hover', position => {
 			this.overlay.show();
 			this.overlay.update(position);
 		});
