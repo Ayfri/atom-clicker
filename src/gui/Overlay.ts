@@ -1,6 +1,6 @@
 import {BigFloat} from 'bigfloat.js';
 import {game} from '../app.js';
-import Window from './Window.js';
+import GUI from './GUI.js';
 
 interface OverlayOptions {
 	description: string;
@@ -16,7 +16,7 @@ export enum StatsType {
 	PRICE = 'PRICE',
 }
 
-export default class Overlay extends Window {
+export default class Overlay extends GUI {
 	public title: PIXI.Text;
 	public description: PIXI.Text;
 	public stats: Map<StatsType, PIXI.Text>;

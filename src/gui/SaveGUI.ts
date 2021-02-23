@@ -2,9 +2,9 @@ import {game} from '../app.js';
 import Clickable from '../components/Clickable.js';
 import {JSONObject} from '../types.js';
 import {getTextureByName} from '../utils/utils.js';
-import Window from './Window.js';
+import GUI from './GUI.js';
 
-export default class SaveGUI extends Window {
+export default class SaveGUI extends GUI {
 	public exitButton: Clickable;
 	public text: HTMLTextAreaElement;
 

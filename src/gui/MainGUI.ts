@@ -3,9 +3,9 @@ import {game} from '../app.js';
 import Button from './Button.js';
 import LoadGUI from './LoadGUI.js';
 import SaveGUI from './SaveGUI.js';
-import Window from './Window.js';
+import GUI from './GUI.js';
 
-export default class MainGUI extends Window {
+export default class MainGUI extends GUI {
 	public atomsCountText: PIXI.Text;
 	public atomsPerClicksText: PIXI.Text;
 	public APSText: PIXI.Text;

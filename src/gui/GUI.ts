@@ -6,7 +6,7 @@ interface WindowOptions {
 	texture?: PIXI.Texture;
 }
 
-export default class Window {
+export default class GUI {
 	public container: PIXI.Container;
 	public background: PIXI.Sprite;
 
