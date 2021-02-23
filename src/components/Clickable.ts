@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import {Button} from '../client/MouseManager.js';
+import {Button} from '../utils/MouseManager.js';
 import EventEmitter from '../utils/EventEmitter.js';
 import {getTextureByName} from '../utils/utils.js';
 
