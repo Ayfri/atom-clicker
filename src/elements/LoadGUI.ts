@@ -53,29 +53,28 @@ export default class LoadGUI extends Window {
 			decompressSave = JSON.parse(save);
 			decompressSave.b = (decompressSave.b as JSONObject[]).map(b => {
 				return typeof b === 'number'
-				       ? {i: Game.getBuyableFromIndex(b, 'building').name}
-				       : typeof b.i === 'number'
-				         ? {
+					? {i: Game.getBuyableFromIndex(b, 'building').name}
+					: typeof b.i === 'number'
+					? {
 							...b,
 							i: Game.getBuyableFromIndex(b.i, 'building')?.name,
-						}
-				         : b;
+					  }
+					: b;
 			}) as JSONObject[];
 			decompressSave.u = (decompressSave.u as JSONObject[]).map(u => {
 				return typeof u === 'number'
-				       ? {i: Game.getBuyableFromIndex(u, 'upgrade')?.name}
-				       : typeof u.i === 'number'
-				         ? {
+					? {i: Game.getBuyableFromIndex(u, 'upgrade')?.name}
+					: typeof u.i === 'number'
+					? {
 							...u,
 							i: Game.getBuyableFromIndex(u.i, 'upgrade')?.name,
-						}
-				         : u;
+					  }
+					: u;
 			}) as JSONObject[];
 			game.gui.loadGUI?.close();
 			game.gui.saveGUI?.close();
 			loadGameFromSave(decompressSave);
-		} catch(ignored) {}
-
+		} catch (ignored) {}
 	}
 
 	public open() {
