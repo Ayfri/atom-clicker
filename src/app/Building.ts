@@ -3,7 +3,7 @@ import {app, game} from '../app.js';
 import Game from './Game.js';
 import {JSONObject} from '../types.js';
 import ClickableContainer from '../components/ClickableContainer.js';
-import Overlay, {StatsType} from '../components/Overlay.js';
+import Overlay, {StatsType} from '../gui/Overlay.js';
 import {Buyable} from './Buyable.js';
 import * as KeyboardManager from '../utils/KeyboardManager.js';
 

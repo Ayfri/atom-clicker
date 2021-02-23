@@ -1,5 +1,6 @@
 import {BigFloat} from 'bigfloat.js';
 import {game} from '../app.js';
+import Window from './Window.js';
 
 interface OverlayOptions {
 	description: string;
@@ -15,20 +16,18 @@ export enum StatsType {
 	PRICE = 'PRICE',
 }
 
-export default class Overlay {
-	public container: PIXI.Container;
-	public sprite: PIXI.Sprite;
+export default class Overlay extends Window {
 	public title: PIXI.Text;
 	public description: PIXI.Text;
 	public stats: Map<StatsType, PIXI.Text>;
 
 	public constructor(options: OverlayOptions) {
-		this.container = new PIXI.Container();
+		super();
 		this.container.visible = false;
 		this.container.zIndex = 100;
 
-		this.sprite = PIXI.Sprite.from(PIXI.Texture.WHITE);
-		this.sprite.height = 80 + Object.keys(options.stats).length * 25;
+		this.background.height = 80 + Object.keys(options.stats).length * 25;
+		this.background.width = 0;
 
 		this.title = new PIXI.Text(options.title);
 		this.title.anchor.set(0.5, 0);
@@ -46,13 +45,12 @@ export default class Overlay {
 			this.stats.set(stat as StatsType, text);
 		}
 
-		this.container.addChild(this.sprite, this.title, this.description, ...this.stats.values());
-		this.sprite.width = this.container.width + 50;
+		this.container.addChild(this.title, this.description, ...this.stats.values());
+		this.background.width = this.container.width + 50;
 	}
 
 	public show() {
 		this.container.visible = true;
-		this.sprite.width = this.container.width + 50;
 	}
 
 	public hide() {
@@ -61,7 +59,13 @@ export default class Overlay {
 
 	public update(position?: PIXI.Point) {
 		this.container.position = position;
-		this.setPositions();
+		this.title.position.x = this.container.width / 2;
+		this.description.position.set(10, 45);
+
+		for (let i = 0; i < this.stats.size; i++) {
+			const stat: PIXI.Text = [...this.stats.values()].sort((stat1, stat2) => stat1.text.localeCompare(stat2.text))[i];
+			stat.position.set(this.container.width / 10, 80 + i * (stat.height + 7));
+		}
 
 		if (position.x + this.container.width > window.innerWidth) this.container.x -= this.container.width;
 		if (position.y + this.container.height > window.innerHeight) this.container.y -= this.container.height;
@@ -73,16 +77,6 @@ export default class Overlay {
 			timeToWaitForBuy.equals(0) && game.atomsCount.lessThan(price)
 				? "Can't be bough."
 				: `Can be bought${timeToWaitForBuy.lessThan(0) ?? game.atomsCount.greaterThanOrEqualTo(price) ? '' : ` in ${timeToWaitForBuy.ceil()} seconds`}.`;
-	}
-
-	private setPositions() {
-		this.title.position.x = this.container.width / 2;
-		this.description.position.set(10, 45);
-
-		for (let i = 0; i < this.stats.size; i++) {
-			const stat: PIXI.Text = [...this.stats.values()].sort((stat1, stat2) => stat1.text.localeCompare(stat2.text))[i];
-			stat.position.set(this.container.width / 10, 80 + i * (stat.height + 7));
-		}
 	}
 }
 

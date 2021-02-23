@@ -4,7 +4,7 @@ import {app, game} from '../app.js';
 import Game from './Game.js';
 import {JSONObject} from '../types.js';
 import ClickableContainer from '../components/ClickableContainer.js';
-import Overlay from '../components/Overlay.js';
+import Overlay from '../gui/Overlay.js';
 import {Buyable} from './Buyable.js';
 
 interface UpgradeOptions {
