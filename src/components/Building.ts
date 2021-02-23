@@ -5,6 +5,7 @@ import {JSONObject} from '../types.js';
 import ClickableContainer from './ClickableContainer.js';
 import Overlay, {StatsType} from './Overlay.js';
 import {Buyable} from './Buyable.js';
+import * as KeyboardManager from '../utils/KeyboardManager.js';
 
 export interface BuildingOptions {
 	readonly name: string;
@@ -79,8 +80,10 @@ export default class Building extends ClickableContainer implements BuildingOpti
 
 		this.on('click', () => {
 			if (this.canBeBought) {
-				game.atomsCount = game.atomsCount.sub(this.price);
-				this.ownedCount++;
+				do {
+					game.atomsCount = game.atomsCount.sub(this.price);
+					this.ownedCount++;
+				} while (this.canBeBought && KeyboardManager.isPressed('Shift'));
 			}
 		});
 
