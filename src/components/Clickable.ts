@@ -12,6 +12,7 @@ export type ClickableEvents = {
 
 export default class Clickable extends EventEmitter<ClickableEvents> {
 	public sprite: PIXI.Sprite;
+	public hover: boolean;
 
 	public constructor(texture: PIXI.Texture | string) {
 		super();
@@ -42,6 +43,9 @@ export default class Clickable extends EventEmitter<ClickableEvents> {
 		this.sprite.on('touchmove', (event: PIXI.InteractionEvent) => {
 			if (event.currentTarget && event.target === this.sprite) this.emit('hoverMove', event.data.global);
 		});
+
+		this.on('hover', () => (this.hover = true));
+		this.on('hoverEnd', () => (this.hover = false));
 	}
 }
 
