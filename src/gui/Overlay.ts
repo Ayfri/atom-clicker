@@ -28,6 +28,7 @@ export default class Overlay extends GUI {
 
 		this.background.height = 80 + Object.keys(options.stats).length * 25;
 		this.background.width = 0;
+		this.background.tint = 0xf0f0f0;
 
 		this.title = new PIXI.Text(options.title);
 		this.title.anchor.set(0.5, 0);
