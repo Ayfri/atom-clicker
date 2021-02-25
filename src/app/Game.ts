@@ -33,7 +33,8 @@ export default class Game implements JSONable {
 		this.mainAtom.sprite.height = 400;
 		this.mainAtom.sprite.width = 400;
 		this.mainAtom.sprite.zIndex = -100;
-		this.mainAtom.sprite.position.set(window.innerWidth / 2 - this.mainAtom.sprite.width / 2, 150);
+		this.mainAtom.sprite.anchor.set(0.5);
+		this.mainAtom.sprite.position.set(window.innerWidth / 2, window.innerHeight / 2.8);
 		app.stage.addChild(this.mainAtom.sprite);
 
 		this.mainAtom.on('click', async (_, position) => {
@@ -127,7 +128,7 @@ export default class Game implements JSONable {
 	public update() {
 		app.stage.sortChildren();
 		this.gui.update();
-		this.mainAtom.sprite.position.x = window.innerWidth / 2 - this.mainAtom.sprite.width / 2;
+		this.mainAtom.sprite.position.x = window.innerWidth / 2;
 
 		this.buildings.forEach((building, index) => {
 			building.update();
