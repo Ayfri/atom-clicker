@@ -1,4 +1,4 @@
-import EventEmitter from './EventEmitter.js';
+import EventEmitter from './EventEmitter';
 
 type KeyboardEvents = {
 	up: [string];

@@ -1,9 +1,9 @@
 import * as PIXI from 'pixi.js';
 import {game} from '../app.js';
-import Button from './Button.js';
-import LoadGUI from './LoadGUI.js';
-import SaveGUI from './SaveGUI.js';
-import GUI from './GUI.js';
+import Button from './Button';
+import GUI from './GUI';
+import LoadGUI from './LoadGUI';
+import SaveGUI from './SaveGUI';
 
 export default class MainGUI extends GUI {
 	public atomsCountText: PIXI.Text;

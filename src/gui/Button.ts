@@ -5,6 +5,12 @@ export default class Button extends ClickableContainer {
 	public label: PIXI.Text;
 	public container: PIXI.Container;
 
+	public update() {
+		super.update();
+		this.label.position.x = this.container.width / 2;
+		this.label.position.y = this.container.height / 2;
+	}
+
 	public constructor(texture: PIXI.Texture | string, text: string = '') {
 		super(texture);
 
@@ -15,11 +21,5 @@ export default class Button extends ClickableContainer {
 		this.sprite.height = this.label.height + 15;
 		this.sprite.width = this.label.width + 15;
 		this.container.addChild(this.sprite, this.label);
-	}
-
-	public update() {
-		super.update();
-		this.label.position.x = this.container.width / 2;
-		this.label.position.y = this.container.height / 2;
 	}
 }

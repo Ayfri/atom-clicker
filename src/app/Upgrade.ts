@@ -1,11 +1,11 @@
 import {BigFloat} from 'bigfloat.js';
 import * as PIXI from 'pixi.js';
 import {app, game} from '../app.js';
-import Game from './Game.js';
-import {JSONObject} from '../types.js';
 import ClickableContainer from '../components/ClickableContainer.js';
 import Overlay from '../gui/Overlay.js';
-import {Buyable} from './Buyable.js';
+import {JSONObject} from '../types.js';
+import {Buyable} from './Buyable';
+import Game from './Game';
 
 interface UpgradeOptions {
 	readonly name: string;

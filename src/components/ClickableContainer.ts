@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import Clickable from './Clickable.js';
+import Clickable from './Clickable';
 
 export default class ClickableContainer extends Clickable {
 	public container: PIXI.Container;

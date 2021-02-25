@@ -1,11 +1,11 @@
 import {BigFloat} from 'bigfloat.js';
 import {app, game} from '../app.js';
-import Game from './Game.js';
-import {JSONObject} from '../types.js';
 import ClickableContainer from '../components/ClickableContainer.js';
 import Overlay, {StatsType} from '../gui/Overlay.js';
-import {Buyable} from './Buyable.js';
+import {JSONObject} from '../types.js';
 import * as KeyboardManager from '../utils/KeyboardManager.js';
+import {Buyable} from './Buyable';
+import Game from './Game';
 
 export interface BuildingOptions {
 	readonly name: string;

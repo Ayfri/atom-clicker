@@ -1,10 +1,10 @@
 import {game, loadGameFromSave} from '../app.js';
-import Button from './Button.js';
+import Game from '../app/Game.js';
 import Clickable from '../components/Clickable.js';
 import {JSONObject} from '../types.js';
 import {getTextureByName} from '../utils/utils.js';
-import Game from '../app/Game.js';
-import GUI from './GUI.js';
+import Button from './Button';
+import GUI from './GUI';
 
 export default class LoadGUI extends GUI {
 	public exitButton: Clickable;

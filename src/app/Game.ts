@@ -3,12 +3,12 @@ import * as PIXI from 'pixi.js';
 import {app} from '../app.js';
 import buildings from '../assets/buildings.json';
 import upgrades from '../assets/upgrades.json';
-import Building, {BuildingOptions} from './Building.js';
-import {Buyable} from './Buyable.js';
 import Clickable from '../components/Clickable.js';
-import Upgrade, {ConditionType, UpgradeType} from './Upgrade.js';
-import {JSONable, JSONObject} from '../types.js';
 import MainGUI from '../gui/MainGUI.js';
+import {JSONable, JSONObject} from '../types.js';
+import Building, {BuildingOptions} from './Building';
+import {Buyable} from './Buyable';
+import Upgrade, {ConditionType, UpgradeType} from './Upgrade';
 
 export default class Game implements JSONable {
 	private static defaultBuyables: [buildings: Building[], upgrades: Upgrade<UpgradeType, ConditionType>[]] = [[], []];

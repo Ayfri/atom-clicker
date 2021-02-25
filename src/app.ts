@@ -1,7 +1,7 @@
 import {BigFloat} from 'bigfloat.js';
 import * as PIXI from 'pixi.js';
-import Game from './app/Game.js';
-import {JSONObject} from './types.js';
+import Game from './app/Game';
+import {JSONObject} from './types';
 
 export let game: Game;
 
@@ -20,7 +20,7 @@ export function loadGameFromSave(save: JSONObject) {
 export const app = new PIXI.Application({
 	antialias: true,
 	resizeTo: window,
-	backgroundColor: 0xbbbbbb,
+	backgroundColor: 0xaaaaaa,
 });
 
 async function loadTextures() {

@@ -1,6 +1,6 @@
 import {BigFloat} from 'bigfloat.js';
 import {game} from '../app.js';
-import GUI from './GUI.js';
+import GUI from './GUI';
 
 interface OverlayOptions {
 	description: string;
