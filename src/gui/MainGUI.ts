@@ -120,6 +120,8 @@ export default class MainGUI extends GUI {
 		this.CPSText.position.set(window.innerWidth / 40, window.innerHeight / 15 + 30);
 		this.saveGUI?.update();
 		this.loadGUI?.update();
+		this.saveButton.update();
+		this.loadButton.update();
 		this.saveButton.container.position.set(0, window.innerHeight - this.saveButton.container.height);
 		this.loadButton.container.position.set(this.saveButton.container.width + 5, window.innerHeight - this.loadButton.container.height);
 

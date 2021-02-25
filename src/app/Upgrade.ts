@@ -141,6 +141,7 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 	}
 
 	public update() {
+		super.update();
 		this.nameText.position.set(5, this.container.height / 10);
 		this.effectText.position.set(5, this.container.height / 2.5);
 		this.priceText.position.set(5, this.container.height - this.container.height / 3.5);
@@ -148,7 +149,7 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		this.sprite.height = window.innerHeight / 12;
 
 		this.overlay.setAPSWaitFromPrice(this.price);
-		this.sprite.tint = this.canBeBought ? 0xffffff : 0xdddddd;
+		this.sprite.tint = this.canBeBought ? 0xffffff : this.color;
 
 		this.checkUnlock();
 	}

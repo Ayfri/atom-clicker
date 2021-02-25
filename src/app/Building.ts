@@ -100,7 +100,7 @@ export default class Building extends ClickableContainer implements BuildingOpti
 	}
 
 	public update() {
-		this.sprite.tint = this.canBeBought ? 0xffffff : 0xdddddd;
+		this.sprite.tint = this.canBeBought ? 0xffffff : this.color;
 
 		this.ownerCountText.text = this.ownedCount.toString();
 		this.priceText.text = `${this.price.toString()} atoms`;
