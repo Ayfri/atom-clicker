@@ -75,6 +75,8 @@ export default class LoadGUI extends GUI {
 			}) as JSONObject[];
 			game.gui.loadGUI?.close();
 			game.gui.saveGUI?.close();
+			game.upgrades.forEach(upgrade => upgrade.overlay.hide());
+			game.buildings.forEach(building => building.overlay.hide());
 			loadGameFromSave(decompressSave);
 		} catch (ignored) {}
 	}
