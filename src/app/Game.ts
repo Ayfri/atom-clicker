@@ -1,3 +1,4 @@
+import TWEEN from '@tweenjs/tween.js';
 import {BigFloat} from 'bigfloat.js';
 import * as PIXI from 'pixi.js';
 import {app} from '../app.js';
@@ -6,6 +7,7 @@ import upgrades from '../assets/upgrades.json';
 import Clickable from '../components/Clickable.js';
 import MainGUI from '../gui/MainGUI.js';
 import {JSONable, JSONObject} from '../types.js';
+import {tween} from '../utils/utils';
 import Building, {BuildingOptions} from './Building';
 import {Buyable} from './Buyable';
 import Upgrade, {ConditionType, UpgradeType} from './Upgrade';
@@ -36,12 +38,59 @@ export default class Game implements JSONable {
 		this.mainAtom.sprite.anchor.set(0.5);
 		this.mainAtom.sprite.position.set(window.innerWidth / 2, window.innerHeight / 2.8);
 		app.stage.addChild(this.mainAtom.sprite);
+		this.mainAtom.on('hover', async () => {
+			await tween({
+				from: 400,
+				to: 430,
+				easing: TWEEN.Easing.Exponential.Out,
+				duration: 200,
+				onUpdate: (value: number) => {
+					this.mainAtom.sprite.width = value;
+					this.mainAtom.sprite.height = value;
+				},
+			});
+		});
+		this.mainAtom.on('hoverEnd', async () => {
+			await tween({
+				from: 430,
+				to: 400,
+				easing: TWEEN.Easing.Circular.Out,
+				duration: 150,
+				onUpdate: (value: number) => {
+					this.mainAtom.sprite.width = value;
+					this.mainAtom.sprite.height = value;
+				},
+			});
+		});
 
 		this.mainAtom.on('click', async (_, position) => {
 			this.atomsCount = this.atomsCount.add(this.totalAtomsPerClicks);
 			this.totalAtomsProduced = this.totalAtomsProduced.add(this.totalAtomsPerClicks);
 			this.totalClicks++;
 			this.gui.click(position);
+
+			await tween({
+				from: this.mainAtom.hover ? 400 : 370,
+				to: this.mainAtom.hover ? 430 : 400,
+				easing: TWEEN.Easing.Bounce.Out,
+				duration: 500,
+				onUpdate: (value: number) => {
+					this.mainAtom.sprite.width = value;
+					this.mainAtom.sprite.height = value;
+				},
+			});
+			if (!this.mainAtom.hover) {
+				await tween({
+					from: 430,
+					to: 400,
+					easing: TWEEN.Easing.Circular.Out,
+					duration: 150,
+					onUpdate: (value: number) => {
+						this.mainAtom.sprite.width = value;
+						this.mainAtom.sprite.height = value;
+					},
+				});
+			}
 		});
 
 		this.setDefaultBuyables();
