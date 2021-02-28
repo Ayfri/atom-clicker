@@ -246,9 +246,9 @@ export default class Game implements JSONable {
 						price: upgrade.price,
 					},
 					upgrade.effect,
-					upgrade.condition,
-				),
-			),
+					upgrade.condition
+				)
+			)
 		);
 
 		Game.defaultBuyables[0].forEach(building => {
@@ -271,8 +271,8 @@ export default class Game implements JSONable {
 							kind: 'building',
 							building: building.name,
 							count: level,
-						},
-					),
+						}
+					)
 				);
 			}
 		});
@@ -292,8 +292,8 @@ export default class Game implements JSONable {
 					{
 						kind: 'clicks',
 						count: level,
-					},
-				),
+					}
+				)
 			);
 		}
 
@@ -312,8 +312,8 @@ export default class Game implements JSONable {
 					{
 						kind: 'atoms',
 						count: level,
-					},
-				),
+					}
+				)
 			);
 		}
 	}
