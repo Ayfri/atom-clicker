@@ -29,7 +29,6 @@ export default class Game implements JSONable {
 
 	public constructor(save?: JSONObject) {
 		this.gui = new MainGUI();
-		app.stage.addChild(this.gui.container);
 
 		this.mainAtom = new Clickable(PIXI.Texture.WHITE);
 		this.mainAtom.sprite.height = 400;
@@ -37,7 +36,6 @@ export default class Game implements JSONable {
 		this.mainAtom.sprite.zIndex = -100;
 		this.mainAtom.sprite.anchor.set(0.5);
 		this.mainAtom.sprite.position.set(window.innerWidth / 2, window.innerHeight / 2.8);
-		app.stage.addChild(this.mainAtom.sprite);
 		this.mainAtom.on('hover', async () => {
 			await tween({
 				from: 400,
@@ -50,6 +48,7 @@ export default class Game implements JSONable {
 				},
 			});
 		});
+
 		this.mainAtom.on('hoverEnd', async () => {
 			await tween({
 				from: 430,
@@ -147,6 +146,8 @@ export default class Game implements JSONable {
 			Game.defaultBuyables[0].forEach(b => this.addBuilding(b));
 			Game.defaultBuyables[1].forEach(u => this.addUpgrade(u));
 		}
+
+		app.stage.addChild(this.mainAtom.sprite, this.gui.container);
 	}
 
 	get totalAtomsPerClicks(): BigFloat {
@@ -245,9 +246,9 @@ export default class Game implements JSONable {
 						price: upgrade.price,
 					},
 					upgrade.effect,
-					upgrade.condition
-				)
-			)
+					upgrade.condition,
+				),
+			),
 		);
 
 		Game.defaultBuyables[0].forEach(building => {
@@ -270,8 +271,8 @@ export default class Game implements JSONable {
 							kind: 'building',
 							building: building.name,
 							count: level,
-						}
-					)
+						},
+					),
 				);
 			}
 		});
@@ -291,8 +292,8 @@ export default class Game implements JSONable {
 					{
 						kind: 'clicks',
 						count: level,
-					}
-				)
+					},
+				),
 			);
 		}
 
@@ -311,8 +312,8 @@ export default class Game implements JSONable {
 					{
 						kind: 'atoms',
 						count: level,
-					}
-				)
+					},
+				),
 			);
 		}
 	}
