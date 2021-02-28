@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import {game} from '../app.js';
+import {game, localSave} from '../app.js';
 import Button from './Button';
 import GUI from './GUI';
 import LoadGUI from './LoadGUI';
@@ -11,8 +11,9 @@ export default class MainGUI extends GUI {
 	public APSText: PIXI.Text;
 	public clicksTexts: PIXI.Text[] = [];
 	public CPSText: PIXI.Text;
+	public exportSaveButton: Button;
+	public loadExportedSaveButton: Button;
 	public saveButton: Button;
-	public loadButton: Button;
 	public saveGUI: SaveGUI;
 	public loadGUI: LoadGUI;
 
@@ -55,8 +56,9 @@ export default class MainGUI extends GUI {
 			this.clicksTexts.push(text);
 		}
 
+		this.exportSaveButton = new Button(PIXI.Texture.WHITE, 'Export Save');
+		this.loadExportedSaveButton = new Button(PIXI.Texture.WHITE, 'Load Exported Save');
 		this.saveButton = new Button(PIXI.Texture.WHITE, 'Save');
-		this.loadButton = new Button(PIXI.Texture.WHITE, 'Load');
 
 		this.container.addChild(
 			this.atomsCountText,
@@ -64,11 +66,14 @@ export default class MainGUI extends GUI {
 			this.atomsPerClicksText,
 			this.CPSText,
 			this.saveButton.container,
-			this.loadButton.container,
+			this.exportSaveButton.container,
+			this.loadExportedSaveButton.container,
 			...this.clicksTexts
 		);
 
-		this.saveButton.on('click', () => {
+		this.saveButton.on('click', () => localSave());
+
+		this.exportSaveButton.on('click', () => {
 			if (!this.saveGUI) this.saveGUI = new SaveGUI();
 			this.saveGUI.open();
 			this.container.addChild(this.saveGUI.container);
@@ -79,7 +84,7 @@ export default class MainGUI extends GUI {
 			});
 		});
 
-		this.loadButton.on('click', () => {
+		this.loadExportedSaveButton.on('click', () => {
 			if (!this.loadGUI) this.loadGUI = new LoadGUI();
 			this.loadGUI.open();
 			this.container.addChild(this.loadGUI.container);
@@ -120,10 +125,12 @@ export default class MainGUI extends GUI {
 		this.CPSText.position.set(window.innerWidth / 40, window.innerHeight / 15 + 30);
 		this.saveGUI?.update();
 		this.loadGUI?.update();
+		this.saveButton.container.position.set(window.innerWidth / 2 - this.saveButton.container.width / 2, window.innerHeight - this.saveButton.container.height);
 		this.saveButton.update();
-		this.loadButton.update();
-		this.saveButton.container.position.set(0, window.innerHeight - this.saveButton.container.height);
-		this.loadButton.container.position.set(this.saveButton.container.width + 5, window.innerHeight - this.loadButton.container.height);
+		this.exportSaveButton.container.position.set(0, window.innerHeight - this.exportSaveButton.container.height);
+		this.exportSaveButton.update();
+		this.loadExportedSaveButton.container.position.set(this.exportSaveButton.container.width + 5, window.innerHeight - this.loadExportedSaveButton.container.height);
+		this.loadExportedSaveButton.update();
 
 		this.clicksTexts
 			.filter(text => text.visible)
