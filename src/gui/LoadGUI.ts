@@ -4,9 +4,10 @@ import Clickable from '../components/Clickable.js';
 import {JSONObject} from '../types.js';
 import {getTextureByName} from '../utils/utils.js';
 import Button from './Button';
+import ClosableGUI from './ClosableGUI';
 import GUI from './GUI';
 
-export default class LoadGUI extends GUI {
+export default class LoadGUI extends ClosableGUI {
 	public exitButton: Clickable;
 	public input: HTMLTextAreaElement;
 	public loadButton: Button;
@@ -22,10 +23,7 @@ export default class LoadGUI extends GUI {
 		this.loadButton.hoverColor = 0xf5f5f5;
 		this.background.tint = 0xd6d6d6;
 
-		this.exitButton = new Clickable(getTextureByName('x'));
-		this.exitButton.sprite.anchor.set(0.5, 0.5);
-		this.exitButton.sprite.position.set(this.container.width - this.exitButton.sprite.height / 2 - 10, this.exitButton.sprite.height - 10);
-		this.container.addChild(this.loadButton.container, this.exitButton.sprite);
+		this.container.addChild(this.loadButton.container);
 
 		this.input = document.createElement('textarea');
 		this.input.style.padding = '5px';
@@ -81,10 +79,12 @@ export default class LoadGUI extends GUI {
 	}
 
 	public close() {
+		super.close();
 		this.input.style.visibility = 'hidden';
 	}
 
 	public open() {
+		super.open();
 		this.input.style.visibility = 'visible';
 	}
 
@@ -95,7 +95,6 @@ export default class LoadGUI extends GUI {
 	public resize() {
 		this.background.width = window.innerWidth / 3;
 		this.background.height = window.innerHeight / 2.5;
-		this.exitButton.sprite.position.set(this.container.width - this.exitButton.sprite.height / 2 - 10, this.exitButton.sprite.height - 10);
 		this.loadButton.resize();
 		this.loadButton.container.position.set(this.container.width / 2 - this.loadButton.container.width / 2, 10);
 

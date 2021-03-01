@@ -3,6 +3,7 @@ import {game, localSave} from '../app.js';
 import Button from './Button';
 import GUI from './GUI';
 import LoadGUI from './LoadGUI';
+import ResetGUI from './ResetGUI';
 import SaveGUI from './SaveGUI';
 
 export default class MainGUI extends GUI {
@@ -15,6 +16,8 @@ export default class MainGUI extends GUI {
 	public exportSaveButton: Button;
 	public loadExportedSaveButton: Button;
 	public loadGUI: LoadGUI;
+	public resetButton: Button;
+	public resetGUI: ResetGUI;
 	public saveButton: Button;
 	public saveGUI: SaveGUI;
 	private lastTime: number = Date.now();
@@ -65,6 +68,11 @@ export default class MainGUI extends GUI {
 		this.exportSaveButton = new Button(PIXI.Texture.WHITE, 'Export Save');
 		this.loadExportedSaveButton = new Button(PIXI.Texture.WHITE, 'Load Exported Save');
 		this.saveButton = new Button(PIXI.Texture.WHITE, 'Save');
+		this.resetButton = new Button(PIXI.Texture.WHITE, 'RESET');
+
+		this.resetGUI = new ResetGUI();
+		this.loadGUI = new LoadGUI();
+		this.saveGUI = new SaveGUI();
 
 		this.container.addChild(
 			this.atomsCountText,
@@ -75,33 +83,21 @@ export default class MainGUI extends GUI {
 			this.saveButton.container,
 			this.exportSaveButton.container,
 			this.loadExportedSaveButton.container,
+			this.resetButton.container,
+			this.resetGUI.container,
+			this.saveGUI.container,
+			this.loadGUI.container,
 			...this.clicksTexts
 		);
 		this.resize();
 
 		this.saveButton.on('click', () => localSave());
 
-		this.exportSaveButton.on('click', () => {
-			if (!this.saveGUI) this.saveGUI = new SaveGUI();
-			this.saveGUI.open();
-			this.container.addChild(this.saveGUI.container);
+		this.exportSaveButton.on('click', () => this.saveGUI.open());
 
-			this.saveGUI.exitButton.on('click', () => {
-				this.saveGUI.close();
-				this.container.removeChild(this.saveGUI.container);
-			});
-		});
+		this.loadExportedSaveButton.on('click', () => this.loadGUI.open());
 
-		this.loadExportedSaveButton.on('click', () => {
-			if (!this.loadGUI) this.loadGUI = new LoadGUI();
-			this.loadGUI.open();
-			this.container.addChild(this.loadGUI.container);
-
-			this.loadGUI.exitButton.on('click', () => {
-				this.loadGUI.close();
-				this.container.removeChild(this.loadGUI.container);
-			});
-		});
+		this.resetButton.on('click', () => this.resetGUI.open());
 	}
 
 	public get clicksPerSeconds(): number {
@@ -136,6 +132,7 @@ export default class MainGUI extends GUI {
 		this.saveButton.resize();
 		this.exportSaveButton.resize();
 		this.loadExportedSaveButton.resize();
+		this.resetButton.resize();
 	}
 
 	public update() {
@@ -148,6 +145,7 @@ export default class MainGUI extends GUI {
 		this.saveButton.update();
 		this.exportSaveButton.update();
 		this.loadExportedSaveButton.update();
+		this.resetButton.update();
 		this.loadGUI?.update();
 
 		this.clicksTexts
