@@ -154,7 +154,7 @@ export default class Game implements JSONable {
 	}
 
 	get totalAtomsPerClicks(): BigFloat {
-		return this.atomsPerClicks.add(this.atomsPerSecond.mul(this.atomsPerClicksAPSBoost)).mul(100).floor().add(1).div(100);
+		return this.atomsPerClicks.add(this.atomsPerSecond.mul(this.atomsPerClicksAPSBoost)).mul(100).floor().div(100);
 	}
 
 	get totalAtomsPerSecond(): BigFloat {
