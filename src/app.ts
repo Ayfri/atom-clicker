@@ -31,7 +31,8 @@ async function setup() {
 
 	setInterval(() => localSave(), 1000 * 30);
 }
-function localSave() {
+
+export function localSave() {
 	localStorage.setItem('save', SaveGUI.generateSave());
 	const popup = new GUI({
 		texture: PIXI.Texture.WHITE,

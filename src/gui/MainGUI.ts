@@ -11,11 +11,14 @@ export default class MainGUI extends GUI {
 	public APSText: PIXI.Text;
 	public clicksTexts: PIXI.Text[] = [];
 	public CPSText: PIXI.Text;
+	public FPSText: PIXI.Text;
 	public exportSaveButton: Button;
 	public loadExportedSaveButton: Button;
 	public saveButton: Button;
 	public saveGUI: SaveGUI;
 	public loadGUI: LoadGUI;
+	private lastTime: number = Date.now();
+	private timeValues: number[] = [];
 
 	public constructor() {
 		super({
@@ -48,6 +51,9 @@ export default class MainGUI extends GUI {
 		this.CPSText.anchor.set(0, 0.5);
 		this.CPSText.position.set(window.innerWidth / 40, window.innerHeight / 15 + 30);
 
+		this.FPSText = new PIXI.Text('');
+		this.FPSText.anchor.set(1, 1);
+
 		for (let i = 0; i < 50; i++) {
 			const text: PIXI.Text = new PIXI.Text('');
 			text.visible = false;
@@ -65,10 +71,11 @@ export default class MainGUI extends GUI {
 			this.APSText,
 			this.atomsPerClicksText,
 			this.CPSText,
+			this.FPSText,
 			this.saveButton.container,
 			this.exportSaveButton.container,
 			this.loadExportedSaveButton.container,
-			...this.clicksTexts
+			...this.clicksTexts,
 		);
 
 		this.saveButton.on('click', () => localSave());
@@ -123,12 +130,41 @@ export default class MainGUI extends GUI {
 
 		this.CPSText.text = `Clicks per second: ${this.clicksPerSeconds}`;
 		this.CPSText.position.set(window.innerWidth / 40, window.innerHeight / 15 + 30);
+		const safeStringify = (obj: any, indent = 2) => {
+			let cache: any[] = [];
+			const retVal = JSON.stringify(
+				obj,
+				(key, value) =>
+					typeof value === 'object' && value !== null
+					? cache.includes(value)
+					  ? undefined // Duplicate reference found, discard key
+					  : cache.push(value) && value // Store value in our collection
+					: value,
+				indent,
+			);
+			cache = null;
+			return retVal;
+		};
+
+		const currentTime = Date.now();
+		this.timeValues.push(1000 / (currentTime - this.lastTime));
+		if (this.timeValues.length === 30) {
+			const total = this.timeValues.reduce((p: number, a: number) => p + a);
+			this.FPSText.text = `FPS : ${(total / 30).toFixed(2)}`;
+			this.timeValues = [];
+		}
+		this.lastTime = currentTime;
+
+		this.FPSText.position.set(window.innerWidth - 80, this.FPSText.height);
+
 		this.saveGUI?.update();
 		this.loadGUI?.update();
+
 		this.saveButton.container.position.set(window.innerWidth / 2 - this.saveButton.container.width / 2, window.innerHeight - this.saveButton.container.height);
 		this.saveButton.update();
 		this.exportSaveButton.container.position.set(0, window.innerHeight - this.exportSaveButton.container.height);
 		this.exportSaveButton.update();
+
 		this.loadExportedSaveButton.container.position.set(this.exportSaveButton.container.width + 5, window.innerHeight - this.loadExportedSaveButton.container.height);
 		this.loadExportedSaveButton.update();
 
