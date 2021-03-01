@@ -90,13 +90,11 @@ export default class MainGUI extends GUI {
 			...this.clicksTexts
 		);
 		this.resize();
+		this.resetGUI.open();
 
 		this.saveButton.on('click', () => localSave());
-
 		this.exportSaveButton.on('click', () => this.saveGUI.open());
-
 		this.loadExportedSaveButton.on('click', () => this.loadGUI.open());
-
 		this.resetButton.on('click', () => this.resetGUI.open());
 	}
 
@@ -122,8 +120,9 @@ export default class MainGUI extends GUI {
 		this.CPSText.position.set(window.innerWidth / 40, window.innerHeight / 15 + 30);
 		this.FPSText.position.set(window.innerWidth - 80, this.FPSText.height);
 
-		this.saveGUI?.resize();
-		this.loadGUI?.resize();
+		this.saveGUI.resize();
+		this.loadGUI.resize();
+		this.resetGUI.resize();
 
 		this.saveButton.container.position.set(window.innerWidth / 2 - this.saveButton.container.width / 2, window.innerHeight - this.saveButton.container.height);
 		this.exportSaveButton.container.position.set(0, window.innerHeight - this.exportSaveButton.container.height);
@@ -146,7 +145,8 @@ export default class MainGUI extends GUI {
 		this.exportSaveButton.update();
 		this.loadExportedSaveButton.update();
 		this.resetButton.update();
-		this.loadGUI?.update();
+		this.loadGUI.update();
+		this.resetGUI.update();
 
 		this.clicksTexts
 			.filter(text => text.visible)
