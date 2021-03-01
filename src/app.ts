@@ -83,6 +83,7 @@ export function resetGame(save?: JSONObject) {
 	game.resetDefaultBuyables();
 	game = new Game(save);
 	(window as any).game = game;
+	game.resize();
 }
 
 setup().then(() => {
