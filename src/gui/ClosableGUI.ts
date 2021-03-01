@@ -3,10 +3,11 @@ import {getTextureByName} from '../utils/utils';
 import GUI, {GUIOptions} from './GUI';
 
 export default class ClosableGUI extends GUI {
-    public exitButton: Clickable;
+	public exitButton: Clickable;
 
 	public constructor(options?: GUIOptions) {
 		super(options);
+		this.background.tint = 0xd6d6d6;
 
 		this.exitButton = new Clickable(getTextureByName('x'));
 		this.exitButton.sprite.anchor.set(0.5, 0.5);
@@ -19,6 +20,7 @@ export default class ClosableGUI extends GUI {
 
 	public open() {
 		this.container.visible = true;
+		this.resize();
 	}
 
 	public close() {

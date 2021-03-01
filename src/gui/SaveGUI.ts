@@ -1,9 +1,6 @@
 import {game} from '../app.js';
-import Clickable from '../components/Clickable.js';
 import {JSONObject} from '../types.js';
-import {getTextureByName} from '../utils/utils.js';
 import ClosableGUI from './ClosableGUI';
-import GUI from './GUI';
 
 export default class SaveGUI extends ClosableGUI {
 	public text: HTMLTextAreaElement;
@@ -13,8 +10,6 @@ export default class SaveGUI extends ClosableGUI {
 			width: window.innerWidth / 3,
 			height: window.innerHeight / 3,
 		});
-
-		this.background.tint = 0xd6d6d6;
 
 		this.text = document.createElement('textarea');
 		this.text.readOnly = true;
@@ -60,10 +55,10 @@ export default class SaveGUI extends ClosableGUI {
 	}
 
 	public resize() {
-		super.resize();
 		this.background.width = window.innerWidth / 3;
 		this.background.height = window.innerHeight / 3;
 
 		this.container.position.set((window.innerWidth - this.container.width) / 2, (window.innerHeight - this.container.height) / 2);
+		super.resize();
 	}
 }
