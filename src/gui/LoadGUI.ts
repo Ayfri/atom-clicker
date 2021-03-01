@@ -1,4 +1,4 @@
-import {game, loadGameFromSave} from '../app.js';
+import {resetGame} from '../app.js';
 import Game from '../app/Game.js';
 import Clickable from '../components/Clickable.js';
 import {JSONObject} from '../types.js';
@@ -67,11 +67,7 @@ export default class LoadGUI extends ClosableGUI {
 					  }
 					: u;
 			}) as JSONObject[];
-			game.gui.loadGUI?.close();
-			game.gui.saveGUI?.close();
-			game.upgrades.forEach(upgrade => upgrade.overlay.hide());
-			game.buildings.forEach(building => building.overlay.hide());
-			loadGameFromSave(decompressSave);
+			resetGame(decompressSave);
 		} catch (ignored) {}
 	}
 

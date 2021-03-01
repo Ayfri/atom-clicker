@@ -90,7 +90,6 @@ export default class MainGUI extends GUI {
 			...this.clicksTexts
 		);
 		this.resize();
-		this.resetGUI.open();
 
 		this.saveButton.on('click', () => localSave());
 		this.exportSaveButton.on('click', () => this.saveGUI.open());
@@ -127,6 +126,7 @@ export default class MainGUI extends GUI {
 		this.saveButton.container.position.set(window.innerWidth / 2 - this.saveButton.container.width / 2, window.innerHeight - this.saveButton.container.height);
 		this.exportSaveButton.container.position.set(0, window.innerHeight - this.exportSaveButton.container.height);
 		this.loadExportedSaveButton.container.position.set(this.exportSaveButton.container.width + 5, window.innerHeight - this.loadExportedSaveButton.container.height);
+		this.resetButton.container.position.set(window.innerWidth - this.resetButton.container.width, window.innerHeight - this.resetButton.container.height);
 
 		this.saveButton.resize();
 		this.exportSaveButton.resize();
