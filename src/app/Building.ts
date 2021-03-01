@@ -97,7 +97,7 @@ export default class Building extends ClickableContainer implements BuildingOpti
 	public readonly startingPrice: number;
 
 	get totalAtomPerSecond(): BigFloat {
-		return new BigFloat(this.atomsPerSecond).mul(this.ownedCount).mul(this.boost);
+		return new BigFloat(this.atomsPerSecond).mul(this.ownedCount).mul(this.boost).mul(1000).floor().add(1).div(1000);
 	}
 
 	public resize() {

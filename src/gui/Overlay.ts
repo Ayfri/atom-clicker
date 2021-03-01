@@ -66,11 +66,11 @@ export default class Overlay extends GUI {
 	}
 
 	public setAPSWaitFromPrice(price: BigFloat | number) {
-		const timeToWaitForBuy: BigFloat = new BigFloat(price).minus(game.atomsCount).div(game.totalAtomsPerSecond);
+		const timeToWaitForBuy = Number(new BigFloat(price).minus(game.atomsCount).div(game.totalAtomsPerSecond).toString());
 		this.stats.get(StatsType.APS_WAIT_TIME).text =
-			timeToWaitForBuy.equals(0) && game.atomsCount.lessThan(price)
+			timeToWaitForBuy === 0 && game.atomsCount.lessThan(price)
 				? "Can't be bough."
-				: `Can be bought${timeToWaitForBuy.lessThan(0) ?? game.atomsCount.greaterThanOrEqualTo(price) ? '' : ` in ${timeToWaitForBuy.ceil()} seconds`}.`;
+				: `Can be bought${timeToWaitForBuy < 0 ?? game.atomsCount.greaterThanOrEqualTo(price) ? '' : ` in ${Math.ceil(timeToWaitForBuy)} seconds`}.`;
 	}
 
 	public show() {
