@@ -96,7 +96,7 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 	}
 
 	public get canBeBought(): boolean {
-		return game.atomsCount.greaterThanOrEqualTo(this.price);
+		return game.atomsCount.greaterThan(this.price - 1);
 	}
 
 	public readonly name: string;
@@ -250,7 +250,7 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 	public update() {
 		super.update();
 
-		this.overlay.setAPSWaitFromPrice(this.price);
+		if (this.overlay.container.visible) this.overlay.setAPSWaitFromPrice(this.price);
 		this.sprite.tint = this.canBeBought ? 0xffffff : this.color;
 		this.checkUnlock();
 	}

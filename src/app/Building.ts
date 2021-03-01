@@ -81,7 +81,7 @@ export default class Building extends ClickableContainer implements BuildingOpti
 	}
 
 	get canBeBought(): boolean {
-		return game.atomsCount.greaterThanOrEqualTo(this.price);
+		return game.atomsCount.greaterThan(this.price - 1);
 	}
 
 	public readonly name: string;
@@ -89,7 +89,7 @@ export default class Building extends ClickableContainer implements BuildingOpti
 	public overlay: Overlay;
 
 	get price(): number {
-		return Math.round(this.startingPrice * this.priceMultiplier ** this.ownedCount * 100) / 100;
+		return Math.round(this.startingPrice * this.priceMultiplier ** this.ownedCount);
 	}
 
 	public priceText: PIXI.Text;
@@ -97,7 +97,7 @@ export default class Building extends ClickableContainer implements BuildingOpti
 	public readonly startingPrice: number;
 
 	get totalAtomPerSecond(): BigFloat {
-		return new BigFloat(this.atomsPerSecond).mul(this.ownedCount).mul(this.boost).mul(1000).floor().add(1).div(1000);
+		return new BigFloat(this.atomsPerSecond).mul(this.ownedCount).mul(this.boost).mul(1000).floor().div(1000);
 	}
 
 	public resize() {
@@ -140,15 +140,17 @@ export default class Building extends ClickableContainer implements BuildingOpti
 		this.ownerCountText.text = this.ownedCount.toString();
 		this.priceText.text = `${this.price.toString()} atoms`;
 
-		this.overlay.setAPSWaitFromPrice(this.price);
-		this.overlay.stats.get(StatsType.PRICE).text = `Price: ${this.price}`;
-		this.overlay.stats.get(StatsType.EFFICIENCY_TOTAL).text = `Atoms per second in total : ${this.totalAtomPerSecond.mul(10).floor().div(10)}`;
-		this.overlay.stats.get(StatsType.EFFICIENCY_EACH).text = `Atoms per second for each building : ${this.atomsPerSecond * this.boost}`;
-		this.overlay.stats.get(StatsType.EFFICIENCY_TOTAL_PERCENTAGE).text = `Atoms per second in total : ${new BigFloat(this.totalAtomPerSecond)
-			.div(game.atomsPerSecond)
-			.mul(10000)
-			.floor()
-			.div(100)}%`;
+		if (this.overlay.container.visible) {
+			this.overlay.setAPSWaitFromPrice(this.price);
+			this.overlay.stats.get(StatsType.PRICE).text = `Price: ${this.price}`;
+			this.overlay.stats.get(StatsType.EFFICIENCY_TOTAL).text = `Atoms per second in total : ${this.totalAtomPerSecond.mul(10).floor().div(10)}`;
+			this.overlay.stats.get(StatsType.EFFICIENCY_EACH).text = `Atoms per second for each building : ${this.atomsPerSecond * this.boost}`;
+			this.overlay.stats.get(StatsType.EFFICIENCY_TOTAL_PERCENTAGE).text = `Atoms per second in total : ${new BigFloat(this.totalAtomPerSecond)
+				.div(game.atomsPerSecond)
+				.mul(10000)
+				.floor()
+				.div(100)}%`;
+		}
 	}
 }
 
