@@ -1,14 +1,14 @@
 import * as PIXI from 'pixi.js';
 
 interface WindowOptions {
-	width?: number;
 	height?: number;
 	texture?: PIXI.Texture;
+	width?: number;
 }
 
 export default class GUI {
-	public container: PIXI.Container;
 	public background: PIXI.Sprite;
+	public container: PIXI.Container;
 
 	public constructor(options?: WindowOptions) {
 		this.container = new PIXI.Container();

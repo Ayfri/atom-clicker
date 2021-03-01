@@ -13,11 +13,11 @@ export function sleep(ms: number): Promise<unknown> {
 }
 
 interface TweenOptions {
-	from: number;
-	to: number;
 	duration: number;
-	onUpdate: (value: number) => unknown;
 	easing: (value: number) => number;
+	from: number;
+	onUpdate: (value: number) => unknown;
+	to: number;
 }
 
 export function tween(options: TweenOptions): Promise<void> {

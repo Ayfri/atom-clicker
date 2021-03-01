@@ -53,20 +53,20 @@ export default class SaveGUI extends GUI {
 		return btoa(data.toString());
 	}
 
+	public close() {
+		this.text.style.visibility = 'hidden';
+	}
+
 	public open() {
 		this.text.textContent = SaveGUI.generateSave();
 		this.text.style.visibility = 'visible';
 	}
 
-	public close() {
-		this.text.style.visibility = 'hidden';
-	}
-
-	public update() {
+	public resize() {
 		this.background.width = window.innerWidth / 3;
 		this.background.height = window.innerHeight / 3;
-		this.exitButton.sprite.position.set(this.container.width - this.exitButton.sprite.height / 2 - 10, this.exitButton.sprite.height - 10);
 
+		this.exitButton.sprite.position.set(this.container.width - this.exitButton.sprite.height / 2 - 10, this.exitButton.sprite.height - 10);
 		this.container.position.set((window.innerWidth - this.container.width) / 2, (window.innerHeight - this.container.height) / 2);
 	}
 }

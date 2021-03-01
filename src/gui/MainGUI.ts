@@ -6,17 +6,17 @@ import LoadGUI from './LoadGUI';
 import SaveGUI from './SaveGUI';
 
 export default class MainGUI extends GUI {
-	public atomsCountText: PIXI.Text;
-	public atomsPerClicksText: PIXI.Text;
 	public APSText: PIXI.Text;
-	public clicksTexts: PIXI.Text[] = [];
 	public CPSText: PIXI.Text;
 	public FPSText: PIXI.Text;
+	public atomsCountText: PIXI.Text;
+	public atomsPerClicksText: PIXI.Text;
+	public clicksTexts: PIXI.Text[] = [];
 	public exportSaveButton: Button;
 	public loadExportedSaveButton: Button;
+	public loadGUI: LoadGUI;
 	public saveButton: Button;
 	public saveGUI: SaveGUI;
-	public loadGUI: LoadGUI;
 	private lastTime: number = Date.now();
 	private timeValues: number[] = [];
 
@@ -75,8 +75,9 @@ export default class MainGUI extends GUI {
 			this.saveButton.container,
 			this.exportSaveButton.container,
 			this.loadExportedSaveButton.container,
-			...this.clicksTexts,
+			...this.clicksTexts
 		);
+		this.resize();
 
 		this.saveButton.on('click', () => localSave());
 
@@ -118,34 +119,46 @@ export default class MainGUI extends GUI {
 		setTimeout(() => (text.visible = false), 1000);
 	}
 
+	public resize() {
+		this.atomsCountText.position.x = window.innerWidth / 2;
+		this.atomsPerClicksText.position.set(window.innerWidth / 40, window.innerHeight / 15);
+		this.APSText.position.x = window.innerWidth / 2;
+		this.CPSText.position.set(window.innerWidth / 40, window.innerHeight / 15 + 30);
+		this.FPSText.position.set(window.innerWidth - 80, this.FPSText.height);
+
+		this.saveGUI?.resize();
+		this.loadGUI?.resize();
+
+		this.saveButton.container.position.set(window.innerWidth / 2 - this.saveButton.container.width / 2, window.innerHeight - this.saveButton.container.height);
+		this.exportSaveButton.container.position.set(0, window.innerHeight - this.exportSaveButton.container.height);
+		this.loadExportedSaveButton.container.position.set(this.exportSaveButton.container.width + 5, window.innerHeight - this.loadExportedSaveButton.container.height);
+
+		this.saveButton.resize();
+		this.exportSaveButton.resize();
+		this.loadExportedSaveButton.resize();
+	}
+
 	public update() {
 		this.atomsCountText.text = `${game.atomsCount.toString().split('.')[0]} atoms`;
-		this.atomsCountText.position.x = window.innerWidth / 2;
-
 		this.APSText.text = `per second: ${game.totalAtomsPerSecond.toString().replace(/(\d+\.\d{2})\d+/g, '$1')}`;
-		this.APSText.position.x = window.innerWidth / 2;
-
 		this.atomsPerClicksText.text = `Atoms per clicks: ${game.totalAtomsPerClicks.toString()}`;
-		this.atomsPerClicksText.position.set(window.innerWidth / 40, window.innerHeight / 15);
-
 		this.CPSText.text = `Clicks per second: ${this.clicksPerSeconds}`;
-		this.CPSText.position.set(window.innerWidth / 40, window.innerHeight / 15 + 30);
-		const safeStringify = (obj: any, indent = 2) => {
-			let cache: any[] = [];
-			const retVal = JSON.stringify(
-				obj,
-				(key, value) =>
-					typeof value === 'object' && value !== null
-					? cache.includes(value)
-					  ? undefined // Duplicate reference found, discard key
-					  : cache.push(value) && value // Store value in our collection
-					: value,
-				indent,
-			);
-			cache = null;
-			return retVal;
-		};
+		this.setFPS();
 
+		this.saveButton.update();
+		this.exportSaveButton.update();
+		this.loadExportedSaveButton.update();
+		this.loadGUI?.update();
+
+		this.clicksTexts
+			.filter(text => text.visible)
+			.forEach(text => {
+				text.position.y--;
+				text.alpha -= 1 / PIXI.Ticker.shared.FPS;
+			});
+	}
+
+	private setFPS(): void {
 		const currentTime = Date.now();
 		this.timeValues.push(1000 / (currentTime - this.lastTime));
 		if (this.timeValues.length === 30) {
@@ -154,25 +167,5 @@ export default class MainGUI extends GUI {
 			this.timeValues = [];
 		}
 		this.lastTime = currentTime;
-
-		this.FPSText.position.set(window.innerWidth - 80, this.FPSText.height);
-
-		this.saveGUI?.update();
-		this.loadGUI?.update();
-
-		this.saveButton.container.position.set(window.innerWidth / 2 - this.saveButton.container.width / 2, window.innerHeight - this.saveButton.container.height);
-		this.saveButton.update();
-		this.exportSaveButton.container.position.set(0, window.innerHeight - this.exportSaveButton.container.height);
-		this.exportSaveButton.update();
-
-		this.loadExportedSaveButton.container.position.set(this.exportSaveButton.container.width + 5, window.innerHeight - this.loadExportedSaveButton.container.height);
-		this.loadExportedSaveButton.update();
-
-		this.clicksTexts
-			.filter(text => text.visible)
-			.forEach(text => {
-				text.position.y--;
-				text.alpha -= 1 / PIXI.Ticker.shared.FPS;
-			});
 	}
 }

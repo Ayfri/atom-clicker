@@ -11,8 +11,8 @@ export type ClickableEvents = {
 };
 
 export default class Clickable extends EventEmitter<ClickableEvents> {
-	public sprite: PIXI.Sprite;
 	public hover: boolean;
+	public sprite: PIXI.Sprite;
 
 	public constructor(texture: PIXI.Texture | string) {
 		super();

@@ -8,34 +8,19 @@ import {Buyable} from './Buyable';
 import Game from './Game';
 
 export interface BuildingOptions {
-	readonly name: string;
-	readonly description: string;
-	readonly startingPrice: number;
 	readonly atomsPerSecond: number;
+	readonly description: string;
+	readonly name: string;
 	priceMultiplier?: number;
+	readonly startingPrice: number;
 }
 
 export default class Building extends ClickableContainer implements BuildingOptions, Buyable {
-	public readonly name: string;
-
-	get price(): number {
-		return Math.round(this.startingPrice * this.priceMultiplier ** this.ownedCount * 100) / 100;
-	}
-
-	get canBeBought(): boolean {
-		return game.atomsCount.greaterThanOrEqualTo(this.price);
-	}
-
-	public overlay: Overlay;
-	public priceText: PIXI.Text;
-	public nameText: PIXI.Text;
-	public readonly description: string;
-	public readonly startingPrice: number;
 	public readonly atomsPerSecond: number;
-	public priceMultiplier: number = 1.2;
+	public readonly description: string;
+	public boost: number = 1;
 	public ownedCount: number = 0;
 	public ownerCountText: PIXI.Text;
-	public boost: number = 1;
 
 	public constructor(options: BuildingOptions) {
 		super(PIXI.Texture.WHITE);
@@ -89,37 +74,38 @@ export default class Building extends ClickableContainer implements BuildingOpti
 
 		this.on('hover', position => {
 			this.overlay.show();
-			this.overlay.update(position);
+			this.overlay.resize(position);
 		});
 		this.on('hoverMove', position => this.overlay.update(position));
 		this.on('hoverEnd', () => this.overlay.hide());
 	}
 
+	get canBeBought(): boolean {
+		return game.atomsCount.greaterThanOrEqualTo(this.price);
+	}
+
+	public readonly name: string;
+	public nameText: PIXI.Text;
+	public overlay: Overlay;
+
+	get price(): number {
+		return Math.round(this.startingPrice * this.priceMultiplier ** this.ownedCount * 100) / 100;
+	}
+
+	public priceText: PIXI.Text;
+	public priceMultiplier: number = 1.2;
+	public readonly startingPrice: number;
+
 	get totalAtomPerSecond(): BigFloat {
 		return new BigFloat(this.atomsPerSecond).mul(this.ownedCount).mul(this.boost);
 	}
 
-	public update() {
-		this.sprite.tint = this.canBeBought ? 0xffffff : this.color;
-
-		this.ownerCountText.text = this.ownedCount.toString();
-		this.priceText.text = `${this.price.toString()} atoms`;
-
+	public resize() {
 		this.sprite.height = window.innerHeight / 15;
 		this.sprite.width = 100 + window.innerWidth / 8;
 		this.ownerCountText.position.set(this.sprite.width - this.sprite.width / 5, this.sprite.height / 2);
 		this.priceText.position.set(this.sprite.width / 3, this.sprite.height - this.sprite.height / 4);
 		this.nameText.position.set(this.sprite.width / 3, this.sprite.height / 4);
-
-		this.overlay.setAPSWaitFromPrice(this.price);
-		this.overlay.stats.get(StatsType.PRICE).text = `Price: ${this.price}`;
-		this.overlay.stats.get(StatsType.EFFICIENCY_TOTAL).text = `Atoms per second in total : ${this.totalAtomPerSecond.mul(10).floor().div(10)}`;
-		this.overlay.stats.get(StatsType.EFFICIENCY_EACH).text = `Atoms per second for each building : ${this.atomsPerSecond * this.boost}`;
-		this.overlay.stats.get(StatsType.EFFICIENCY_TOTAL_PERCENTAGE).text = `Atoms per second in total : ${new BigFloat(this.totalAtomPerSecond)
-			.div(game.atomsPerSecond)
-			.mul(10000)
-			.floor()
-			.div(100)}%`;
 	}
 
 	public toJSON() {
@@ -145,6 +131,24 @@ export default class Building extends ClickableContainer implements BuildingOpti
 		if (Object.keys(content).join('') === 'i') return game.buildings.indexOf(this);
 
 		return content;
+	}
+
+	public update() {
+		super.update();
+		this.sprite.tint = this.canBeBought ? 0xffffff : this.color;
+
+		this.ownerCountText.text = this.ownedCount.toString();
+		this.priceText.text = `${this.price.toString()} atoms`;
+
+		this.overlay.setAPSWaitFromPrice(this.price);
+		this.overlay.stats.get(StatsType.PRICE).text = `Price: ${this.price}`;
+		this.overlay.stats.get(StatsType.EFFICIENCY_TOTAL).text = `Atoms per second in total : ${this.totalAtomPerSecond.mul(10).floor().div(10)}`;
+		this.overlay.stats.get(StatsType.EFFICIENCY_EACH).text = `Atoms per second for each building : ${this.atomsPerSecond * this.boost}`;
+		this.overlay.stats.get(StatsType.EFFICIENCY_TOTAL_PERCENTAGE).text = `Atoms per second in total : ${new BigFloat(this.totalAtomPerSecond)
+			.div(game.atomsPerSecond)
+			.mul(10000)
+			.floor()
+			.div(100)}%`;
 	}
 }
 

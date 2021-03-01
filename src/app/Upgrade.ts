@@ -8,8 +8,8 @@ import {Buyable} from './Buyable';
 import Game from './Game';
 
 interface UpgradeOptions {
-	readonly name: string;
 	readonly description?: string;
+	readonly name: string;
 	price: number;
 }
 
@@ -53,22 +53,12 @@ export type ConditionType = ConditionCount & Upgrades;
 export type UpgradeType = NumberedUpgrade & Upgrades;
 
 export default class Upgrade<T extends UpgradeType, L extends ConditionType> extends ClickableContainer implements UpgradeOptions, Buyable {
-	public readonly name: string;
-	public readonly description: string;
-	public price: number;
-
-	public get canBeBought(): boolean {
-		return game.atomsCount.greaterThanOrEqualTo(this.price);
-	}
-
-	public overlay: Overlay;
-	public priceText: PIXI.Text;
-	public nameText: PIXI.Text;
 	public condition?: L;
-	public unlocked: boolean;
+	public readonly description: string;
+	public effect: T;
 	public effectText: PIXI.Text;
 	public owned: boolean = false;
-	public effect: T;
+	public unlocked: boolean;
 
 	public constructor(options: UpgradeOptions, effect: T, condition?: L) {
 		super(PIXI.Texture.WHITE);
@@ -99,11 +89,21 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 
 		this.on('hover', position => {
 			this.overlay.show();
-			this.overlay.update(position);
+			this.overlay.resize(position);
 		});
 		this.on('hoverMove', position => this.overlay.update(position));
 		this.on('hoverEnd', () => this.overlay.hide());
 	}
+
+	public get canBeBought(): boolean {
+		return game.atomsCount.greaterThanOrEqualTo(this.price);
+	}
+
+	public readonly name: string;
+	public nameText: PIXI.Text;
+	public overlay: Overlay;
+	public price: number;
+	public priceText: PIXI.Text;
 
 	public get getEffectAsString(): string {
 		let result = '';
@@ -138,49 +138,6 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		}
 
 		return result;
-	}
-
-	public update() {
-		super.update();
-		this.nameText.position.set(5, this.container.height / 10);
-		this.effectText.position.set(5, this.container.height / 2.5);
-		this.priceText.position.set(5, this.container.height - this.container.height / 3.5);
-		this.sprite.width = 50 + window.innerWidth / 10;
-		this.sprite.height = window.innerHeight / 12;
-
-		this.overlay.setAPSWaitFromPrice(this.price);
-		this.sprite.tint = this.canBeBought ? 0xffffff : this.color;
-
-		this.checkUnlock();
-	}
-
-	public checkUnlock(): void {
-		if (!this.condition) this.unlocked = true;
-		switch (this.condition?.kind) {
-			case 'building':
-				this.unlocked = game.buildings?.find(building => building.name === (this.condition as BuildingUpgrade).building)?.ownedCount >= this.condition.count;
-				break;
-
-			case 'clicks':
-				this.unlocked = game.totalClicks >= this.condition.count;
-				break;
-
-			case 'buildingGlobal':
-				this.unlocked = game.buildings.map(building => building.ownedCount).reduce((previousValue, currentValue) => previousValue + currentValue) >= this.condition.count;
-				break;
-
-			case 'clickAPS':
-				this.unlocked = game.atomsPerClicks.greaterThanOrEqualTo(this.condition.count);
-				break;
-
-			case 'atoms':
-				this.unlocked = game.totalAtomsProduced.greaterThanOrEqualTo(this.condition.count);
-				break;
-
-			case 'aps':
-				this.unlocked = game.atomsPerSecond.greaterThanOrEqualTo(this.condition.count);
-				break;
-		}
 	}
 
 	public buy() {
@@ -220,6 +177,43 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		}
 	}
 
+	public checkUnlock(): void {
+		if (!this.condition) this.unlocked = true;
+		switch (this.condition?.kind) {
+			case 'building':
+				this.unlocked = game.buildings?.find(building => building.name === (this.condition as BuildingUpgrade).building)?.ownedCount >= this.condition.count;
+				break;
+
+			case 'clicks':
+				this.unlocked = game.totalClicks >= this.condition.count;
+				break;
+
+			case 'buildingGlobal':
+				this.unlocked = game.buildings.map(building => building.ownedCount).reduce((previousValue, currentValue) => previousValue + currentValue) >= this.condition.count;
+				break;
+
+			case 'clickAPS':
+				this.unlocked = game.atomsPerClicks.greaterThanOrEqualTo(this.condition.count);
+				break;
+
+			case 'atoms':
+				this.unlocked = game.totalAtomsProduced.greaterThanOrEqualTo(this.condition.count);
+				break;
+
+			case 'aps':
+				this.unlocked = game.atomsPerSecond.greaterThanOrEqualTo(this.condition.count);
+				break;
+		}
+	}
+
+	public resize() {
+		this.nameText.position.set(5, this.container.height / 10);
+		this.effectText.position.set(5, this.container.height / 2.5);
+		this.priceText.position.set(5, this.container.height - this.container.height / 3.5);
+		this.sprite.width = 50 + window.innerWidth / 10;
+		this.sprite.height = window.innerHeight / 12;
+	}
+
 	public toJSON(): JSONObject | number {
 		let content: JSONObject = {
 			i: game.upgrades.indexOf(this),
@@ -251,6 +245,14 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		if (Object.keys(content).join('') === 'i') return game.upgrades.indexOf(this);
 
 		return content;
+	}
+
+	public update() {
+		super.update();
+
+		this.overlay.setAPSWaitFromPrice(this.price);
+		this.sprite.tint = this.canBeBought ? 0xffffff : this.color;
+		this.checkUnlock();
 	}
 
 	private applyNumberedUpgrade(value: number): number;

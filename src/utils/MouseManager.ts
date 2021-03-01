@@ -32,6 +32,10 @@ export class Button extends PIXI.utils.EventEmitter {
 		}
 	}
 
+	isMineEvent(event: MouseEvent): boolean {
+		return event.button === this.id;
+	}
+
 	on(event: ButtonEvent, fn: (event?: KeyboardEvent, duration?: number) => unknown, context?: any): this {
 		super.on(event, fn, context);
 		return this;
@@ -40,10 +44,6 @@ export class Button extends PIXI.utils.EventEmitter {
 	once(event: ButtonEvent, fn: (eventN: KeyboardEvent, durationN: number) => unknown, context?: any): this {
 		super.once(event, fn, context);
 		return this;
-	}
-
-	isMineEvent(event: MouseEvent): boolean {
-		return event.button === this.id;
 	}
 }
 

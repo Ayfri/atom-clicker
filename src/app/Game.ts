@@ -21,11 +21,11 @@ export default class Game implements JSONable {
 	public atomsPerSecondBoost: BigFloat = new BigFloat(0);
 	public buildings: Building[] = [];
 	public buildingsGlobalBoost: number = 1;
+	public gui: MainGUI;
 	public mainAtom: Clickable;
 	public totalAtomsProduced: BigFloat = new BigFloat(0);
 	public totalClicks: number = 0;
 	public upgrades: Upgrade<UpgradeType, ConditionType>[] = [];
-	public gui: MainGUI;
 
 	public constructor(save?: JSONObject) {
 		this.gui = new MainGUI();
@@ -147,6 +147,9 @@ export default class Game implements JSONable {
 			Game.defaultBuyables[1].forEach(u => this.addUpgrade(u));
 		}
 
+		setInterval(() => this.updateVisibleBuildings(), 200);
+		this.resize();
+
 		app.stage.addChild(this.mainAtom.sprite, this.gui.container);
 	}
 
@@ -158,10 +161,6 @@ export default class Game implements JSONable {
 		return this.atomsPerSecond.add(this.atomsPerClicks.mul(this.gui.clicksPerSeconds));
 	}
 
-	public static getBuyableFromName(name: string): Buyable {
-		return Game.defaultBuyables.flat().find(b => b.name === name);
-	}
-
 	public static getBuyableFromIndex(index: number, type: 'building' | 'upgrade'): Buyable {
 		switch (type) {
 			case 'building':
@@ -171,41 +170,12 @@ export default class Game implements JSONable {
 		}
 	}
 
+	public static getBuyableFromName(name: string): Buyable {
+		return Game.defaultBuyables.flat().find(b => b.name === name);
+	}
+
 	public static isDefaultBuyable(buyable: Buyable): boolean {
 		return !!Game.getBuyableFromName(buyable.name);
-	}
-
-	public update() {
-		app.stage.sortChildren();
-		this.gui.update();
-		this.mainAtom.sprite.position.x = window.innerWidth / 2;
-
-		this.buildings.forEach((building, index) => {
-			building.update();
-			building.container.x = window.innerWidth - building.container.width;
-			building.container.y = index * (building.container.height + 5) + window.innerHeight / 4;
-		});
-
-		for (const upgrade of this.upgrades.sort((u1, u2) => u1.price - u2.price)) {
-			const index = this.upgrades.filter(upgrade => upgrade.unlocked && !upgrade.owned).indexOf(upgrade);
-			upgrade.update();
-			upgrade.container.y = index * (upgrade.container.height + 5) + window.innerHeight / 4;
-			upgrade.container.visible = upgrade.unlocked && !upgrade.owned;
-			if (upgrade.unlocked) upgrade.container.alpha = 1;
-		}
-
-		this.atomsCount = this.atomsCount.add(this.atomsPerSecond.dividedBy(PIXI.Ticker.shared.FPS));
-		this.totalAtomsProduced = this.totalAtomsProduced.add(this.atomsPerSecond.dividedBy(PIXI.Ticker.shared.FPS));
-		this.calculateAPS();
-	}
-
-	public calculateAPS() {
-		//		console.log(this.buildings.map(building => building.totalAtomPerSecond.mul(this.buildingsGlobalBoost)).reduce((previous, current) => previous.add(current))
-		//			.add(this.atomsPerSecondBoost).toString())
-		this.atomsPerSecond = this.buildings
-			.map(building => building.totalAtomPerSecond.mul(this.buildingsGlobalBoost))
-			.reduce((previous, current) => previous.add(current))
-			.add(this.atomsPerSecondBoost);
 	}
 
 	public addBuilding(building: Building) {
@@ -216,6 +186,20 @@ export default class Game implements JSONable {
 	public addUpgrade(upgrade: Upgrade<UpgradeType, ConditionType>) {
 		this.upgrades.push(upgrade);
 		app.stage.addChild(upgrade.container);
+	}
+
+	public calculateAPS() {
+		this.atomsPerSecond = this.buildings
+			.map(building => building.totalAtomPerSecond.mul(this.buildingsGlobalBoost))
+			.reduce((previous, current) => previous.add(current))
+			.add(this.atomsPerSecondBoost);
+	}
+
+	public resize() {
+		this.updateVisibleBuildings();
+		this.gui.resize();
+		this.buildings?.forEach(building => building.resize());
+		this.upgrades?.forEach(upgrade => upgrade.resize());
 	}
 
 	public toJSON(): JSONObject {
@@ -232,6 +216,35 @@ export default class Game implements JSONable {
 		if (this.buildingsGlobalBoost > 1) content.bb = this.buildingsGlobalBoost;
 
 		return content;
+	}
+
+	public update() {
+		app.stage.sortChildren();
+		this.gui.update();
+		this.mainAtom.sprite.position.x = window.innerWidth / 2;
+
+		this.buildings.forEach(building => building.update());
+		this.upgrades.forEach(upgrade => upgrade.update());
+
+		this.atomsCount = this.atomsCount.add(this.atomsPerSecond.dividedBy(PIXI.Ticker.shared.FPS));
+		this.totalAtomsProduced = this.totalAtomsProduced.add(this.atomsPerSecond.dividedBy(PIXI.Ticker.shared.FPS));
+		this.calculateAPS();
+	}
+
+	public updateVisibleBuildings() {
+		this.buildings.forEach((building, index) => {
+			building.resize();
+			building.container.x = window.innerWidth - building.container.width;
+			building.container.y = index * (building.container.height + 5) + window.innerHeight / 4;
+		});
+
+		for (const upgrade of this.upgrades.sort((u1, u2) => u1.price - u2.price)) {
+			const index = this.upgrades.filter(upgrade => upgrade.unlocked && !upgrade.owned).indexOf(upgrade);
+			upgrade.resize();
+			upgrade.container.y = index * (upgrade.container.height + 5) + window.innerHeight / 4;
+			upgrade.container.visible = upgrade.unlocked && !upgrade.owned;
+			if (upgrade.unlocked) upgrade.container.alpha = 1;
+		}
 	}
 
 	private setDefaultBuyables(): void {

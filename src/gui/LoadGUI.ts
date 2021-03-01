@@ -41,9 +41,8 @@ export default class LoadGUI extends GUI {
 		this.input.id = 'load';
 		document.body.appendChild(this.input);
 
-		this.loadButton.on('click', () => {
-			LoadGUI.decompressSave(this.input.value);
-		});
+		this.loadButton.on('click', () => LoadGUI.decompressSave(this.input.value));
+		this.resize();
 	}
 
 	public static decompressSave(save: string) {
@@ -81,19 +80,23 @@ export default class LoadGUI extends GUI {
 		} catch (ignored) {}
 	}
 
-	public open() {
-		this.input.style.visibility = 'visible';
-	}
-
 	public close() {
 		this.input.style.visibility = 'hidden';
 	}
 
+	public open() {
+		this.input.style.visibility = 'visible';
+	}
+
 	public update() {
+		this.loadButton.update();
+	}
+
+	public resize() {
 		this.background.width = window.innerWidth / 3;
 		this.background.height = window.innerHeight / 2.5;
 		this.exitButton.sprite.position.set(this.container.width - this.exitButton.sprite.height / 2 - 10, this.exitButton.sprite.height - 10);
-		this.loadButton.update();
+		this.loadButton.resize();
 		this.loadButton.container.position.set(this.container.width / 2 - this.loadButton.container.width / 2, 10);
 
 		this.container.position.set((window.innerWidth - this.container.width) / 2, (window.innerHeight - this.container.height) / 2);

@@ -4,8 +4,8 @@ import GUI from './GUI';
 
 interface OverlayOptions {
 	description: string;
-	title: string;
 	stats?: {[k in StatsType]?: PIXI.Text};
+	title: string;
 }
 
 export enum StatsType {
@@ -17,9 +17,9 @@ export enum StatsType {
 }
 
 export default class Overlay extends GUI {
-	public title: PIXI.Text;
 	public description: PIXI.Text;
 	public stats: Map<StatsType, PIXI.Text>;
+	public title: PIXI.Text;
 
 	public constructor(options: OverlayOptions) {
 		super();
@@ -50,16 +50,12 @@ export default class Overlay extends GUI {
 		this.background.width = this.container.width + 50;
 	}
 
-	public show() {
-		this.container.visible = true;
-	}
-
 	public hide() {
 		this.container.visible = false;
 	}
 
-	public update(position?: PIXI.Point) {
-		this.container.position = position;
+	public resize(position?: PIXI.Point) {
+		if (position) this.update(position);
 		this.title.position.x = this.container.width / 2;
 		this.description.position.set(10, 45);
 
@@ -67,9 +63,6 @@ export default class Overlay extends GUI {
 			const stat: PIXI.Text = [...this.stats.values()].sort((stat1, stat2) => stat1.text.localeCompare(stat2.text))[i];
 			stat.position.set(this.container.width / 10, 80 + i * (stat.height + 7));
 		}
-
-		if (position.x + this.container.width > window.innerWidth) this.container.x -= this.container.width;
-		if (position.y + this.container.height > window.innerHeight) this.container.y -= this.container.height;
 	}
 
 	public setAPSWaitFromPrice(price: BigFloat | number) {
@@ -78,6 +71,16 @@ export default class Overlay extends GUI {
 			timeToWaitForBuy.equals(0) && game.atomsCount.lessThan(price)
 				? "Can't be bough."
 				: `Can be bought${timeToWaitForBuy.lessThan(0) ?? game.atomsCount.greaterThanOrEqualTo(price) ? '' : ` in ${timeToWaitForBuy.ceil()} seconds`}.`;
+	}
+
+	public show() {
+		this.container.visible = true;
+	}
+
+	public update(position: PIXI.Point) {
+		this.container.position = position;
+		if (position.x + this.container.width > window.innerWidth) this.container.x -= this.container.width;
+		if (position.y + this.container.height > window.innerHeight) this.container.y -= this.container.height;
 	}
 }
 

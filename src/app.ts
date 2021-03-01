@@ -29,6 +29,9 @@ async function setup() {
 	if (localStorage.getItem('save')) LoadGUI.decompressSave(localStorage.getItem('save'));
 	(window as any).game = game;
 
+	game.resize();
+	window.onresize = () => game.resize();
+
 	setInterval(() => localSave(), 1000 * 30);
 }
 
