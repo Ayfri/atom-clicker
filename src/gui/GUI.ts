@@ -15,7 +15,7 @@ export default class GUI {
 
 		this.background = PIXI.Sprite.from(options?.texture ?? PIXI.Texture.WHITE);
 		this.background.width = options?.width ?? window.innerWidth;
-		this.background.height = options?.width ?? window.innerHeight;
+		this.background.height = options?.height ?? window.innerHeight;
 
 		this.container.addChild(this.background);
 	}
