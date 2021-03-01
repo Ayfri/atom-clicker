@@ -195,6 +195,10 @@ export default class Game implements JSONable {
 			.add(this.atomsPerSecondBoost);
 	}
 
+	public resetDefaultBuyables(): void {
+		Game.defaultBuyables = [[], []];
+	}
+
 	public resize() {
 		this.updateVisibleBuildings();
 		this.gui.resize();

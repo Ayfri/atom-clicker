@@ -72,8 +72,15 @@ export function localSave() {
 	}, 2000);
 }
 
-export function loadGameFromSave(save: JSONObject) {
+export function resetGame(save?: JSONObject) {
+	game.gui.loadGUI.close();
+	game.gui.saveGUI.close();
+	game.gui.resetGUI.close();
+	game.upgrades.forEach(upgrade => upgrade.overlay.hide());
+	game.buildings.forEach(building => building.overlay.hide());
+
 	app.stage.removeChildren();
+	game.resetDefaultBuyables();
 	game = new Game(save);
 	(window as any).game = game;
 }
