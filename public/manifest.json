@@ -1,9 +1,20 @@
 {
 	"author": "Ayfri",
-	"background-color": "#aaaaaa",
+	"background_color": "#aaaaaa",
 	"contributors": ["Ayfri", "Loockeeer"],
 	"description": "A simple clicker game with the theme of atoms.",
+	"display": "standalone",
+	"icons": [
+		{
+			"src": "/textures/x.png",
+			"type": "image/png",
+			"sizes": "32x32"
+		}
+	],
 	"keywords": ["Game", "Atoms", "Atom", "Clicker", "Idle", "Click"],
 	"name": "Atom Clicker",
-	"start-url": "/"
+	"orientation": "portrait",
+	"short_name": "Atom Clicker",
+	"start_url": "/",
+	"theme_color": "#eeeeee"
 }
