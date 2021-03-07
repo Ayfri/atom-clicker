@@ -21,7 +21,7 @@ function bundle() {
 }
 
 function copyPublic() {
-	return gulp.src(['./public/index.html', './public/style.css']).pipe(gulp.dest('./dist'));
+	return gulp.src(['./public/index.html', './public/style.css', './public/manifest.json']).pipe(gulp.dest('./dist'));
 }
 
 function copyTextures() {
