@@ -26,7 +26,6 @@ export default class Overlay extends GUI {
 		this.container.visible = false;
 		this.container.zIndex = 100;
 
-		this.background.height = 80 + Object.keys(options.stats).length * 25;
 		this.background.width = 0;
 		this.background.tint = 0xf0f0f0;
 
@@ -55,9 +54,10 @@ export default class Overlay extends GUI {
 	}
 
 	public resize(position?: PIXI.Point) {
-		if (position) this.update(position);
+		if (position) this.move(position);
 		this.title.position.x = this.container.width / 2;
 		this.description.position.set(10, 45);
+		this.background.height = 80 + this.stats.size * 25;
 
 		for (let i = 0; i < this.stats.size; i++) {
 			const stat: PIXI.Text = [...this.stats.values()].sort((stat1, stat2) => stat1.text.localeCompare(stat2.text))[i];
@@ -77,7 +77,7 @@ export default class Overlay extends GUI {
 		this.container.visible = true;
 	}
 
-	public update(position: PIXI.Point) {
+	public move(position: PIXI.Point) {
 		this.container.position = position;
 		if (position.x + this.container.width > window.innerWidth) this.container.x -= this.container.width;
 		if (position.y + this.container.height > window.innerHeight) this.container.y -= this.container.height;
