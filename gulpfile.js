@@ -29,11 +29,11 @@ function copyTextures() {
 }
 
 function watch() {
-	exec('reload -b --dir=dist --port=5000', err => {
+	exec('reload --browser --dir=dist --port=5000', err => {
 		if (err) throw err;
 	});
 
-	return gulp.watch(['src/**/*.ts', 'src/assets/**/*.json', 'public/**.*'], bundle);
+	return gulp.watch(['src/**/*.ts', 'src/assets/**/*.json', 'public/**.*'], gulp.series(copyPublic, bundle));
 }
 
 exports.bundle = gulp.series(copyPublic, copyTextures, bundle);
