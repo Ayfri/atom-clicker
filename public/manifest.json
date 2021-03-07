@@ -1,0 +1,9 @@
+{
+	"author": "Ayfri",
+	"background-color": "#aaaaaa",
+	"contributors": ["Ayfri", "Loockeeer"],
+	"description": "A simple clicker game with the theme of atoms.",
+	"keywords": ["Game", "Atoms", "Atom", "Clicker", "Idle", "Click"],
+	"name": "Atom Clicker",
+	"start-url": "/"
+}
