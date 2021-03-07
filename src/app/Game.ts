@@ -147,10 +147,8 @@ export default class Game implements JSONable {
 			Game.defaultBuyables[1].forEach(u => this.addUpgrade(u));
 		}
 
-		setInterval(() => this.updateVisibleBuildings(), 200);
-		this.resize();
-
 		app.stage.addChild(this.mainAtom.sprite, this.gui.container);
+		setInterval(() => this.updateVisibleBuildings(), 200);
 	}
 
 	get totalAtomsPerClicks(): BigFloat {
@@ -227,9 +225,6 @@ export default class Game implements JSONable {
 		this.gui.update();
 		this.mainAtom.sprite.position.x = window.innerWidth / 2;
 
-		this.buildings.forEach(building => building.update());
-		this.upgrades.forEach(upgrade => upgrade.update());
-
 		this.atomsCount = this.atomsCount.add(this.atomsPerSecond.dividedBy(PIXI.Ticker.shared.FPS));
 		this.totalAtomsProduced = this.totalAtomsProduced.add(this.atomsPerSecond.dividedBy(PIXI.Ticker.shared.FPS));
 		this.calculateAPS();
@@ -238,6 +233,7 @@ export default class Game implements JSONable {
 	public updateVisibleBuildings() {
 		this.buildings.forEach((building, index) => {
 			building.resize();
+			building.update();
 			building.container.x = window.innerWidth - building.container.width;
 			building.container.y = index * (building.container.height + 5) + window.innerHeight / 4;
 		});
@@ -245,6 +241,7 @@ export default class Game implements JSONable {
 		for (const upgrade of this.upgrades.sort((u1, u2) => u1.price - u2.price)) {
 			const index = this.upgrades.filter(upgrade => upgrade.unlocked && !upgrade.owned).indexOf(upgrade);
 			upgrade.resize();
+			upgrade.update();
 			upgrade.container.y = index * (upgrade.container.height + 5) + window.innerHeight / 4;
 			upgrade.container.visible = upgrade.unlocked && !upgrade.owned;
 			if (upgrade.unlocked) upgrade.container.alpha = 1;

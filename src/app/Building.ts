@@ -63,25 +63,28 @@ export default class Building extends ClickableContainer implements BuildingOpti
 		this.container.addChild(this.ownerCountText, this.priceText, this.nameText);
 		app.stage.addChild(this.overlay.container);
 
-		this.on('click', () => {
-			if (this.canBeBought) {
-				do {
-					game.atomsCount = game.atomsCount.sub(this.price);
-					this.ownedCount++;
-				} while (this.canBeBought && KeyboardManager.isPressed('Shift'));
-			}
-		});
+		this.on('click', () => this.buy());
 
 		this.on('hover', position => {
 			this.overlay.show();
 			this.overlay.resize(position);
 		});
-		this.on('hoverMove', position => this.overlay.update(position));
+		this.on('hoverMove', position => this.overlay.move(position));
 		this.on('hoverEnd', () => this.overlay.hide());
 	}
 
 	get canBeBought(): boolean {
 		return game.atomsCount.greaterThan(this.price - 1);
+	}
+
+	public buy() {
+		if (this.canBeBought) {
+			this.update();
+			do {
+				game.atomsCount = game.atomsCount.sub(this.price);
+				this.ownedCount++;
+			} while (this.canBeBought && KeyboardManager.isPressed('Shift'));
+		}
 	}
 
 	public readonly name: string;

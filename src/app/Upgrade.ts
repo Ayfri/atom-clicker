@@ -91,7 +91,7 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 			this.overlay.show();
 			this.overlay.resize(position);
 		});
-		this.on('hoverMove', position => this.overlay.update(position));
+		this.on('hoverMove', position => this.overlay.move(position));
 		this.on('hoverEnd', () => this.overlay.hide());
 	}
 
