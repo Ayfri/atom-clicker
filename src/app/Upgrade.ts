@@ -1,7 +1,6 @@
 import {BigFloat} from 'bigfloat.js';
 import * as PIXI from 'pixi.js';
 import {app, game} from '../app.js';
-import ClickableContainer from '../components/ClickableContainer.js';
 import Overlay from '../gui/Overlay.js';
 import {JSONObject} from '../types.js';
 import {Buyable} from './Buyable';
@@ -52,26 +51,26 @@ type Upgrades = BuildingUpgrade | ClickUpgrade | BuildingGlobalUpgrade | ClickAP
 export type ConditionType = ConditionCount & Upgrades;
 export type UpgradeType = NumberedUpgrade & Upgrades;
 
-export default class Upgrade<T extends UpgradeType, L extends ConditionType> extends ClickableContainer implements UpgradeOptions, Buyable {
+export default class Upgrade<T extends UpgradeType, L extends ConditionType> extends Buyable implements UpgradeOptions {
 	public condition?: L;
-	public readonly description: string;
 	public effect: T;
 	public effectText: PIXI.Text;
 	public owned: boolean = false;
 	public unlocked: boolean;
 
 	public constructor(options: UpgradeOptions, effect: T, condition?: L) {
-		super(PIXI.Texture.WHITE);
-		this.name = options.name;
+		super(PIXI.Texture.WHITE, options.name);
 		this.description = options.description ?? '';
 		this.price = options.price;
 		this.effect = effect;
 		this.unlocked = !condition;
 		this.condition = condition;
 
-		this.nameText = new PIXI.Text(this.name, {fontSize: 18});
 		this.effectText = new PIXI.Text(this.getEffectAsString, {fontSize: 12});
-		this.priceText = new PIXI.Text(this.price.toString(), {fontSize: 12});
+		this.effectText.anchor.set(0.5);
+		this.nameText.style.fontSize = 20;
+		this.priceText.style.fontSize = 13;
+		this.priceText.text = this.price.toString();
 
 		this.overlay = new Overlay({
 			title: this.name,
@@ -82,28 +81,9 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 			},
 		});
 
-		this.container.addChild(this.nameText, this.effectText, this.priceText);
+		this.container.addChild(this.effectText);
 		app.stage.addChild(this.overlay.container);
-
-		this.on('click', () => this.buy());
-
-		this.on('hover', position => {
-			this.overlay.show();
-			this.overlay.resize(position);
-		});
-		this.on('hoverMove', position => this.overlay.move(position));
-		this.on('hoverEnd', () => this.overlay.hide());
 	}
-
-	public get canBeBought(): boolean {
-		return game.atomsCount.greaterThan(this.price - 1);
-	}
-
-	public readonly name: string;
-	public nameText: PIXI.Text;
-	public overlay: Overlay;
-	public price: number;
-	public priceText: PIXI.Text;
 
 	public get getEffectAsString(): string {
 		let result = '';
@@ -138,6 +118,18 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		}
 
 		return result;
+	}
+
+	private applyNumberedUpgrade(value: number): number;
+	private applyNumberedUpgrade(value: BigFloat): BigFloat;
+	private applyNumberedUpgrade(value: number | BigFloat) {
+		return typeof value === 'number'
+			? this.effect.multiplier
+				? value * this.effect.multiplier
+				: value + this.effect.addition
+			: this.effect.multiplier
+			? value.mul(this.effect.multiplier)
+			: value.add(this.effect.addition);
 	}
 
 	public buy() {
@@ -177,39 +169,12 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		}
 	}
 
-	public checkUnlock(): void {
-		if (!this.condition) this.unlocked = true;
-		switch (this.condition?.kind) {
-			case 'building':
-				this.unlocked = game.buildings?.find(building => building.name === (this.condition as BuildingUpgrade).building)?.ownedCount >= this.condition.count;
-				break;
-
-			case 'clicks':
-				this.unlocked = game.totalClicks >= this.condition.count;
-				break;
-
-			case 'buildingGlobal':
-				this.unlocked = game.buildings.map(building => building.ownedCount).reduce((previousValue, currentValue) => previousValue + currentValue) >= this.condition.count;
-				break;
-
-			case 'clickAPS':
-				this.unlocked = game.atomsPerClicks.greaterThanOrEqualTo(this.condition.count);
-				break;
-
-			case 'atoms':
-				this.unlocked = game.totalAtomsProduced.greaterThanOrEqualTo(this.condition.count);
-				break;
-
-			case 'aps':
-				this.unlocked = game.atomsPerSecond.greaterThanOrEqualTo(this.condition.count);
-				break;
-		}
-	}
+	public price: number;
 
 	public resize() {
-		this.nameText.position.set(5, this.container.height / 10);
-		this.effectText.position.set(5, this.container.height / 2.5);
-		this.priceText.position.set(5, this.container.height - this.container.height / 3.5);
+		this.nameText.position.set(this.nameText.width / 2 + 5, this.container.height / 5);
+		this.effectText.position.set(this.effectText.width / 2 + 5, this.container.height / 2.2);
+		this.priceText.position.set(this.priceText.width / 2 + 5, this.container.height - this.container.height / 5);
 		this.sprite.width = 50 + window.innerWidth / 10;
 		this.sprite.height = window.innerHeight / 12;
 	}
@@ -247,22 +212,41 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		return content;
 	}
 
+	public checkUnlock(): void {
+		if (!this.condition) this.unlocked = true;
+		switch (this.condition?.kind) {
+			case 'building':
+				this.unlocked = game.buildings?.find(building => building.name === (this.condition as BuildingUpgrade).building)?.ownedCount >= this.condition.count;
+				break;
+
+			case 'clicks':
+				this.unlocked = game.totalClicks >= this.condition.count;
+				break;
+
+			case 'buildingGlobal':
+				this.unlocked = game.buildings.map(building => building.ownedCount).reduce((previousValue, currentValue) => previousValue + currentValue) >= this.condition.count;
+				break;
+
+			case 'clickAPS':
+				this.unlocked = game.atomsPerClicks.greaterThanOrEqualTo(this.condition.count);
+				break;
+
+			case 'atoms':
+				this.unlocked = game.totalAtomsProduced.greaterThanOrEqualTo(this.condition.count);
+				break;
+
+			case 'aps':
+				this.unlocked = game.atomsPerSecond.greaterThanOrEqualTo(this.condition.count);
+				break;
+		}
+	}
+
 	public update() {
 		super.update();
 
 		if (this.overlay.container.visible) this.overlay.setAPSWaitFromPrice(this.price);
 		this.sprite.tint = this.canBeBought ? 0xffffff : this.color;
 		this.checkUnlock();
-	}
-
-	private applyNumberedUpgrade(value: number): number;
-	private applyNumberedUpgrade(value: BigFloat): BigFloat;
-	private applyNumberedUpgrade(value: number | BigFloat) {
-		if (typeof value === 'number') {
-			return this.effect.multiplier ? value * this.effect.multiplier : value + this.effect.addition;
-		} else {
-			return this.effect.multiplier ? value.mul(this.effect.multiplier) : value.add(this.effect.addition);
-		}
 	}
 }
 

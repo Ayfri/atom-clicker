@@ -1,7 +1,6 @@
 import {BigFloat} from 'bigfloat.js';
 import * as PIXI from 'pixi.js';
 import {app, game} from '../app.js';
-import ClickableContainer from '../components/ClickableContainer.js';
 import Overlay, {StatsType} from '../gui/Overlay.js';
 import {JSONObject} from '../types.js';
 import * as KeyboardManager from '../utils/KeyboardManager.js';
@@ -16,37 +15,29 @@ export interface BuildingOptions {
 	readonly startingPrice: number;
 }
 
-export default class Building extends ClickableContainer implements BuildingOptions, Buyable {
+export default class Building extends Buyable implements BuildingOptions {
 	public readonly atomsPerSecond: number;
-	public readonly description: string;
+	public priceMultiplier: number = 1.2;
+	public readonly startingPrice: number;
 	public boost: number = 1;
 	public ownedCount: number = 0;
 	public ownerCountText: PIXI.Text;
 
 	public constructor(options: BuildingOptions) {
-		super(PIXI.Texture.WHITE);
-		this.name = options.name;
+		super(PIXI.Texture.WHITE, options.name);
 		this.description = options.description;
 		this.startingPrice = options.startingPrice;
 		this.atomsPerSecond = options.atomsPerSecond;
 		this.priceMultiplier = options.priceMultiplier ?? 1.2;
 
-		this.ownerCountText = new PIXI.Text(this.ownedCount.toString(), {
-			fontSize: 40,
-		});
+		this.ownerCountText = new PIXI.Text(this.ownedCount.toString(), {fontSize: 40});
 		this.ownerCountText.anchor.set(0.5);
 		this.ownerCountText.position.set(this.sprite.width - this.sprite.width / 5, this.sprite.height / 2);
 
-		this.priceText = new PIXI.Text(this.price.toString(), {
-			fontSize: 16,
-		});
-		this.priceText.anchor.set(0.5);
+		this.priceText.style.fontSize = 16;
 		this.priceText.position.set(this.sprite.width / 3, this.sprite.height - this.sprite.height / 4);
 
-		this.nameText = new PIXI.Text(this.name, {
-			fontSize: 25,
-		});
-		this.nameText.anchor.set(0.5);
+		this.nameText.style.fontSize = 25;
 		this.nameText.position.set(this.sprite.width / 3, this.sprite.height / 4);
 
 		this.overlay = new Overlay({
@@ -61,34 +52,9 @@ export default class Building extends ClickableContainer implements BuildingOpti
 			},
 		});
 
-		this.container.addChild(this.ownerCountText, this.priceText, this.nameText);
+		this.container.addChild(this.ownerCountText);
 		app.stage.addChild(this.overlay.container);
-
-		this.on('click', () => this.buy());
-
-		this.on('hover', position => {
-			this.overlay.show();
-			this.overlay.resize(position);
-		});
-		this.on('hoverMove', position => this.overlay.move(position));
-		this.on('hoverEnd', () => this.overlay.hide());
 	}
-
-	get canBeBought(): boolean {
-		return game.atomsCount.greaterThan(this.price - 1);
-	}
-
-	public readonly name: string;
-	public nameText: PIXI.Text;
-	public overlay: Overlay;
-
-	get price(): number {
-		return Math.round(this.startingPrice * this.priceMultiplier ** this.ownedCount);
-	}
-
-	public priceText: PIXI.Text;
-	public priceMultiplier: number = 1.2;
-	public readonly startingPrice: number;
 
 	get totalAtomPerSecond(): BigFloat {
 		return new BigFloat(this.atomsPerSecond).mul(this.ownedCount).mul(this.boost).mul(1000).floor().div(1000);
@@ -103,6 +69,12 @@ export default class Building extends ClickableContainer implements BuildingOpti
 			} while (this.canBeBought && KeyboardManager.isPressed('Shift'));
 		}
 	}
+
+	get price(): number {
+		return Math.round(this.startingPrice * this.priceMultiplier ** this.ownedCount);
+	}
+
+	public priceText: PIXI.Text;
 
 	public resize() {
 		this.sprite.height = window.innerHeight / 15;
