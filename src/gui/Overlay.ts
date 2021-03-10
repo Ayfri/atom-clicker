@@ -33,9 +33,7 @@ export default class Overlay extends GUI {
 		this.title = new PIXI.Text(options.title);
 		this.title.anchor.set(0.5, 0);
 
-		this.description = new PIXI.Text(options.description, {
-			fontSize: 18,
-		});
+		this.description = new PIXI.Text(options.description, {fontSize: 18});
 		this.description.anchor.set(0, 0.5);
 
 		this.stats = new Map();
@@ -47,11 +45,13 @@ export default class Overlay extends GUI {
 		}
 
 		this.container.addChild(this.title, this.description, ...this.stats.values());
-		this.background.width = this.container.width + 50;
+		this.background.width = this.container.width;
+		this.resize();
 	}
 
 	public hide() {
 		this.container.visible = false;
+		this.background.width /= 1.1;
 	}
 
 	public move(position: PIXI.Point) {
@@ -68,7 +68,7 @@ export default class Overlay extends GUI {
 
 		for (let i = 0; i < this.stats.size; i++) {
 			const stat: PIXI.Text = [...this.stats.values()].sort((stat1, stat2) => stat1.text.localeCompare(stat2.text))[i];
-			stat.position.set(this.container.width / 10, 80 + i * (stat.height + 7));
+			stat.position.set(20, 80 + i * (stat.height + 7));
 		}
 	}
 
@@ -82,6 +82,7 @@ export default class Overlay extends GUI {
 
 	public show() {
 		this.container.visible = true;
+		this.background.width = this.container.width * 1.1;
 	}
 }
 

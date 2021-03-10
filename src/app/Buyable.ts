@@ -22,6 +22,7 @@ export abstract class Buyable extends ClickableContainer {
 
 		this.on('click', () => this.buy());
 		this.on('hover', position => {
+			this.overlay.resize(position);
 			this.overlay.show();
 			this.overlay.resize(position);
 		});
