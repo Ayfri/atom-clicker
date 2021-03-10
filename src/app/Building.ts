@@ -1,4 +1,5 @@
 import {BigFloat} from 'bigfloat.js';
+import * as PIXI from 'pixi.js';
 import {app, game} from '../app.js';
 import ClickableContainer from '../components/ClickableContainer.js';
 import Overlay, {StatsType} from '../gui/Overlay.js';
@@ -77,16 +78,6 @@ export default class Building extends ClickableContainer implements BuildingOpti
 		return game.atomsCount.greaterThan(this.price - 1);
 	}
 
-	public buy() {
-		if (this.canBeBought) {
-			this.update();
-			do {
-				game.atomsCount = game.atomsCount.sub(this.price);
-				this.ownedCount++;
-			} while (this.canBeBought && KeyboardManager.isPressed('Shift'));
-		}
-	}
-
 	public readonly name: string;
 	public nameText: PIXI.Text;
 	public overlay: Overlay;
@@ -101,6 +92,16 @@ export default class Building extends ClickableContainer implements BuildingOpti
 
 	get totalAtomPerSecond(): BigFloat {
 		return new BigFloat(this.atomsPerSecond).mul(this.ownedCount).mul(this.boost).mul(1000).floor().div(1000);
+	}
+
+	public buy() {
+		if (this.canBeBought) {
+			this.update();
+			do {
+				game.atomsCount = game.atomsCount.sub(this.price);
+				this.ownedCount++;
+			} while (this.canBeBought && KeyboardManager.isPressed('Shift'));
+		}
 	}
 
 	public resize() {

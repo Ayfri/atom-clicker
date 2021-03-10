@@ -1,7 +1,8 @@
 import TWEEN from '@tweenjs/tween.js';
+import * as PIXI from 'pixi.js';
 
 export function getTextureByName(name: string): PIXI.Texture | undefined {
-	return PIXI.Loader.shared.resources[name].texture;
+	return PIXI.Loader.shared.resources[name].data;
 }
 
 export function deepCopy<T>(source: T): T {

@@ -1,4 +1,5 @@
 import {BigFloat} from 'bigfloat.js';
+import * as PIXI from 'pixi.js';
 import {game} from '../app.js';
 import GUI from './GUI';
 
@@ -53,6 +54,12 @@ export default class Overlay extends GUI {
 		this.container.visible = false;
 	}
 
+	public move(position: PIXI.Point) {
+		this.container.position.copyFrom(position);
+		if (position.x + this.container.width > window.innerWidth) this.container.x -= this.container.width;
+		if (position.y + this.container.height > window.innerHeight) this.container.y -= this.container.height;
+	}
+
 	public resize(position?: PIXI.Point) {
 		if (position) this.move(position);
 		this.title.position.x = this.container.width / 2;
@@ -75,12 +82,6 @@ export default class Overlay extends GUI {
 
 	public show() {
 		this.container.visible = true;
-	}
-
-	public move(position: PIXI.Point) {
-		this.container.position = position;
-		if (position.x + this.container.width > window.innerWidth) this.container.x -= this.container.width;
-		if (position.y + this.container.height > window.innerHeight) this.container.y -= this.container.height;
 	}
 }
 

@@ -18,13 +18,13 @@ export default class ClosableGUI extends GUI {
 		this.exitButton.on('click', () => this.close());
 	}
 
+	public close() {
+		this.container.visible = false;
+	}
+
 	public open() {
 		this.container.visible = true;
 		this.resize();
-	}
-
-	public close() {
-		this.container.visible = false;
 	}
 
 	public resize() {

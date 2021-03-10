@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js';
 import {resetGame} from '../app.js';
 import Game from '../app/Game.js';
 import Clickable from '../components/Clickable.js';
@@ -6,7 +7,6 @@ import Button from './Button';
 import ClosableGUI from './ClosableGUI';
 
 export default class LoadGUI extends ClosableGUI {
-	public exitButton: Clickable;
 	public input: HTMLTextAreaElement;
 	public loadButton: Button;
 
@@ -76,13 +76,11 @@ export default class LoadGUI extends ClosableGUI {
 		this.input.style.visibility = 'hidden';
 	}
 
+	public exitButton: Clickable;
+
 	public open() {
 		super.open();
 		this.input.style.visibility = 'visible';
-	}
-
-	public update() {
-		this.loadButton.update();
 	}
 
 	public resize() {
@@ -93,5 +91,9 @@ export default class LoadGUI extends ClosableGUI {
 
 		this.container.position.set((window.innerWidth - this.container.width) / 2, (window.innerHeight - this.container.height) / 2);
 		super.resize();
+	}
+
+	public update() {
+		this.loadButton.update();
 	}
 }

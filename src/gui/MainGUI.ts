@@ -107,7 +107,7 @@ export default class MainGUI extends GUI {
 		text.text = `+${game.totalAtomsPerClicks}`;
 		text.alpha = 1;
 		text.visible = true;
-		text.position = position;
+		text.position.copyFrom(position);
 		text.x += Math.random() * 10 - 5;
 		setTimeout(() => (text.visible = false), 1000);
 	}

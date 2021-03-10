@@ -1,10 +1,11 @@
+import * as PIXI from 'pixi.js';
 import {resetGame} from '../app';
 import Button from './Button';
 import ClosableGUI from './ClosableGUI';
 
 export default class ResetGUI extends ClosableGUI {
-	public resetButton: Button;
 	public disclaimerText: PIXI.Text;
+	public resetButton: Button;
 
 	public constructor() {
 		super({
@@ -39,10 +40,6 @@ export default class ResetGUI extends ClosableGUI {
 		this.resize();
 	}
 
-	public update() {
-		this.resetButton.update();
-	}
-
 	public resize() {
 		this.background.width = window.innerWidth / 2;
 		this.background.height = window.innerHeight / 2;
@@ -53,5 +50,9 @@ export default class ResetGUI extends ClosableGUI {
 
 		this.container.position.set((window.innerWidth - this.container.width) / 2, (window.innerHeight - this.container.height) / 2);
 		super.resize();
+	}
+
+	public update() {
+		this.resetButton.update();
 	}
 }
