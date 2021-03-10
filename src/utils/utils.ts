@@ -17,8 +17,9 @@ interface TweenOptions {
 	duration: number;
 	easing: (value: number) => number;
 	endIf?: (value: number) => boolean;
+	onEnd?: (value: number) => void;
 	from: number;
-	onUpdate: (value: number) => unknown;
+	onUpdate: (value: number) => void;
 	to: number;
 }
 
@@ -39,6 +40,7 @@ export function tween(options: TweenOptions): Promise<void> {
 				resolve();
 				ticker.stop();
 				ticker.destroy();
+				options.onEnd?.(object.value);
 			})
 			.start();
 
