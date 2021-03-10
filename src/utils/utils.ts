@@ -16,6 +16,7 @@ export function sleep(ms: number): Promise<unknown> {
 interface TweenOptions {
 	duration: number;
 	easing: (value: number) => number;
+	endIf?: (value: number) => boolean;
 	from: number;
 	onUpdate: (value: number) => unknown;
 	to: number;
@@ -24,19 +25,30 @@ interface TweenOptions {
 export function tween(options: TweenOptions): Promise<void> {
 	return new Promise(resolve => {
 		const ticker = new PIXI.Ticker();
-		const t = new TWEEN.Tween({value: options.from})
+		const object = {value: options.from};
+		const t = new TWEEN.Tween(object)
 			.to(
 				{
 					value: options.to,
 				},
-				options.duration
+				options.duration,
 			)
 			.easing(options.easing)
-			.onUpdate(result => options.onUpdate(result.value))
-			.onComplete(() => resolve())
+			.onUpdate(() => options.onUpdate(object.value))
+			.onComplete(() => {
+				resolve();
+				ticker.stop();
+				ticker.destroy();
+			})
 			.start();
 
-		ticker.add(() => t.update(), {}, PIXI.UPDATE_PRIORITY.HIGH).start();
+		ticker.add(() => {
+			t.update();
+			if (options.endIf?.(object.value)) {
+				object.value = options.to;
+				t.end();
+			}
+		}, {}, PIXI.UPDATE_PRIORITY.HIGH).start();
 	});
 }
 
