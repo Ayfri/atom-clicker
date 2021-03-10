@@ -6,10 +6,12 @@
 		"noImplicitAny": true,
 		"outDir": "cache",
 		"esModuleInterop": true,
+		"moduleResolution": "node",
 		"resolveJsonModule": true,
 		"rootDir": "src",
 		"sourceMap": true,
 		"target": "ESNext"
 	},
-	"exclude": ["node_modules"]
+	"exclude": ["node_modules"],
+	"files": ["src/**/*.ts"]
 }
