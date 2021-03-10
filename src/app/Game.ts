@@ -37,7 +37,7 @@ export default class Game implements JSONable {
 		this.mainAtom.sprite.anchor.set(0.5);
 		this.mainAtom.sprite.position.set(window.innerWidth / 2, window.innerHeight / 2.8);
 		this.mainAtom.on('hover', async () => {
-			await tween({
+			tween({
 				from: 400,
 				to: 430,
 				easing: TWEEN.Easing.Exponential.Out,
@@ -77,19 +77,21 @@ export default class Game implements JSONable {
 					this.mainAtom.sprite.width = value;
 					this.mainAtom.sprite.height = value;
 				},
+				onEnd: async (value: number) => {
+					if(this.mainAtom.hover) return;
+					await tween({
+						from: value,
+						to: 400,
+						easing: TWEEN.Easing.Circular.Out,
+						duration: 100,
+						onUpdate: (value: number) => {
+							this.mainAtom.sprite.width = value;
+							this.mainAtom.sprite.height = value;
+						},
+					});
+				},
+				endIf: () => !this.mainAtom.hover
 			});
-			if (!this.mainAtom.hover) {
-				await tween({
-					from: 430,
-					to: 400,
-					easing: TWEEN.Easing.Circular.Out,
-					duration: 150,
-					onUpdate: (value: number) => {
-						this.mainAtom.sprite.width = value;
-						this.mainAtom.sprite.height = value;
-					},
-				});
-			}
 		});
 
 		this.setDefaultBuyables();
