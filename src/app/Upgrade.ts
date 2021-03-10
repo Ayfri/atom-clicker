@@ -62,7 +62,7 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		this.unlocked = !condition;
 		this.condition = condition;
 
-		this.effectText = new PIXI.Text(this.getEffectAsString, {fontSize: 12});
+		this.effectText = new PIXI.Text(Upgrade.getEffectAsString(this.effect), {fontSize: 12});
 		this.effectText.anchor.set(0.5);
 		this.nameText.style.fontSize = 20;
 		this.priceText.style.fontSize = 13;
@@ -81,47 +81,45 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		app.stage.addChild(this.overlay.container);
 	}
 
-	public get getEffectAsString(): string {
+	public static getEffectAsString(effect: UpgradeType): string {
 		let result = '';
-		switch (this.effect.kind) {
+		switch (effect.kind) {
 			case 'building':
-				result += this.effect.multiplier
-					? `Multiply by ${this.effect.multiplier * 100}% ${(this.effect as BuildingUpgrade).building}.`
-					: `Add ${this.effect.addition} to ${(this.effect as BuildingUpgrade).building}.`;
+				result += effect.multiplier
+					? `Multiply by ${effect.multiplier * 100}% ${(effect as BuildingUpgrade).building}.`
+					: `Add ${effect.addition} to ${(effect as BuildingUpgrade).building}.`;
 				break;
 
 			case 'clicks':
-				result += this.effect.multiplier ? `Multiply clicks by ${this.effect.multiplier * 100}%.` : `Add ${this.effect.addition * 100}% to clicks.`;
+				result += effect.multiplier ? `Multiply clicks by ${effect.multiplier * 100}%.` : `Add ${effect.addition * 100}% to clicks.`;
 				break;
 
 			case 'buildingGlobal':
-				result += this.effect.multiplier ? `Multiply buildings by ${this.effect.multiplier * 100}%.` : `Add ${this.effect.addition * 100}% to buildings.`;
+				result += effect.multiplier ? `Multiply buildings by ${effect.multiplier * 100}%.` : `Add ${effect.addition * 100}% to buildings.`;
 				break;
 
 			case 'clickAPS':
-				result += this.effect.multiplier
-					? `Multiply the boost of APS to clicks by ${this.effect.multiplier * 100}%.`
-					: `Add ${this.effect.addition * 100}% of APS to clicks.`;
+				result += effect.multiplier ? `Multiply the boost of APS to clicks by ${effect.multiplier * 100}%.` : `Add ${effect.addition * 100}% of APS to clicks.`;
 				break;
 
 			case 'atoms':
-				result += this.effect.multiplier ? `Multiply atoms by ${this.effect.multiplier * 100}%.` : `Add ${this.effect.addition * 100} atoms.`;
+				result += effect.multiplier ? `Multiply atoms by ${effect.multiplier * 100}%.` : `Add ${effect.addition} atoms.`;
 				break;
 		}
 
 		return result;
 	}
 
-	private applyNumberedUpgrade(value: number): number;
-	private applyNumberedUpgrade(value: BigFloat): BigFloat;
-	private applyNumberedUpgrade(value: number | BigFloat) {
+	private static applyNumberedUpgrade(value: number, effect: UpgradeType): number;
+	private static applyNumberedUpgrade(value: BigFloat, effect: UpgradeType): BigFloat;
+	private static applyNumberedUpgrade(value: number | BigFloat, effect: UpgradeType) {
 		return typeof value === 'number'
-			? this.effect.multiplier
-				? value * this.effect.multiplier
-				: value + this.effect.addition
-			: this.effect.multiplier
-			? value.mul(this.effect.multiplier)
-			: value.add(this.effect.addition);
+			? effect.multiplier
+				? value * effect.multiplier
+				: value + effect.addition
+			: effect.multiplier
+			? value.mul(effect.multiplier)
+			: value.add(effect.addition);
 	}
 
 	public buy() {
@@ -130,29 +128,33 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 			app.stage.removeChild(this.overlay.container);
 			game.atomsCount = game.atomsCount.sub(this.price);
 
-			switch (this.effect.kind) {
-				case 'building':
-					const building = game.buildings.find(building => building.name === (this.effect as BuildingUpgrade).building);
-					if (!building) throw new Error(`Building '${(this.effect as BuildingUpgrade).building}' not found.`);
-					building.boost = this.applyNumberedUpgrade(building.boost);
-					break;
+			Upgrade.applyEffect(this.effect);
+		}
+	}
 
-				case 'clicks':
-					game.atomsPerClicks = this.applyNumberedUpgrade(game.atomsPerClicks);
-					break;
+	public static applyEffect(effect: UpgradeType): void {
+		switch (effect.kind) {
+			case 'building':
+				const building = game.buildings.find(building => building.name === (effect as BuildingUpgrade).building);
+				if (!building) throw new Error(`Building '${(effect as BuildingUpgrade).building}' not found.`);
+				building.boost = Upgrade.applyNumberedUpgrade(building.boost, effect);
+				break;
 
-				case 'buildingGlobal':
-					game.buildingsGlobalBoost = this.applyNumberedUpgrade(game.buildingsGlobalBoost);
-					break;
+			case 'clicks':
+				game.atomsPerClicks = Upgrade.applyNumberedUpgrade(game.atomsPerClicks, effect);
+				break;
 
-				case 'clickAPS':
-					game.atomsPerClicksAPSBoost = this.applyNumberedUpgrade(game.atomsPerClicksAPSBoost);
-					break;
+			case 'buildingGlobal':
+				game.buildingsGlobalBoost = Upgrade.applyNumberedUpgrade(game.buildingsGlobalBoost, effect);
+				break;
 
-				case 'atoms':
-					game.atomsCount = this.applyNumberedUpgrade(game.atomsCount);
-					break;
-			}
+			case 'clickAPS':
+				game.atomsPerClicksAPSBoost = Upgrade.applyNumberedUpgrade(game.atomsPerClicksAPSBoost, effect);
+				break;
+
+			case 'atoms':
+				game.atomsCount = Upgrade.applyNumberedUpgrade(game.atomsCount, effect);
+				break;
 		}
 	}
 
