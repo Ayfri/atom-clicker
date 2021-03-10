@@ -1,4 +1,4 @@
-import TWEEN from '@tweenjs/tween.js';
+import TWEEN, {Easing} from '@tweenjs/tween.js';
 import * as PIXI from 'pixi.js';
 
 export function getTextureByName(name: string): PIXI.Texture | undefined {
@@ -13,9 +13,13 @@ export function sleep(ms: number): Promise<unknown> {
 	return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+export function random<T>(array: T[]): T {
+	return array[Math.floor(Math.random() * array.length)];
+}
+
 interface TweenOptions {
 	duration: number;
-	easing: (value: number) => number;
+	easing?: (value: number) => number;
 	endIf?: (value: number) => boolean;
 	from: number;
 	onEnd?: (value: number) => void;
@@ -32,9 +36,9 @@ export function tween(options: TweenOptions): Promise<void> {
 				{
 					value: options.to,
 				},
-				options.duration,
+				options.duration
 			)
-			.easing(options.easing)
+			.easing(options.easing ?? Easing.Linear.None)
 			.onUpdate(() => options.onUpdate?.(object.value))
 			.onComplete(() => {
 				resolve();
@@ -44,13 +48,20 @@ export function tween(options: TweenOptions): Promise<void> {
 			})
 			.start();
 
-		ticker.add(() => {
-			t.update();
-			if (options.endIf?.(object.value)) {
-				object.value = options.to;
-				t.end();
-			}
-		}, {}, PIXI.UPDATE_PRIORITY.HIGH).start();
+		ticker
+			.add(
+				() => {
+					t.update();
+					if (options.endIf?.(object.value)) {
+						object.value = options.to;
+						t.stop();
+						t.end();
+					}
+				},
+				{},
+				PIXI.UPDATE_PRIORITY.HIGH
+			)
+			.start();
 	});
 }
 
@@ -59,4 +70,5 @@ export function tween(options: TweenOptions): Promise<void> {
 	deepCopy,
 	sleep,
 	tween,
+	random,
 };
