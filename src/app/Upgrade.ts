@@ -42,11 +42,7 @@ type AtomsUpgrade = {
 	kind: 'atoms';
 };
 
-type APSUpgrade = {
-	kind: 'aps';
-};
-
-type Upgrades = BuildingUpgrade | ClickUpgrade | BuildingGlobalUpgrade | ClickAPSUpgrade | APSUpgrade | AtomsUpgrade;
+type Upgrades = BuildingUpgrade | ClickUpgrade | BuildingGlobalUpgrade | ClickAPSUpgrade | AtomsUpgrade;
 
 export type ConditionType = ConditionCount & Upgrades;
 export type UpgradeType = NumberedUpgrade & Upgrades;
@@ -108,10 +104,6 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 					: `Add ${this.effect.addition * 100}% of APS to clicks.`;
 				break;
 
-			case 'aps':
-				result += this.effect.multiplier ? `Multiply atoms per second by ${this.effect.multiplier * 100}% .` : `Add ${this.effect.addition} atoms per seconds.`;
-				break;
-
 			case 'atoms':
 				result += this.effect.multiplier ? `Multiply atoms by ${this.effect.multiplier * 100}%.` : `Add ${this.effect.addition * 100} atoms.`;
 				break;
@@ -157,11 +149,6 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 					game.atomsPerClicksAPSBoost = this.applyNumberedUpgrade(game.atomsPerClicksAPSBoost);
 					break;
 
-				case 'aps':
-					game.atomsPerSecondBoost = this.effect.multiplier
-						? game.atomsPerSecondBoost.add(game.atomsPerSecond.mul(this.effect.multiplier - 1))
-						: game.atomsPerSecond.add(this.effect.addition);
-					break;
 				case 'atoms':
 					game.atomsCount = this.applyNumberedUpgrade(game.atomsCount);
 					break;
@@ -187,7 +174,6 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		if (this.owned) content.o = this.owned;
 		else {
 			switch (this.condition?.kind) {
-				case 'aps':
 				case 'building':
 				case 'buildingGlobal':
 				case 'clickAPS':
@@ -234,19 +220,19 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 			case 'atoms':
 				this.unlocked = game.totalAtomsProduced.greaterThanOrEqualTo(this.condition.count);
 				break;
-
-			case 'aps':
-				this.unlocked = game.atomsPerSecond.greaterThanOrEqualTo(this.condition.count);
-				break;
 		}
 	}
 
 	public update() {
 		super.update();
 
-		if (this.overlay.container.visible) this.overlay.setAPSWaitFromPrice(this.price);
+		if (this.overlay.container.visible) this.updateOverlayValues();
 		this.sprite.tint = this.canBeBought ? 0xffffff : this.color;
 		this.checkUnlock();
+	}
+
+	public updateOverlayValues(): void {
+		this.overlay.setAPSWaitFromPrice(this.price);
 	}
 }
 

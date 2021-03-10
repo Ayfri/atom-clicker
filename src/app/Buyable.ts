@@ -25,6 +25,7 @@ export abstract class Buyable extends ClickableContainer {
 			this.overlay.resize(position);
 			this.overlay.show();
 			this.overlay.resize(position);
+			this.updateOverlayValues();
 		});
 		this.on('hoverMove', position => this.overlay.move(position));
 		this.on('hoverEnd', () => this.overlay.hide());
@@ -35,6 +36,8 @@ export abstract class Buyable extends ClickableContainer {
 	get canBeBought(): boolean {
 		return game.atomsCount.greaterThan(this.price - 1);
 	}
+
+	public abstract updateOverlayValues?(): void;
 
 	public abstract get price(): number;
 

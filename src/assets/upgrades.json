@@ -26,7 +26,7 @@
 			"addition": 0.01
 		},
 		"condition": {
-			"kind": "aps",
+			"kind": "buildingGlobal",
 			"count": 1000
 		}
 	},

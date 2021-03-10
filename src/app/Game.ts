@@ -18,7 +18,6 @@ export default class Game implements JSONable {
 	public atomsPerClicks: BigFloat = new BigFloat(1);
 	public atomsPerClicksAPSBoost: number = 0;
 	public atomsPerSecond: BigFloat = new BigFloat(0);
-	public atomsPerSecondBoost: BigFloat = new BigFloat(0);
 	public buildings: Building[] = [];
 	public buildingsGlobalBoost: number = 1;
 	public gui: MainGUI;
@@ -141,7 +140,6 @@ export default class Game implements JSONable {
 			this.totalAtomsProduced = new BigFloat((save.ta as string) ?? 0);
 			this.atomsPerClicks = new BigFloat((save.ac as string) ?? 1);
 			this.atomsPerClicksAPSBoost = Number(save.acb ?? 0);
-			this.atomsPerSecondBoost = new BigFloat((save.asb as string) ?? 0);
 			this.totalClicks = Number(save.t ?? 0);
 			this.buildingsGlobalBoost = Number(save.bb ?? 1);
 		} else {
@@ -273,10 +271,7 @@ export default class Game implements JSONable {
 	}
 
 	public calculateAPS() {
-		this.atomsPerSecond = this.buildings
-			.map(building => building.totalAtomPerSecond.mul(this.buildingsGlobalBoost))
-			.reduce((previous, current) => previous.add(current))
-			.add(this.atomsPerSecondBoost);
+		this.atomsPerSecond = this.buildings.map(building => building.totalAtomPerSecond).reduce((previous, current) => previous.add(current));
 	}
 
 	public resetDefaultBuyables(): void {
@@ -299,7 +294,6 @@ export default class Game implements JSONable {
 		if (this.totalClicks > 0) content.t = this.totalClicks;
 		if (this.atomsPerClicks.greaterThan(1)) content.ac = this.atomsPerClicks.toString();
 		if (this.atomsPerClicksAPSBoost > 0) content.acb = this.atomsPerClicksAPSBoost;
-		if (this.atomsPerSecondBoost.greaterThan(0)) content.asb = this.atomsPerSecondBoost.toString();
 		if (this.totalAtomsProduced.greaterThan(0)) content.ta = this.totalAtomsProduced.toString();
 		if (this.buildingsGlobalBoost > 1) content.bb = this.buildingsGlobalBoost;
 
