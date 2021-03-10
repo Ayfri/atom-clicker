@@ -4,10 +4,12 @@ import * as PIXI from 'pixi.js';
 import {app} from '../app.js';
 import buildings from '../assets/buildings.json';
 import upgrades from '../assets/upgrades.json';
+import boosts from '../assets/boosts.json';
 import Clickable from '../components/Clickable.js';
 import MainGUI from '../gui/MainGUI.js';
 import {JSONable, JSONObject} from '../types.js';
-import {tween} from '../utils/utils';
+import {random, tween} from '../utils/utils';
+import Boost from './Boost';
 import Building, {BuildingOptions} from './Building';
 import {Buyable} from './Buyable';
 import Upgrade, {ConditionType, UpgradeType} from './Upgrade';
@@ -93,6 +95,11 @@ export default class Game implements JSONable {
 			});
 		});
 
+		Boost.savedBoosts = boosts.map((b: any) => {
+			return new Boost({
+				effect: b,
+			});
+		});
 		this.setDefaultBuyables();
 		if (save) {
 			(save.b as any[]).forEach(b => {
@@ -248,7 +255,7 @@ export default class Game implements JSONable {
 						price: level * 10,
 					},
 					{
-						kind: 'aps',
+						kind: 'buildingGlobal',
 						multiplier: Math.ceil(Math.log10(level) / 2),
 					},
 					{
@@ -300,7 +307,7 @@ export default class Game implements JSONable {
 		return content;
 	}
 
-	public update() {
+	public async update() {
 		app.stage.sortChildren();
 		this.gui.update();
 		this.mainAtom.sprite.position.x = window.innerWidth / 2;
@@ -308,6 +315,8 @@ export default class Game implements JSONable {
 		this.atomsCount = this.atomsCount.add(this.atomsPerSecond.dividedBy(PIXI.Ticker.shared.FPS));
 		this.totalAtomsProduced = this.totalAtomsProduced.add(this.atomsPerSecond.dividedBy(PIXI.Ticker.shared.FPS));
 		this.calculateAPS();
+
+		if (Math.floor(Math.random() * 1000) === 100) await random(Boost.savedBoosts).spawn();
 	}
 
 	public updateVisibleBuildings() {

@@ -87,7 +87,7 @@ export function resetGame(save?: JSONObject) {
 }
 
 setup().then(() => {
-	PIXI.Ticker.shared.add(() => game.update(), {}, PIXI.UPDATE_PRIORITY.HIGH);
+	PIXI.Ticker.shared.add(async () => await game.update(), {}, PIXI.UPDATE_PRIORITY.HIGH);
 	console.log('Game started.');
 });
 
