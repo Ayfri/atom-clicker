@@ -42,7 +42,7 @@ export default class Boost<T extends UpgradeType> extends Clickable {
 	}
 
 	public async click() {
-		if (!this.spawned) return;
+		if (!this.spawned || this.clicked) return;
 		Upgrade.applyEffect(this.effect);
 		this.clicked = true;
 		const textContent: string = Upgrade.getEffectAsString(this.effect).replace('Multiply', 'Multiplied').replace('Add', 'Added');
