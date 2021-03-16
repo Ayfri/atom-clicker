@@ -14,6 +14,7 @@ export default class Boost<T extends UpgradeType> extends Clickable {
 	public static savedBoosts: Boost<UpgradeType>[] = [];
 	public clicked: boolean = false;
 	public effect: T;
+	public hiding: boolean = false;
 	public spawned: boolean = false;
 
 	public constructor(options: BoostOptions<T>) {
@@ -23,20 +24,24 @@ export default class Boost<T extends UpgradeType> extends Clickable {
 		this.sprite.height = 100;
 		this.sprite.alpha = 0;
 
-		this.sprite.on('click', () => this.click());
+		this.sprite.on('click', async () => {
+			if (!this.hiding) await this.click();
+		});
 	}
 
 	public async spawn() {
-		this.sprite.position.set(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
-		app.stage.addChild(this.sprite);
 		this.spawned = true;
+		this.sprite.position.set(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
+		this.sprite.alpha = 0;
+		app.stage.addChild(this.sprite);
 		await tween({
 			duration: 5000,
 			easing: Easing.Linear.None,
 			from: 0,
-			to: 4,
+			to: 1,
 			onUpdate: value => (this.sprite.alpha = value),
 		});
+
 		await sleep(20000);
 		if (!this.clicked) await this.hide(5000);
 	}
@@ -71,6 +76,7 @@ export default class Boost<T extends UpgradeType> extends Clickable {
 
 	public async hide(time: number = 1000) {
 		if (!this.spawned) return;
+		this.hiding = true;
 		await tween({
 			duration: time,
 			easing: Easing.Linear.None,
@@ -80,6 +86,8 @@ export default class Boost<T extends UpgradeType> extends Clickable {
 		});
 		app.stage.removeChild(this.sprite);
 		this.spawned = false;
+		this.hiding = false;
+		this.clicked = false;
 	}
 }
 
