@@ -101,8 +101,19 @@ export default class MainGUI extends GUI {
 		return this.clicksTexts.filter(text => text.visible).length;
 	}
 
+	private setFPS(): void {
+		const currentTime = Date.now();
+		this.timeValues.push(1000 / (currentTime - this.lastTime));
+		if (this.timeValues.length === 30) {
+			const total = this.timeValues.reduce((p: number, a: number) => p + a);
+			this.FPSText.text = `FPS : ${(total / 30).toFixed(2)}`;
+			this.timeValues = [];
+		}
+		this.lastTime = currentTime;
+	}
+
 	public click(position: PIXI.Point) {
-		const text = this.clicksTexts.find(text => !text.visible);
+		const text: PIXI.Text | undefined = this.clicksTexts.find(text => !text.visible);
 		if (!text) return;
 		text.text = `+${game.totalAtomsPerClicks}`;
 		text.alpha = 1;
@@ -154,16 +165,5 @@ export default class MainGUI extends GUI {
 				text.position.y--;
 				text.alpha -= 1 / PIXI.Ticker.shared.FPS;
 			});
-	}
-
-	private setFPS(): void {
-		const currentTime = Date.now();
-		this.timeValues.push(1000 / (currentTime - this.lastTime));
-		if (this.timeValues.length === 30) {
-			const total = this.timeValues.reduce((p: number, a: number) => p + a);
-			this.FPSText.text = `FPS : ${(total / 30).toFixed(2)}`;
-			this.timeValues = [];
-		}
-		this.lastTime = currentTime;
 	}
 }

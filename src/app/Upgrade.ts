@@ -81,6 +81,32 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		app.stage.addChild(this.overlay.container);
 	}
 
+	public static applyEffect(effect: UpgradeType): void {
+		switch (effect.kind) {
+			case 'building':
+				const building = game.buildings.find(building => building.name === (effect as BuildingUpgrade).building);
+				if (!building) throw new Error(`Building '${(effect as BuildingUpgrade).building}' not found.`);
+				building.boost = Upgrade.applyNumberedUpgrade(building.boost, effect);
+				break;
+
+			case 'clicks':
+				game.atomsPerClicks = Upgrade.applyNumberedUpgrade(game.atomsPerClicks, effect);
+				break;
+
+			case 'buildingGlobal':
+				game.buildingsGlobalBoost = Upgrade.applyNumberedUpgrade(game.buildingsGlobalBoost, effect);
+				break;
+
+			case 'clickAPS':
+				game.atomsPerClicksAPSBoost = Upgrade.applyNumberedUpgrade(game.atomsPerClicksAPSBoost, effect);
+				break;
+
+			case 'atoms':
+				game.atomsCount = Upgrade.applyNumberedUpgrade(game.atomsCount, effect);
+				break;
+		}
+	}
+
 	public static getEffectAsString(effect: UpgradeType): string {
 		let result = '';
 		switch (effect.kind) {
@@ -111,7 +137,9 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 	}
 
 	private static applyNumberedUpgrade(value: number, effect: UpgradeType): number;
+
 	private static applyNumberedUpgrade(value: BigFloat, effect: UpgradeType): BigFloat;
+
 	private static applyNumberedUpgrade(value: number | BigFloat, effect: UpgradeType) {
 		return typeof value === 'number'
 			? effect.multiplier
@@ -129,32 +157,6 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 			game.atomsCount = game.atomsCount.sub(this.price);
 
 			Upgrade.applyEffect(this.effect);
-		}
-	}
-
-	public static applyEffect(effect: UpgradeType): void {
-		switch (effect.kind) {
-			case 'building':
-				const building = game.buildings.find(building => building.name === (effect as BuildingUpgrade).building);
-				if (!building) throw new Error(`Building '${(effect as BuildingUpgrade).building}' not found.`);
-				building.boost = Upgrade.applyNumberedUpgrade(building.boost, effect);
-				break;
-
-			case 'clicks':
-				game.atomsPerClicks = Upgrade.applyNumberedUpgrade(game.atomsPerClicks, effect);
-				break;
-
-			case 'buildingGlobal':
-				game.buildingsGlobalBoost = Upgrade.applyNumberedUpgrade(game.buildingsGlobalBoost, effect);
-				break;
-
-			case 'clickAPS':
-				game.atomsPerClicksAPSBoost = Upgrade.applyNumberedUpgrade(game.atomsPerClicksAPSBoost, effect);
-				break;
-
-			case 'atoms':
-				game.atomsCount = Upgrade.applyNumberedUpgrade(game.atomsCount, effect);
-				break;
 		}
 	}
 
@@ -200,6 +202,10 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		return content;
 	}
 
+	public updateOverlayValues(): void {
+		this.overlay.setAPSWaitFromPrice(this.price);
+	}
+
 	public checkUnlock(): void {
 		if (!this.condition) this.unlocked = true;
 		switch (this.condition?.kind) {
@@ -231,10 +237,6 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		if (this.overlay.container.visible) this.updateOverlayValues();
 		this.sprite.tint = this.canBeBought ? 0xffffff : this.color;
 		this.checkUnlock();
-	}
-
-	public updateOverlayValues(): void {
-		this.overlay.setAPSWaitFromPrice(this.price);
 	}
 }
 

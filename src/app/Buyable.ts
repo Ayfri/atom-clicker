@@ -6,8 +6,8 @@ import {JSONObject} from '../types.js';
 
 export abstract class Buyable extends ClickableContainer {
 	public container: PIXI.Container;
-	public readonly name: string;
 	public description: string;
+	public readonly name: string;
 	public nameText: PIXI.Text;
 	public overlay: Overlay;
 	public priceText?: PIXI.Text;
@@ -37,9 +37,9 @@ export abstract class Buyable extends ClickableContainer {
 		return game.atomsCount.greaterThan(this.price - 1);
 	}
 
-	public abstract updateOverlayValues?(): void;
-
 	public abstract get price(): number;
+
+	public abstract updateOverlayValues?(): void;
 
 	public abstract buy(): void;
 
