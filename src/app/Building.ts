@@ -61,12 +61,10 @@ export default class Building extends Buyable implements BuildingOptions {
 	}
 
 	public buy() {
-		if (this.canBeBought) {
-			this.update();
-			do {
-				game.atomsCount = game.atomsCount.sub(this.price);
-				this.ownedCount++;
-			} while (this.canBeBought && KeyboardManager.isPressed('Shift'));
+		this.update();
+		while (this.canBeBought && KeyboardManager.isPressed('Shift')) {
+			game.atomsCount = game.atomsCount.sub(this.price);
+			this.ownedCount++;
 		}
 	}
 
@@ -109,18 +107,6 @@ export default class Building extends Buyable implements BuildingOptions {
 		return content;
 	}
 
-	public update() {
-		super.update();
-		this.sprite.tint = this.canBeBought ? 0xffffff : this.color;
-
-		this.ownerCountText.text = this.ownedCount.toString();
-		this.priceText.text = `${this.price.toString()} atoms`;
-
-		if (this.overlay.container.visible) {
-			this.updateOverlayValues();
-		}
-	}
-
 	public updateOverlayValues(): void {
 		this.overlay.setAPSWaitFromPrice(this.price);
 		this.overlay.stats.get(StatsType.PRICE).text = `Price: ${this.price}`;
@@ -131,6 +117,18 @@ export default class Building extends Buyable implements BuildingOptions {
 			.mul(10000)
 			.floor()
 			.div(100)}%`;
+	}
+
+	public update() {
+		super.update();
+		this.sprite.tint = this.canBeBought ? 0xffffff : this.color;
+
+		this.ownerCountText.text = this.ownedCount.toString();
+		this.priceText.text = `${this.price.toString()} atoms`;
+
+		if (this.overlay.container.visible) {
+			this.updateOverlayValues();
+		}
 	}
 }
 
