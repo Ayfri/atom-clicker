@@ -33,7 +33,7 @@ function watch() {
 		if (err) throw err;
 	});
 
-	return gulp.watch(['src/**/*.ts', 'src/assets/**/*.json', 'public/**.*'], copyAndBundle);
+	return gulp.watch(['src/**/*.*', 'public/**.*'], copyAndBundle);
 }
 
 function copyAndBundle() {
