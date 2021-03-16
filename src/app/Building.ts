@@ -62,10 +62,10 @@ export default class Building extends Buyable implements BuildingOptions {
 
 	public buy() {
 		this.update();
-		while (this.canBeBought && KeyboardManager.isPressed('Shift')) {
+		do {
 			game.atomsCount = game.atomsCount.sub(this.price);
 			this.ownedCount++;
-		}
+		} while (this.canBeBought && KeyboardManager.isPressed('Shift'));
 	}
 
 	get price(): number {
