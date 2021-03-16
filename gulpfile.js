@@ -33,8 +33,12 @@ function watch() {
 		if (err) throw err;
 	});
 
-	return gulp.watch(['src/**/*.ts', 'src/assets/**/*.json', 'public/**.*'], gulp.series(copyPublic, bundle));
+	return gulp.watch(['src/**/*.ts', 'src/assets/**/*.json', 'public/**.*'], copyAndBundle);
 }
 
-exports.bundle = gulp.series(copyPublic, copyTextures, bundle);
-exports.watch = gulp.series(copyPublic, copyTextures, watch);
+function copyAndBundle() {
+	return gulp.series(copyPublic, copyTextures, bundle);
+}
+
+exports.bundle = copyAndBundle;
+exports.watch = watch;
