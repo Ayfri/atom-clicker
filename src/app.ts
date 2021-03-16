@@ -19,6 +19,8 @@ document.body.appendChild(app.view);
 async function loadTextures() {
 	await new Promise(resolve => {
 		PIXI.Loader.shared.add('x', 'textures/x.png');
+		PIXI.Loader.shared.add('red-atom', 'textures/red-atom.png');
+		PIXI.Loader.shared.add('blue-atom', 'textures/blue-atom.png');
 		PIXI.Loader.shared.load(resolve);
 	});
 }

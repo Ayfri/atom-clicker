@@ -2,7 +2,7 @@ import {Easing} from '@tweenjs/tween.js';
 import * as PIXI from 'pixi.js';
 import {app} from '../app';
 import Clickable from '../components/Clickable';
-import {sleep, tween} from '../utils/utils';
+import {getTextureByName, random, sleep, tween} from '../utils/utils';
 import Upgrade, {UpgradeType} from './Upgrade';
 
 interface BoostOptions<T extends UpgradeType> {
@@ -17,13 +17,13 @@ export default class Boost<T extends UpgradeType> extends Clickable {
 	public spawned: boolean = false;
 
 	public constructor(options: BoostOptions<T>) {
-		super(options.texture ?? PIXI.Texture.WHITE);
+		super(options.texture ?? random([getTextureByName('red-atom'), getTextureByName('blue-atom')]));
 		this.effect = options.effect;
 		this.sprite.width = 100;
 		this.sprite.height = 100;
 		this.sprite.alpha = 0;
 
-		this.sprite.on('click', async () => await this.click());
+		this.sprite.on('click', () => this.click());
 	}
 
 	public async spawn() {
