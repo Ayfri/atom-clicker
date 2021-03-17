@@ -33,12 +33,12 @@ function watch() {
 		if (err) throw err;
 	});
 
-	return gulp.watch(['src/**/*.*', 'public/**.*'], copyAndBundle);
+	return gulp.watch(['src/**/*.*', 'public/**.*'], copyAndBundle());
 }
 
 function copyAndBundle() {
 	return gulp.series(copyPublic, copyTextures, bundle);
 }
 
-exports.bundle = copyAndBundle;
+exports.bundle = copyAndBundle();
 exports.watch = watch;
