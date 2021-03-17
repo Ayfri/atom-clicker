@@ -316,7 +316,7 @@ export default class Game implements JSONable {
 		this.totalAtomsProduced = this.totalAtomsProduced.add(this.atomsPerSecond.dividedBy(PIXI.Ticker.shared.FPS));
 		this.calculateAPS();
 
-		if (Math.floor(Math.random() * 1000) === 100) await random(Boost.savedBoosts).spawn();
+		if (Math.floor(Math.random() * 300) === 42) await random(Boost.savedBoosts.filter(b => !b.spawned))?.spawn();
 	}
 
 	public updateVisibleBuildings() {
