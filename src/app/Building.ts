@@ -61,6 +61,7 @@ export default class Building extends Buyable implements BuildingOptions {
 	}
 
 	public buy() {
+		if (!this.canBeBought) return;
 		this.update();
 		do {
 			game.atomsCount = game.atomsCount.sub(this.price);
