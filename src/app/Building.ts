@@ -83,10 +83,8 @@ export default class Building extends Buyable implements BuildingOptions {
 		this.nameText.position.set(this.sprite.width / 3, this.sprite.height / 4);
 	}
 
-	public toJSON() {
-		let content: JSONObject = {
-			i: game.buildings.indexOf(this),
-		};
+	public toJSON(): JSONObject | number {
+		let content: JSONObject = {};
 
 		if (this.boost > 1) content.b = this.boost;
 		if (this.ownedCount > 0) content.o = this.ownedCount;
@@ -103,9 +101,7 @@ export default class Building extends Buyable implements BuildingOptions {
 			if (this.description) content.d = this.description;
 		}
 
-		if (Object.keys(content).join('') === 'i') return game.buildings.indexOf(this);
-
-		return content;
+		return !Object.keys(content).length ? Game.getBuyableIndex(this, 'building') : content;
 	}
 
 	public updateOverlayValues(): void {

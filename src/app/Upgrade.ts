@@ -171,9 +171,7 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 	}
 
 	public toJSON(): JSONObject | number {
-		let content: JSONObject = {
-			i: game.upgrades.indexOf(this),
-		};
+		let content: JSONObject = {};
 
 		if (this.owned) content.o = this.owned;
 		else {
@@ -197,9 +195,7 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 			if (this.description) content.d = this.description;
 		}
 
-		if (Object.keys(content).join('') === 'i') return game.upgrades.indexOf(this);
-
-		return content;
+		return !Object.keys(content).length ? Game.getBuyableIndex(this, 'upgrade') : content;
 	}
 
 	public updateOverlayValues(): void {
@@ -234,9 +230,12 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 	public update() {
 		super.update();
 
-		if (this.overlay.container.visible) this.updateOverlayValues();
-		this.sprite.tint = this.canBeBought ? 0xffffff : this.color;
 		this.checkUnlock();
+		this.container.visible = this.unlocked && !this.owned;
+		if (this.container.visible) {
+			this.sprite.tint = this.canBeBought ? 0xffffff : this.color;
+			if (this.overlay.container.visible) this.updateOverlayValues();
+		}
 	}
 }
 
