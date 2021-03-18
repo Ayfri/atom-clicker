@@ -101,54 +101,58 @@ export default class Game implements JSONable {
 			});
 		});
 		this.setDefaultBuyables();
+
 		if (save) {
-			(save.b as any[]).forEach(b => {
-				let building: Building;
-				if (Game.getBuyableFromName(b.i) instanceof Building) {
-					building = Game.getBuyableFromName(b.i) as Building;
-					app.stage.addChild(building.overlay.container);
-				} else {
-					building = new Building({
-						name: b.n,
-						description: b.d ?? '',
-						atomsPerSecond: b.a,
-						startingPrice: b.s,
-						priceMultiplier: b.p ?? 1.2,
-					});
-				}
-				building.ownedCount = b.o ?? 0;
-				building.boost = b.b ?? 1;
-				this.addBuilding(building);
-			});
-
-			(save.u as any[]).forEach(u => {
-				let upgrade: Upgrade<UpgradeType, ConditionType>;
-				if (Game.getBuyableFromName(u.i) instanceof Upgrade) {
-					upgrade = Game.getBuyableFromName(u.i) as Upgrade<UpgradeType, ConditionType>;
-					app.stage.addChild(upgrade.overlay.container);
-				} else {
-					upgrade = new Upgrade<UpgradeType, ConditionType>(
-						{
-							name: u.i,
-							description: u.d ?? '',
-							price: u.p,
-						},
-						u.e,
-						u.c
-					);
-				}
-
-				upgrade.unlocked = u.hasOwnProperty('u') ? !!u.u : true;
-				upgrade.owned = u.hasOwnProperty('o') ? !!u.o : false;
-				this.addUpgrade(upgrade);
-			});
-
 			this.atomsCount = new BigFloat((save.c as string) ?? 0);
 			this.totalAtomsProduced = new BigFloat((save.ta as string) ?? 0);
 			this.atomsPerClicks = new BigFloat((save.ac as string) ?? 1);
 			this.atomsPerClicksAPSBoost = Number(save.acb ?? 0);
 			this.totalClicks = Number(save.t ?? 0);
 			this.buildingsGlobalBoost = Number(save.bb ?? 1);
+
+			(save.b as any[]).forEach(b => {
+				const building: Building = Game.getBuyableFromName(b.i) as Building;
+				building.ownedCount = b.o ?? 0;
+				building.boost = b.b ?? 1;
+				this.addBuilding(building);
+			});
+
+			(save.cb as any[])?.forEach(cb => {
+				const building = new Building({
+					name: cb.n,
+					description: cb.d ?? '',
+					atomsPerSecond: cb.a,
+					startingPrice: cb.s,
+					priceMultiplier: cb.p ?? 1.2,
+				});
+
+				building.ownedCount = cb.o ?? 0;
+				building.boost = cb.b ?? 1;
+				this.addBuilding(building);
+			});
+
+			(save.u as any[]).forEach(u => {
+				const upgrade = Game.getBuyableFromName(u.i) as Upgrade<UpgradeType, ConditionType>;
+
+				upgrade.unlocked = u.hasOwnProperty('u') ? !!u.u : true;
+				upgrade.owned = u.hasOwnProperty('o') ? !!u.o : false;
+				this.addUpgrade(upgrade);
+			});
+
+			(save.cu as any[])?.forEach(u => {
+				const upgrade = new Upgrade<UpgradeType, ConditionType>(
+					{
+						name: u.i,
+						description: u.d ?? '',
+						price: u.p,
+					},
+					u.e,
+					u.c
+				);
+				upgrade.unlocked = u.hasOwnProperty('u') ? !!u.u : true;
+				upgrade.owned = u.hasOwnProperty('o') ? !!u.o : false;
+				this.addUpgrade(upgrade);
+			});
 		} else {
 			Game.defaultBuyables[0].forEach(b => this.addBuilding(b));
 			Game.defaultBuyables[1].forEach(u => this.addUpgrade(u));
@@ -159,16 +163,15 @@ export default class Game implements JSONable {
 	}
 
 	public static getBuyableFromIndex(index: number, type: 'building' | 'upgrade'): Buyable {
-		switch (type) {
-			case 'building':
-				return Game.defaultBuyables[0][index];
-			case 'upgrade':
-				return Game.defaultBuyables[1][index];
-		}
+		return Game.defaultBuyables[Number(type === 'upgrade')][index];
 	}
 
 	public static getBuyableFromName(name: string): Buyable {
 		return Game.defaultBuyables.flat().find(b => b.name === name);
+	}
+
+	public static getBuyableIndex(buyable: Buyable, type: 'building' | 'upgrade'): number {
+		return Game.defaultBuyables[Number(type === 'upgrade')].indexOf(buyable as any);
 	}
 
 	public static isDefaultBuyable(buyable: Buyable): boolean {
@@ -294,9 +297,14 @@ export default class Game implements JSONable {
 
 	public toJSON(): JSONObject {
 		const content: JSONObject = {
-			b: this.buildings.map(building => building.toJSON()),
-			u: this.upgrades.map(upgrade => upgrade.toJSON()),
+			b: this.buildings.filter(b => Game.isDefaultBuyable(b)).map(building => building.toJSON()),
+			u: this.upgrades.filter(u => Game.isDefaultBuyable(u)).map(u => u.toJSON()),
 		};
+
+		if ((content.u as any[]).length < this.upgrades.length) content.cu = this.upgrades.filter(u => !Game.isDefaultBuyable(u)).map(u => u.toJSON());
+
+		if ((content.b as any[]).length < this.buildings.length) content.cb = this.buildings.filter(b => !Game.isDefaultBuyable(b)).map(b => b.toJSON());
+
 		if (this.atomsCount.greaterThan(0)) content.c = this.atomsCount.floor().toString();
 		if (this.totalClicks > 0) content.t = this.totalClicks;
 		if (this.atomsPerClicks.greaterThan(1)) content.ac = this.atomsPerClicks.toString();
@@ -321,19 +329,21 @@ export default class Game implements JSONable {
 
 	public updateVisibleBuildings() {
 		this.buildings.forEach((building, index) => {
-			building.resize();
-			building.update();
 			building.container.x = window.innerWidth - building.container.width;
 			building.container.y = index * (building.container.height + 5) + window.innerHeight / 4;
 		});
 
-		for (const upgrade of this.upgrades.sort((u1, u2) => u1.price - u2.price)) {
-			const index = this.upgrades.filter(upgrade => upgrade.unlocked && !upgrade.owned).indexOf(upgrade);
-			upgrade.resize();
-			upgrade.update();
+		[...this.buildings, ...this.upgrades].forEach(b => {
+			b.resize();
+			b.update();
+		});
+
+		const upgrades = this.upgrades.filter(u => u.container.visible).sort((u1, u2) => u1.price - u2.price);
+		upgrades.forEach((u, index) => {
+			const upgrade = upgrades[index];
 			upgrade.container.y = index * (upgrade.container.height + 5) + window.innerHeight / 4;
-			upgrade.container.visible = upgrade.unlocked && !upgrade.owned;
-			if (upgrade.unlocked) upgrade.container.alpha = 1;
-		}
+		});
 	}
 }
+
+(window as any).Game = Game;
