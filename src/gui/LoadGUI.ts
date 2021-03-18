@@ -47,25 +47,23 @@ export default class LoadGUI extends ClosableGUI {
 			let decompressSave: JSONObject;
 			save = save.replace(/([{,])([iubctonpsde]|ac|acb|asb|bb|ta)(:)/g, '$1"$2"$3');
 			decompressSave = JSON.parse(save);
-			decompressSave.b = (decompressSave.b as JSONObject[]).map(b => {
+			decompressSave.b = (decompressSave.b as JSONObject[]).map((b, index) => {
+				const building = Game.getBuyableFromIndex(typeof b === 'number' ? b : index, 'building');
 				return typeof b === 'number'
-					? {i: Game.getBuyableFromIndex(b, 'building').name}
-					: typeof b.i === 'number'
-					? {
+					? {i: building?.name}
+					: {
 							...b,
-							i: Game.getBuyableFromIndex(b.i, 'building')?.name,
-					  }
-					: b;
+							i: building?.name,
+					  };
 			}) as JSONObject[];
-			decompressSave.u = (decompressSave.u as JSONObject[]).map(u => {
+			decompressSave.u = (decompressSave.u as JSONObject[]).map((u, index) => {
+				const upgrade = Game.getBuyableFromIndex(typeof u === 'number' ? u : index, 'upgrade');
 				return typeof u === 'number'
-					? {i: Game.getBuyableFromIndex(u, 'upgrade')?.name}
-					: typeof u.i === 'number'
-					? {
+					? {i: upgrade?.name}
+					: {
 							...u,
-							i: Game.getBuyableFromIndex(u.i, 'upgrade')?.name,
-					  }
-					: u;
+							i: upgrade?.name,
+					  };
 			}) as JSONObject[];
 			resetGame(decompressSave);
 		} catch (ignored) {}
