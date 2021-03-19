@@ -99,6 +99,7 @@ export default class Game implements JSONable {
 			return new Boost({
 				effect: b.effect,
 				condition: b.condition,
+				duration: b.duration,
 			});
 		});
 		this.setDefaultBuyables();
