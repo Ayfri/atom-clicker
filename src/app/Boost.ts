@@ -3,26 +3,30 @@ import * as PIXI from 'pixi.js';
 import {app} from '../app';
 import Clickable from '../components/Clickable';
 import {getTextureByName, random, sleep, tween} from '../utils/utils';
-import Upgrade, {UpgradeType} from './Upgrade';
+import Upgrade, {ConditionType, UpgradeType} from './Upgrade';
 
-interface BoostOptions<T extends UpgradeType> {
+interface BoostOptions<T extends UpgradeType, L extends ConditionType> {
 	effect: T;
+	condition?: L;
 	texture?: PIXI.Texture;
 }
 
-export default class Boost<T extends UpgradeType> extends Clickable {
-	public static savedBoosts: Boost<UpgradeType>[] = [];
+export default class Boost<T extends UpgradeType, L extends ConditionType> extends Clickable {
+	public static savedBoosts: Boost<UpgradeType, ConditionType>[] = [];
 	public clicked: boolean = false;
+	public condition?: L;
 	public effect: T;
 	public hiding: boolean = false;
 	public spawned: boolean = false;
+	public unlocked: boolean = true;
 
-	public constructor(options: BoostOptions<T>) {
+	public constructor(options: BoostOptions<T, L>) {
 		super(options.texture ?? random([getTextureByName('red-atom'), getTextureByName('blue-atom')]));
 		this.effect = options.effect;
 		this.sprite.width = 100;
 		this.sprite.height = 100;
 		this.sprite.alpha = 0;
+		this.condition = options.condition;
 
 		this.sprite.on('click', async () => {
 			if (!this.hiding) await this.click();
@@ -30,6 +34,8 @@ export default class Boost<T extends UpgradeType> extends Clickable {
 	}
 
 	public async spawn() {
+		this.unlocked = Upgrade.checkUnlock(this.condition);
+		if (!this.unlocked) return;
 		this.spawned = true;
 		this.sprite.position.set(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
 		this.sprite.alpha = 0;
