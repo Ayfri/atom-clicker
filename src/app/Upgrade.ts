@@ -202,35 +202,38 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		this.overlay.setAPSWaitFromPrice(this.price);
 	}
 
-	public checkUnlock(): void {
-		if (!this.condition) this.unlocked = true;
-		switch (this.condition?.kind) {
+	public static checkUnlock(condition?: ConditionType): boolean {
+		let unlocked: boolean;
+		if (!condition) unlocked = true;
+		switch (condition?.kind) {
 			case 'building':
-				this.unlocked = game.buildings?.find(building => building.name === (this.condition as BuildingUpgrade).building)?.ownedCount >= this.condition.count;
+				unlocked = game.buildings?.find(building => building.name === (condition as BuildingUpgrade).building)?.ownedCount >= condition.count;
 				break;
 
 			case 'clicks':
-				this.unlocked = game.totalClicks >= this.condition.count;
+				unlocked = game.totalClicks >= condition.count;
 				break;
 
 			case 'buildingGlobal':
-				this.unlocked = game.buildings.map(building => building.ownedCount).reduce((previousValue, currentValue) => previousValue + currentValue) >= this.condition.count;
+				unlocked = game.buildings.map(building => building.ownedCount).reduce((previousValue, currentValue) => previousValue + currentValue) >= condition.count;
 				break;
 
 			case 'clickAPS':
-				this.unlocked = game.atomsPerClicks.greaterThanOrEqualTo(this.condition.count);
+				unlocked = game.atomsPerClicks.greaterThanOrEqualTo(condition.count);
 				break;
 
 			case 'atoms':
-				this.unlocked = game.totalAtomsProduced.greaterThanOrEqualTo(this.condition.count);
+				unlocked = game.totalAtomsProduced.greaterThanOrEqualTo(condition.count);
 				break;
 		}
+
+		return unlocked;
 	}
 
 	public update() {
 		super.update();
 
-		this.checkUnlock();
+		this.unlocked = Upgrade.checkUnlock(this.condition);
 		this.container.visible = this.unlocked && !this.owned;
 		if (this.container.visible) {
 			this.sprite.tint = this.canBeBought ? 0xffffff : this.color;
