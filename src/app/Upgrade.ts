@@ -168,7 +168,7 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		this.nameText.position.set(this.nameText.width / 2 + 5, this.container.height / 5);
 		this.effectText.position.set(this.effectText.width / 2 + 5, this.container.height / 2.2);
 		this.priceText.position.set(this.priceText.width / 2 + 5, this.container.height - this.container.height / 5);
-		this.sprite.width = 50 + window.innerWidth / 10;
+		this.sprite.width = 100 + window.innerWidth / 7;
 		this.sprite.height = window.innerHeight / 12;
 	}
 

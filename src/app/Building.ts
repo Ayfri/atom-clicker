@@ -77,7 +77,7 @@ export default class Building extends Buyable implements BuildingOptions {
 
 	public resize() {
 		this.sprite.height = window.innerHeight / 15;
-		this.sprite.width = 100 + window.innerWidth / 8;
+		this.sprite.width = 100 + window.innerWidth / 6;
 		this.ownerCountText.position.set(this.sprite.width - this.sprite.width / 5, this.sprite.height / 2);
 		this.priceText.position.set(this.sprite.width / 3, this.sprite.height - this.sprite.height / 4);
 		this.nameText.position.set(this.sprite.width / 3, this.sprite.height / 4);
