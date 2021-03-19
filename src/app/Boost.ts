@@ -1,13 +1,14 @@
 import {Easing} from '@tweenjs/tween.js';
 import * as PIXI from 'pixi.js';
-import {app} from '../app';
+import {app, game} from '../app';
 import Clickable from '../components/Clickable';
-import {getTextureByName, random, sleep, tween} from '../utils/utils';
+import {deepCopy, getTextureByName, random, sleep, tween} from '../utils/utils';
 import Upgrade, {ConditionType, UpgradeType} from './Upgrade';
 
 interface BoostOptions<T extends UpgradeType, L extends ConditionType> {
-	effect: T;
 	condition?: L;
+	duration?: number;
+	effect: T;
 	texture?: PIXI.Texture;
 }
 
@@ -15,6 +16,7 @@ export default class Boost<T extends UpgradeType, L extends ConditionType> exten
 	public static savedBoosts: Boost<UpgradeType, ConditionType>[] = [];
 	public clicked: boolean = false;
 	public condition?: L;
+	public duration?: number;
 	public effect: T;
 	public hiding: boolean = false;
 	public spawned: boolean = false;
@@ -27,6 +29,7 @@ export default class Boost<T extends UpgradeType, L extends ConditionType> exten
 		this.sprite.height = 100;
 		this.sprite.alpha = 0;
 		this.condition = options.condition;
+		this.duration = options.duration;
 
 		this.sprite.on('click', async () => {
 			if (!this.hiding) await this.click();
@@ -56,13 +59,33 @@ export default class Boost<T extends UpgradeType, L extends ConditionType> exten
 		if (!this.spawned || this.clicked) return;
 		Upgrade.applyEffect(this.effect);
 		this.clicked = true;
-		const textContent: string = Upgrade.getEffectAsString(this.effect).replace('Multiply', 'Multiplied').replace('Add', 'Added');
+
+		if (this.duration) {
+			console.log(game.atomsPerClicks.toString());
+
+			setTimeout(() => {
+				const negativeEffect = deepCopy(this.effect);
+				if (negativeEffect.multiplier) negativeEffect.multiplier = 1 / negativeEffect.multiplier;
+				else negativeEffect.addition = -negativeEffect.addition;
+
+				switch (this.effect.kind) {
+					case 'building':
+					case 'buildingGlobal':
+					case 'clicks':
+					case 'clickAPS':
+						Upgrade.applyEffect(negativeEffect);
+				}
+			}, this.duration * 1000);
+		}
+
+		const textContent: string = Upgrade.getEffectAsString(this.effect, this.duration).replace('Multiply', 'Multiplied').replace('Add', 'Added');
 		const text = new PIXI.Text(textContent, {
 			fontSize: 30,
 			fontWeight: 'bold',
 		});
 		text.anchor.set(0.5);
 		text.position.set(window.innerWidth / 2, window.innerHeight / 6);
+
 		app.stage.addChild(text);
 		await this.hide();
 
