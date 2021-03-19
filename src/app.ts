@@ -27,11 +27,14 @@ async function loadTextures() {
 
 async function setup() {
 	await loadTextures();
-	game = new Game();
+	Game.setDefaultBuyables();
 	if (localStorage.getItem('save')) LoadGUI.decompressSave(localStorage.getItem('save'));
-	(window as any).game = game;
-
+	else {
+		game = new Game();
+		(window as any).game = game;
+	}
 	game.resize();
+	await game.update();
 	window.onresize = () => game.resize();
 
 	setInterval(() => localSave(), 1000 * 30);
@@ -75,14 +78,15 @@ export function localSave() {
 }
 
 export function resetGame(save?: JSONObject) {
-	game.gui.loadGUI.close();
-	game.gui.saveGUI.close();
-	game.gui.resetGUI.close();
-	game.upgrades.forEach(upgrade => upgrade.overlay.hide());
-	game.buildings.forEach(building => building.overlay.hide());
+	game?.gui.loadGUI.close();
+	game?.gui.saveGUI.close();
+	game?.gui.resetGUI.close();
+	game?.upgrades.forEach(upgrade => upgrade.overlay.hide());
+	game?.buildings.forEach(building => building.overlay.hide());
 
 	app.stage.removeChildren();
-	game.resetDefaultBuyables();
+	game?.resetDefaultBuyables();
+	Game.setDefaultBuyables();
 	game = new Game(save);
 	(window as any).game = game;
 	game.resize();

@@ -101,7 +101,6 @@ export default class Game implements JSONable {
 				duration: b.duration,
 			});
 		});
-		this.setDefaultBuyables();
 
 		if (save) {
 			this.atomsCount = new BigFloat((save.c as string) ?? 0);
@@ -113,6 +112,7 @@ export default class Game implements JSONable {
 
 			(save.b as any[]).forEach(b => {
 				const building: Building = Game.getBuyableFromName(b.i) as Building;
+				console.log(b, save);
 				building.ownedCount = b.o ?? 0;
 				building.boost = b.b ?? 1;
 				this.addBuilding(building);
@@ -187,7 +187,7 @@ export default class Game implements JSONable {
 		return this.atomsPerSecond.add(this.atomsPerClicks * this.gui.clicksPerSeconds);
 	}
 
-	private setDefaultBuyables(): void {
+	public static setDefaultBuyables(): void {
 		buildings.forEach((building: BuildingOptions) => Game.defaultBuyables[0].push(new Building(building)));
 
 		upgrades.forEach((upgrade: any) =>
@@ -269,6 +269,26 @@ export default class Game implements JSONable {
 				)
 			);
 		}
+
+		for (let level = 1; level < 100; level++) {
+			Game.defaultBuyables[1].push(
+				new Upgrade(
+					{
+						name: `Rare Atom ${level} !`,
+						description: `You can now buy a new rare atom.`,
+						price: 10 ** level,
+					},
+					{
+						kind: 'clickAPS',
+						multiplier: 0.01,
+					},
+					{
+						kind: 'atoms',
+						count: 10 ** level / 10,
+					}
+				)
+			);
+		}
 	}
 
 	public addBuilding(building: Building) {
@@ -288,8 +308,7 @@ export default class Game implements JSONable {
 	public resize() {
 		this.updateVisibleBuildings();
 		this.gui.resize();
-		this.buildings?.forEach(building => building.resize());
-		this.upgrades?.forEach(upgrade => upgrade.resize());
+		[this.gui, ...this.buildings, ...this.upgrades].forEach(b => b.resize());
 		this.mainAtom.sprite.height = window.innerWidth / 3.5;
 		this.mainAtom.sprite.width = window.innerWidth / 3.5;
 	}
@@ -332,14 +351,12 @@ export default class Game implements JSONable {
 			building.container.y = index * (building.container.height + 5) + window.innerHeight / 4;
 		});
 
-		[...this.buildings, ...this.upgrades].forEach(b => {
-			//			b.resize();
-			b.update();
-		});
+		[...this.buildings, ...this.upgrades].forEach(b => b.update());
 
 		const upgrades = this.upgrades.filter(u => u.container.visible).sort((u1, u2) => u1.price - u2.price);
 		upgrades.forEach((u, index) => {
 			const upgrade = upgrades[index];
+			upgrade.resize();
 			upgrade.container.y = index * (upgrade.container.height + 5) + window.innerHeight / 4;
 		});
 	}
