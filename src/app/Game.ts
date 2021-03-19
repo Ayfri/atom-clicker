@@ -32,15 +32,13 @@ export default class Game implements JSONable {
 		this.gui = new MainGUI();
 
 		this.mainAtom = new Clickable(PIXI.Texture.WHITE);
-		this.mainAtom.sprite.height = 400;
-		this.mainAtom.sprite.width = 400;
 		this.mainAtom.sprite.zIndex = -100;
 		this.mainAtom.sprite.anchor.set(0.5);
 		this.mainAtom.sprite.position.set(window.innerWidth / 2, window.innerHeight / 2.8);
 		this.mainAtom.on('hover', async () => {
 			await tween({
-				from: 400,
-				to: 430,
+				from: window.innerWidth / 3.5,
+				to: window.innerWidth / 3.3,
 				easing: TWEEN.Easing.Exponential.Out,
 				duration: 200,
 				onUpdate: (value: number) => {
@@ -52,8 +50,8 @@ export default class Game implements JSONable {
 
 		this.mainAtom.on('hoverEnd', async () => {
 			await tween({
-				from: 430,
-				to: 400,
+				from: window.innerWidth / 3.3,
+				to: window.innerWidth / 3.5,
 				easing: TWEEN.Easing.Circular.Out,
 				duration: 150,
 				onUpdate: (value: number) => {
@@ -71,8 +69,8 @@ export default class Game implements JSONable {
 			this.gui.click(position);
 
 			await tween({
-				from: this.mainAtom.hover ? 400 : 370,
-				to: this.mainAtom.hover ? 430 : 400,
+				from: this.mainAtom.hover ? window.innerWidth / 3.5 : window.innerWidth / 3.7,
+				to: this.mainAtom.hover ? window.innerWidth / 3.3 : window.innerWidth / 3.5,
 				easing: TWEEN.Easing.Bounce.Out,
 				duration: 500,
 				onUpdate: (value: number) => {
@@ -83,7 +81,7 @@ export default class Game implements JSONable {
 					if (this.mainAtom.hover) return;
 					await tween({
 						from: value,
-						to: 400,
+						to: window.innerWidth / 3.5,
 						easing: TWEEN.Easing.Circular.Out,
 						duration: 100,
 						onUpdate: (value: number) => {
@@ -292,6 +290,8 @@ export default class Game implements JSONable {
 		this.gui.resize();
 		this.buildings?.forEach(building => building.resize());
 		this.upgrades?.forEach(upgrade => upgrade.resize());
+		this.mainAtom.sprite.height = window.innerWidth / 3.5;
+		this.mainAtom.sprite.width = window.innerWidth / 3.5;
 	}
 
 	public toJSON(): JSONObject {
