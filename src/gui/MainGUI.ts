@@ -22,6 +22,7 @@ export default class MainGUI extends GUI {
 	public saveGUI: SaveGUI;
 	private lastTime: number = Date.now();
 	private timeValues: number[] = [];
+	private atomsPerClicks: string;
 
 	public constructor() {
 		super({
@@ -115,7 +116,7 @@ export default class MainGUI extends GUI {
 	public click(position: PIXI.Point) {
 		const text: PIXI.Text | undefined = this.clicksTexts.find(text => !text.visible);
 		if (!text) return;
-		text.text = `+${game.totalAtomsPerClicks}`;
+		text.text = `+${this.atomsPerClicks}`;
 		text.alpha = 1;
 		text.visible = true;
 		text.position.copyFrom(position);
@@ -146,9 +147,10 @@ export default class MainGUI extends GUI {
 	}
 
 	public update() {
+		this.atomsPerClicks = game.totalAtomsPerClicks.toString();
 		this.atomsCountText.text = `${game.atomsCount.toString().split('.')[0]} atoms`;
 		this.APSText.text = `per second: ${game.totalAtomsPerSecond.toString().replace(/(\d+\.\d{2})\d+/g, '$1')}`;
-		this.atomsPerClicksText.text = `Atoms per clicks: ${game.totalAtomsPerClicks.toString()}`;
+		this.atomsPerClicksText.text = `Atoms per clicks: ${this.atomsPerClicks}`;
 		this.CPSText.text = `Clicks per second: ${this.clicksPerSeconds}`;
 		this.setFPS();
 

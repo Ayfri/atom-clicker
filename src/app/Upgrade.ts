@@ -221,7 +221,7 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 				break;
 
 			case 'clickAPS':
-				unlocked = game.atomsPerClicks.greaterThanOrEqualTo(condition.count);
+				unlocked = game.atomsPerClicks >= condition.count;
 				break;
 
 			case 'atoms':

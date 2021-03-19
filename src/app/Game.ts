@@ -17,7 +17,7 @@ import Upgrade, {ConditionType, UpgradeType} from './Upgrade';
 export default class Game implements JSONable {
 	private static defaultBuyables: [buildings: Building[], upgrades: Upgrade<UpgradeType, ConditionType>[]] = [[], []];
 	public atomsCount: BigFloat = new BigFloat(0);
-	public atomsPerClicks: BigFloat = new BigFloat(1);
+	public atomsPerClicks: number = 1;
 	public atomsPerClicksAPSBoost: number = 0;
 	public atomsPerSecond: BigFloat = new BigFloat(0);
 	public buildings: Building[] = [];
@@ -108,7 +108,7 @@ export default class Game implements JSONable {
 		if (save) {
 			this.atomsCount = new BigFloat((save.c as string) ?? 0);
 			this.totalAtomsProduced = new BigFloat((save.ta as string) ?? 0);
-			this.atomsPerClicks = new BigFloat((save.ac as string) ?? 1);
+			this.atomsPerClicks = Number(save.bb ?? 1);
 			this.atomsPerClicksAPSBoost = Number(save.acb ?? 0);
 			this.totalClicks = Number(save.t ?? 0);
 			this.buildingsGlobalBoost = Number(save.bb ?? 1);
@@ -182,11 +182,11 @@ export default class Game implements JSONable {
 	}
 
 	get totalAtomsPerClicks(): BigFloat {
-		return this.atomsPerClicks.add(this.atomsPerSecond.mul(this.atomsPerClicksAPSBoost)).mul(100).floor().div(100);
+		return new BigFloat(this.atomsPerClicks).add(this.atomsPerSecond.mul(this.atomsPerClicksAPSBoost)).mul(100).floor().div(100);
 	}
 
 	get totalAtomsPerSecond(): BigFloat {
-		return this.atomsPerSecond.add(this.atomsPerClicks.mul(this.gui.clicksPerSeconds));
+		return this.atomsPerSecond.add(this.atomsPerClicks * this.gui.clicksPerSeconds);
 	}
 
 	private setDefaultBuyables(): void {
@@ -306,7 +306,7 @@ export default class Game implements JSONable {
 
 		if (this.atomsCount.greaterThan(0)) content.c = this.atomsCount.floor().toString();
 		if (this.totalClicks > 0) content.t = this.totalClicks;
-		if (this.atomsPerClicks.greaterThan(1)) content.ac = this.atomsPerClicks.toString();
+		if (this.atomsPerClicks > 1) content.ac = this.atomsPerClicks.toString();
 		if (this.atomsPerClicksAPSBoost > 0) content.acb = this.atomsPerClicksAPSBoost;
 		if (this.totalAtomsProduced.greaterThan(0)) content.ta = this.totalAtomsProduced.toString();
 		if (this.buildingsGlobalBoost > 1) content.bb = this.buildingsGlobalBoost;
@@ -333,7 +333,7 @@ export default class Game implements JSONable {
 		});
 
 		[...this.buildings, ...this.upgrades].forEach(b => {
-			b.resize();
+			//			b.resize();
 			b.update();
 		});
 
