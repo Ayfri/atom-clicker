@@ -1,70 +1,98 @@
 [
 	{
-		"kind": "atoms",
-		"addition": 1000
+		"effect": {
+			"kind": "atoms",
+			"addition": 1000
+		},
+		"condition": {
+			"kind": "atoms",
+			"count": 2048
+		}
 	},
 	{
-		"kind": "atoms",
-		"addition": 2000
+		"effect": {
+			"kind": "atoms",
+			"addition": 10000
+		},
+		"condition": {
+			"kind": "atoms",
+			"count": 500000
+		}
 	},
 	{
-		"kind": "atoms",
-		"addition": 10000
+		"effect": {
+			"kind": "atoms",
+			"addition": 666
+		}
 	},
 	{
-		"kind": "atoms",
-		"addition": 5000
+		"effect": {
+			"kind": "atoms",
+			"addition": 1
+		}
 	},
 	{
-		"kind": "atoms",
-		"addition": 50
+		"effect": {
+			"kind": "atoms",
+			"addition": 69
+		},
+		"condition": {
+			"kind": "clicks",
+			"count": 69
+		}
 	},
 	{
-		"kind": "atoms",
-		"addition": 666
+		"effect": {
+			"kind": "atoms",
+			"addition": 420
+		}
 	},
 	{
-		"kind": "atoms",
-		"addition": 1
+		"effect": {
+			"kind": "atoms",
+			"addition": 2021
+		},
+		"condition": {
+			"kind": "atoms",
+			"count": 1000
+		}
 	},
 	{
-		"kind": "atoms",
-		"addition": 69
+		"effect": {
+			"kind": "atoms",
+			"addition": 9000
+		},
+		"condition": {
+			"kind": "atoms",
+			"count": 111111
+		}
 	},
 	{
-		"kind": "atoms",
-		"addition": 420
+		"effect": {
+			"kind": "atoms",
+			"addition": 786
+		}
 	},
 	{
-		"kind": "atoms",
-		"addition": 42
+		"effect": {
+			"kind": "atoms",
+			"addition": 4048
+		},
+		"condition": {
+			"kind": "atoms",
+			"count": 16384
+		}
 	},
 	{
-		"kind": "atoms",
-		"addition": 2021
+		"effect": {
+			"kind": "atoms",
+			"addition": 1000
+		}
 	},
 	{
-		"kind": "atoms",
-		"addition": 9000
-	},
-	{
-		"kind": "atoms",
-		"addition": 786
-	},
-	{
-		"kind": "atoms",
-		"addition": 4048
-	},
-	{
-		"kind": "atoms",
-		"addition": 1000
-	},
-	{
-		"kind": "atoms",
-		"addition": 12000
-	},
-	{
-		"kind": "atoms",
-		"addition": 18
+		"effect": {
+			"kind": "atoms",
+			"multiplier": 1.8
+		}
 	}
 ]
