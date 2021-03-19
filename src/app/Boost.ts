@@ -61,8 +61,6 @@ export default class Boost<T extends UpgradeType, L extends ConditionType> exten
 		this.clicked = true;
 
 		if (this.duration) {
-			console.log(game.atomsPerClicks.toString());
-
 			setTimeout(() => {
 				const negativeEffect = deepCopy(this.effect);
 				if (negativeEffect.multiplier) negativeEffect.multiplier = 1 / negativeEffect.multiplier;

@@ -214,7 +214,7 @@ export default class Game implements JSONable {
 						{
 							name: `${level} ${building.name}.`,
 							description: `Buy ${level} ${building.name}.`,
-							price: Math.round(building.startingPrice * building.priceMultiplier ** level * Math.log(level * 10)),
+							price: Math.round(building.startingPrice * building.priceMultiplier ** level * Math.log(level * 8)),
 						},
 						{
 							kind: 'building',
@@ -261,7 +261,7 @@ export default class Game implements JSONable {
 					},
 					{
 						kind: 'buildingGlobal',
-						multiplier: Math.ceil(Math.log10(level) / 2),
+						multiplier: Math.ceil(Math.log10(level) / 3),
 					},
 					{
 						kind: 'atoms',
