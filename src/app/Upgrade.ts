@@ -107,32 +107,33 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		}
 	}
 
-	public static getEffectAsString(effect: UpgradeType): string {
+	public static getEffectAsString(effect: UpgradeType, duration?: number): string {
 		let result = '';
 		switch (effect.kind) {
 			case 'building':
 				result += effect.multiplier
-					? `Multiply by ${effect.multiplier * 100}% ${(effect as BuildingUpgrade).building}.`
-					: `Add ${effect.addition} to ${(effect as BuildingUpgrade).building}.`;
+					? `Multiply by ${effect.multiplier * 100}% ${(effect as BuildingUpgrade).building}`
+					: `Add ${effect.addition} to ${(effect as BuildingUpgrade).building}`;
 				break;
 
 			case 'clicks':
-				result += effect.multiplier ? `Multiply clicks by ${effect.multiplier * 100}%.` : `Add ${effect.addition * 100}% to clicks.`;
+				result += effect.multiplier ? `Multiply clicks by ${effect.multiplier * 100}%` : `Add ${effect.addition * 100}% to clicks`;
 				break;
 
 			case 'buildingGlobal':
-				result += effect.multiplier ? `Multiply buildings by ${effect.multiplier * 100}%.` : `Add ${effect.addition * 100}% to buildings.`;
+				result += effect.multiplier ? `Multiply buildings by ${effect.multiplier * 100}%` : `Add ${effect.addition * 100}% to buildings`;
 				break;
 
 			case 'clickAPS':
-				result += effect.multiplier ? `Multiply the boost of APS to clicks by ${effect.multiplier * 100}%.` : `Add ${effect.addition * 100}% of APS to clicks.`;
+				result += effect.multiplier ? `Multiply the boost of APS to clicks by ${effect.multiplier * 100}%` : `Add ${effect.addition * 100}% of APS to clicks`;
 				break;
 
 			case 'atoms':
-				result += effect.multiplier ? `Multiply atoms by ${effect.multiplier * 100}%.` : `Add ${effect.addition} atoms.`;
+				result += effect.multiplier ? `Multiply atoms by ${effect.multiplier * 100}%` : `Add ${effect.addition} atoms`;
 				break;
 		}
 
+		result += duration ? ` for ${duration} seconds.` : '.';
 		return result;
 	}
 
