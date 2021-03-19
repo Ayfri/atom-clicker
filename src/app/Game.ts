@@ -97,7 +97,8 @@ export default class Game implements JSONable {
 
 		Boost.savedBoosts = boosts.map((b: any) => {
 			return new Boost({
-				effect: b,
+				effect: b.effect,
+				condition: b.condition,
 			});
 		});
 		this.setDefaultBuyables();
