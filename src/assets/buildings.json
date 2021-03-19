@@ -3,36 +3,42 @@
 		"name": "quarks",
 		"description": "The littlest thing you can buy !",
 		"atomsPerSecond": 0.1,
-		"startingPrice": 10
+		"startingPrice": 25
 	},
 	{
 		"name": "nucleons",
 		"description": "The things that constitute atoms.",
 		"atomsPerSecond": 3,
-		"startingPrice": 100
+		"startingPrice": 800
 	},
 	{
 		"name": "hydrogen",
 		"description": "The littlest atom you can buy.",
-		"atomsPerSecond": 50,
-		"startingPrice": 5000
+		"atomsPerSecond": 35,
+		"startingPrice": 7000
 	},
 	{
 		"name": "dna",
 		"description": "Now you evolved, you can now buy dna, where will you stop ?",
-		"atomsPerSecond": 700,
-		"startingPrice": 69000
+		"atomsPerSecond": 450,
+		"startingPrice": 89000
+	},
+	{
+		"name": "research center",
+		"description": "Scientists are now working on creating machines that creates atoms.",
+		"atomsPerSecond": 2000,
+		"startingPrice": 1100000
 	},
 	{
 		"name": "factory",
-		"description": "Producing atoms is now easier than ever.",
-		"atomsPerSecond": 2500,
-		"startingPrice": 786000
+		"description": "You are now creating machines that produces atoms that are made by these atoms.",
+		"atomsPerSecond": 10500,
+		"startingPrice": 33300000
 	},
 	{
 		"name": "white hole",
 		"description": "With theses, you can now erase worlds, your power is divin.",
-		"atomsPerSecond": 12500,
-		"startingPrice": 33300000
+		"atomsPerSecond": 976543.21,
+		"startingPrice": 8642013579
 	}
 ]

@@ -2,7 +2,7 @@
 	{
 		"name": "First clicks.",
 		"description": "Yeah you clicked a bit.",
-		"price": 200,
+		"price": 500,
 		"effect": {
 			"kind": "clicks",
 			"multiplier": 2
@@ -14,13 +14,13 @@
 		"price": 2000,
 		"effect": {
 			"kind": "clickAPS",
-			"addition": 0.05
+			"addition": 0.02
 		}
 	},
 	{
 		"name": "Atom production.",
 		"description": "Generating atoms is so easy for you now.",
-		"price": 2000,
+		"price": 2500,
 		"effect": {
 			"kind": "clickAPS",
 			"addition": 0.01
@@ -46,7 +46,7 @@
 		"price": 42000,
 		"effect": {
 			"kind": "buildingGlobal",
-			"multiplier": 2
+			"multiplier": 1.5
 		}
 	}
 ]
