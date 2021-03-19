@@ -105,11 +105,12 @@ export default class Building extends Buyable implements BuildingOptions {
 	}
 
 	public updateOverlayValues(): void {
+		const totalAtomsPerSecond: BigFloat = this.totalAtomPerSecond;
 		this.overlay.setAPSWaitFromPrice(this.price);
 		this.overlay.stats.get(StatsType.PRICE).text = `Price: ${this.price}`;
-		this.overlay.stats.get(StatsType.EFFICIENCY_TOTAL).text = `Atoms per second in total : ${this.totalAtomPerSecond.mul(10).floor().div(10)}`;
+		this.overlay.stats.get(StatsType.EFFICIENCY_TOTAL).text = `Atoms per second in total : ${totalAtomsPerSecond.mul(10).floor().div(10)}`;
 		this.overlay.stats.get(StatsType.EFFICIENCY_EACH).text = `Atoms per second for each building : ${Math.floor(this.atomsPerSecond * this.boost * 10) / 10}`;
-		this.overlay.stats.get(StatsType.EFFICIENCY_TOTAL_PERCENTAGE).text = `Atoms per second in total : ${this.totalAtomPerSecond
+		this.overlay.stats.get(StatsType.EFFICIENCY_TOTAL_PERCENTAGE).text = `Atoms per second in total : ${totalAtomsPerSecond
 			.div(game.atomsPerSecond)
 			.mul(10000)
 			.floor()

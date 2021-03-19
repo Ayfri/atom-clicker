@@ -64,8 +64,9 @@ export default class Game implements JSONable {
 		});
 
 		this.mainAtom.on('click', async (_, position) => {
-			this.atomsCount = this.atomsCount.add(this.totalAtomsPerClicks);
-			this.totalAtomsProduced = this.totalAtomsProduced.add(this.totalAtomsPerClicks);
+			const atomsPerClicks: BigFloat = this.totalAtomsPerClicks;
+			this.atomsCount = this.atomsCount.add(atomsPerClicks);
+			this.totalAtomsProduced = this.totalAtomsProduced.add(atomsPerClicks);
 			this.totalClicks++;
 			this.gui.click(position);
 
@@ -282,10 +283,6 @@ export default class Game implements JSONable {
 		app.stage.addChild(upgrade.container);
 	}
 
-	public calculateAPS() {
-		this.atomsPerSecond = this.buildings.map(building => building.totalAtomPerSecond).reduce((previous, current) => previous.add(current));
-	}
-
 	public resetDefaultBuyables(): void {
 		Game.defaultBuyables = [[], []];
 	}
@@ -322,9 +319,9 @@ export default class Game implements JSONable {
 		this.gui.update();
 		this.mainAtom.sprite.position.x = window.innerWidth / 2;
 
+		this.atomsPerSecond = this.buildings.map(building => building.totalAtomPerSecond).reduce((previous, current) => previous.add(current));
 		this.atomsCount = this.atomsCount.add(this.atomsPerSecond.dividedBy(PIXI.Ticker.shared.FPS));
 		this.totalAtomsProduced = this.totalAtomsProduced.add(this.atomsPerSecond.dividedBy(PIXI.Ticker.shared.FPS));
-		this.calculateAPS();
 
 		if (Math.floor(Math.random() * 300) === 42) await random(Boost.savedBoosts.filter(b => !b.spawned))?.spawn();
 	}

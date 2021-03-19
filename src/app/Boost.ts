@@ -40,7 +40,11 @@ export default class Boost<T extends UpgradeType, L extends ConditionType> exten
 		this.unlocked = Upgrade.checkUnlock(this.condition);
 		if (!this.unlocked) return;
 		this.spawned = true;
-		this.sprite.position.set(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
+		this.sprite.position.set(
+			Math.random() * (window.innerWidth - this.sprite.width * 2) + this.sprite.width,
+			Math.random() * (window.innerHeight - this.sprite.height * 2) + this.sprite.height
+		);
+
 		this.sprite.alpha = 0;
 		app.stage.addChild(this.sprite);
 		await tween({

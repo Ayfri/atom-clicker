@@ -164,6 +164,7 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 	public price: number;
 
 	public resize() {
+		if (!this.container.visible) return;
 		this.nameText.position.set(this.nameText.width / 2 + 5, this.container.height / 5);
 		this.effectText.position.set(this.effectText.width / 2 + 5, this.container.height / 2.2);
 		this.priceText.position.set(this.priceText.width / 2 + 5, this.container.height - this.container.height / 5);
