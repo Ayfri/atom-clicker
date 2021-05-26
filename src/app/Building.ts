@@ -4,6 +4,7 @@ import {app, game} from '../app.js';
 import Overlay, {StatsType} from '../gui/Overlay.js';
 import {JSONObject} from '../types.js';
 import * as KeyboardManager from '../utils/KeyboardManager.js';
+import {floatNumberWithExtension} from '../utils/showNumber';
 import {Buyable} from './Buyable';
 import Game from './Game';
 
@@ -122,7 +123,7 @@ export default class Building extends Buyable implements BuildingOptions {
 		this.sprite.tint = this.canBeBought ? 0xffffff : this.color;
 
 		this.ownerCountText.text = this.ownedCount.toString();
-		this.priceText.text = `${this.price.toString()} atoms`;
+		this.priceText.text = `${floatNumberWithExtension(this.price, 2)} atoms`;
 
 		if (this.overlay.container.visible) {
 			this.updateOverlayValues();

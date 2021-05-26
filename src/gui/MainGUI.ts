@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import {game, localSave} from '../app.js';
+import {floatNumberWithExtension, intNumberWithExtension} from '../utils/showNumber';
 import Button from './Button';
 import GUI from './GUI';
 import LoadGUI from './LoadGUI';
@@ -135,9 +136,15 @@ export default class MainGUI extends GUI {
 		this.loadGUI.resize();
 		this.resetGUI.resize();
 
-		this.saveButton.container.position.set(window.innerWidth / 2 - this.saveButton.container.width / 2, window.innerHeight - this.saveButton.container.height);
+		this.saveButton.container.position.set(
+			window.innerWidth / 2 - this.saveButton.container.width / 2,
+			window.innerHeight - this.saveButton.container.height
+		);
 		this.exportSaveButton.container.position.set(0, window.innerHeight - this.exportSaveButton.container.height);
-		this.loadExportedSaveButton.container.position.set(this.exportSaveButton.container.width + 5, window.innerHeight - this.loadExportedSaveButton.container.height);
+		this.loadExportedSaveButton.container.position.set(
+			this.exportSaveButton.container.width + 5,
+			window.innerHeight - this.loadExportedSaveButton.container.height
+		);
 		this.resetButton.container.position.set(window.innerWidth - this.resetButton.container.width, window.innerHeight - this.resetButton.container.height);
 
 		this.saveButton.resize();
@@ -148,8 +155,10 @@ export default class MainGUI extends GUI {
 
 	public update() {
 		this.atomsPerClicks = game.totalAtomsPerClicks.toString();
-		this.atomsCountText.text = `${game.atomsCount.toString().split('.')[0]} atoms`;
-		this.APSText.text = `per second: ${game.totalAtomsPerSecond.toString().replace(/(\d+\.\d{2})\d+/g, '$1')}`;
+		this.atomsCountText.text = `${
+			game.atomsCount.greaterThan(1e6) ? floatNumberWithExtension(game.atomsCount) : game.atomsCount.toString().split('.')[0]
+		} atoms`;
+		this.APSText.text = `per second: ${floatNumberWithExtension(game.totalAtomsPerSecond)}`;
 		this.atomsPerClicksText.text = `Atoms per clicks: ${this.atomsPerClicks}`;
 		this.CPSText.text = `Clicks per second: ${this.clicksPerSeconds}`;
 		this.setFPS();

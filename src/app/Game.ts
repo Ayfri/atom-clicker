@@ -112,7 +112,6 @@ export default class Game implements JSONable {
 
 			(save.b as any[]).forEach(b => {
 				const building: Building = Game.getBuyableFromName(b.i) as Building;
-				console.log(b, save);
 				building.ownedCount = b.o ?? 0;
 				building.boost = b.b ?? 1;
 				this.addBuilding(building);

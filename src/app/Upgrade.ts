@@ -3,6 +3,7 @@ import * as PIXI from 'pixi.js';
 import {app, game} from '../app.js';
 import Overlay from '../gui/Overlay.js';
 import {JSONObject} from '../types.js';
+import {floatNumberWithExtension} from '../utils/showNumber';
 import {Buyable} from './Buyable';
 import Game from './Game';
 
@@ -66,7 +67,7 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		this.effectText.anchor.set(0.5);
 		this.nameText.style.fontSize = 20;
 		this.priceText.style.fontSize = 13;
-		this.priceText.text = this.price.toString();
+		this.priceText.text = floatNumberWithExtension(this.price, 2);
 
 		this.overlay = new Overlay({
 			title: this.name,
