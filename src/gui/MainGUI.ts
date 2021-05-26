@@ -21,9 +21,9 @@ export default class MainGUI extends GUI {
 	public resetGUI: ResetGUI;
 	public saveButton: Button;
 	public saveGUI: SaveGUI;
+	private atomsPerClicks: string;
 	private lastTime: number = Date.now();
 	private timeValues: number[] = [];
-	private atomsPerClicks: string;
 
 	public constructor() {
 		super({

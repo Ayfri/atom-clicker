@@ -108,6 +108,34 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 		}
 	}
 
+	public static checkUnlock(condition?: ConditionType): boolean {
+		let unlocked: boolean;
+		if (!condition) unlocked = true;
+		switch (condition?.kind) {
+			case 'building':
+				unlocked = game.buildings?.find(building => building.name === (condition as BuildingUpgrade).building)?.ownedCount >= condition.count;
+				break;
+
+			case 'clicks':
+				unlocked = game.totalClicks >= condition.count;
+				break;
+
+			case 'buildingGlobal':
+				unlocked = game.buildings.map(building => building.ownedCount).reduce((previousValue, currentValue) => previousValue + currentValue) >= condition.count;
+				break;
+
+			case 'clickAPS':
+				unlocked = game.atomsPerClicks >= condition.count;
+				break;
+
+			case 'atoms':
+				unlocked = game.totalAtomsProduced.greaterThanOrEqualTo(condition.count.toLocaleString('en', {notation: 'scientific'}).split('E')[1]);
+				break;
+		}
+
+		return unlocked;
+	}
+
 	public static getEffectAsString(effect: UpgradeType, duration?: number): string {
 		let result = '';
 		switch (effect.kind) {
@@ -203,34 +231,6 @@ export default class Upgrade<T extends UpgradeType, L extends ConditionType> ext
 
 	public updateOverlayValues(): void {
 		this.overlay.setAPSWaitFromPrice(this.price);
-	}
-
-	public static checkUnlock(condition?: ConditionType): boolean {
-		let unlocked: boolean;
-		if (!condition) unlocked = true;
-		switch (condition?.kind) {
-			case 'building':
-				unlocked = game.buildings?.find(building => building.name === (condition as BuildingUpgrade).building)?.ownedCount >= condition.count;
-				break;
-
-			case 'clicks':
-				unlocked = game.totalClicks >= condition.count;
-				break;
-
-			case 'buildingGlobal':
-				unlocked = game.buildings.map(building => building.ownedCount).reduce((previousValue, currentValue) => previousValue + currentValue) >= condition.count;
-				break;
-
-			case 'clickAPS':
-				unlocked = game.atomsPerClicks >= condition.count;
-				break;
-
-			case 'atoms':
-				unlocked = game.totalAtomsProduced.greaterThanOrEqualTo(condition.count);
-				break;
-		}
-
-		return unlocked;
 	}
 
 	public update() {

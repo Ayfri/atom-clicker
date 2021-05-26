@@ -1,6 +1,6 @@
 import {Easing} from '@tweenjs/tween.js';
 import * as PIXI from 'pixi.js';
-import {app, game} from '../app';
+import {app} from '../app';
 import Clickable from '../components/Clickable';
 import {deepCopy, getTextureByName, random, sleep, tween} from '../utils/utils';
 import Upgrade, {ConditionType, UpgradeType} from './Upgrade';

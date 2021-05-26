@@ -178,12 +178,8 @@ export default class Game implements JSONable {
 		return !!Game.getBuyableFromName(buyable.name);
 	}
 
-	get totalAtomsPerClicks(): BigFloat {
-		return new BigFloat(this.atomsPerClicks).add(this.atomsPerSecond.mul(this.atomsPerClicksAPSBoost)).mul(100).floor().div(100);
-	}
-
-	get totalAtomsPerSecond(): BigFloat {
-		return this.atomsPerSecond.add(this.atomsPerClicks * this.gui.clicksPerSeconds);
+	public static resetDefaultBuyables(): void {
+		Game.defaultBuyables = [[], []];
 	}
 
 	public static setDefaultBuyables(): void {
@@ -288,8 +284,14 @@ export default class Game implements JSONable {
 				)
 			);
 		}
+	}
 
-		console.log(Game.defaultBuyables.map(a => a.length));
+	get totalAtomsPerClicks(): BigFloat {
+		return new BigFloat(this.atomsPerClicks).add(this.atomsPerSecond.mul(this.atomsPerClicksAPSBoost)).mul(100).floor().div(100);
+	}
+
+	get totalAtomsPerSecond(): BigFloat {
+		return this.atomsPerSecond.add(this.atomsPerClicks * this.gui.clicksPerSeconds);
 	}
 
 	public addBuilding(building: Building) {
@@ -300,10 +302,6 @@ export default class Game implements JSONable {
 	public addUpgrade(upgrade: Upgrade<UpgradeType, ConditionType>) {
 		this.upgrades.push(upgrade);
 		app.stage.addChild(upgrade.container);
-	}
-
-	public static resetDefaultBuyables(): void {
-		Game.defaultBuyables = [[], []];
 	}
 
 	public resize() {
