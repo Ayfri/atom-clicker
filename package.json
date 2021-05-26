@@ -8,7 +8,6 @@
 	},
 	"devDependencies": {
 		"@types/node": "^15.6.1",
-		"@types/pixi.js": "^5.0.0",
 		"esbuild": "^0.12.3",
 		"gulp": "^4.0.2",
 		"gulp-cli": "^2.3.0",
