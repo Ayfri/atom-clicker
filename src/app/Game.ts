@@ -288,6 +288,8 @@ export default class Game implements JSONable {
 				)
 			);
 		}
+
+		console.log(Game.defaultBuyables.map(a => a.length));
 	}
 
 	public addBuilding(building: Building) {
@@ -300,7 +302,7 @@ export default class Game implements JSONable {
 		app.stage.addChild(upgrade.container);
 	}
 
-	public resetDefaultBuyables(): void {
+	public static resetDefaultBuyables(): void {
 		Game.defaultBuyables = [[], []];
 	}
 
@@ -325,7 +327,7 @@ export default class Game implements JSONable {
 		if (this.atomsCount.greaterThan(0)) content.c = this.atomsCount.floor().toString();
 		if (this.totalClicks > 0) content.t = this.totalClicks;
 		if (this.atomsPerClicks > 1) content.ac = this.atomsPerClicks.toString();
-		if (this.atomsPerClicksAPSBoost > 0) content.acb = this.atomsPerClicksAPSBoost;
+		if (this.atomsPerClicksAPSBoost > 0) content.acb = this.atomsPerClicksAPSBoost.toPrecision(5);
 		if (this.totalAtomsProduced.greaterThan(0)) content.ta = this.totalAtomsProduced.toString();
 		if (this.buildingsGlobalBoost > 1) content.bb = this.buildingsGlobalBoost;
 
