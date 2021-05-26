@@ -1,6 +1,6 @@
 import {BigFloat} from 'bigfloat.js'
 import * as PIXI from 'pixi.js'
-import {game} from '../app.js'
+import {game, locale} from '../app.js'
 import GUI from './GUI'
 
 interface OverlayOptions {
@@ -74,10 +74,11 @@ export default class Overlay extends GUI {
 
 	public setAPSWaitFromPrice(price: BigFloat | number) {
 		const timeToWaitForBuy = Number(new BigFloat(price).minus(game.atomsCount).div(game.totalAtomsPerSecond).toString())
+		const waitTime = (window as any).dayjs.duration(Math.ceil(timeToWaitForBuy))
 		this.stats.get(StatsType.APS_WAIT_TIME).text =
 			timeToWaitForBuy === 0 && game.atomsCount.lessThan(price)
 				? "Can't be bough."
-				: `Can be bought${timeToWaitForBuy < 0 ?? game.atomsCount.greaterThanOrEqualTo(price) ? '' : ` in ${Math.ceil(timeToWaitForBuy)} seconds`}.`
+				: `Can be bought${timeToWaitForBuy < 0 ?? game.atomsCount.greaterThanOrEqualTo(price) ? '' : ` ${waitTime.humanize(true)}`}.`
 	}
 
 	public show() {
