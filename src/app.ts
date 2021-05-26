@@ -38,6 +38,7 @@ async function setup() {
 	window.onresize = () => game.resize()
 
 	setInterval(() => localSave(), 1000 * 30)
+	PIXI.Ticker.shared.add(async () => await game.update(), {}, PIXI.UPDATE_PRIORITY.HIGH)
 }
 
 export function localSave() {
@@ -92,11 +93,8 @@ export function resetGame(save?: JSONObject) {
 	game.resize()
 }
 
-setup().then(() => {
-	PIXI.Ticker.shared.add(async () => await game.update(), {}, PIXI.UPDATE_PRIORITY.HIGH)
-	console.log('Game started.')
-})
-
+setup().then(() => console.log('Game started.'))
 ;(window as any).bigfloat = BigFloat
 ;(window as any).app = app
 ;(window as any).PIXI = PIXI
+;(window as any).setup = setup
