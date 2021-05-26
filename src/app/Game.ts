@@ -103,56 +103,7 @@ export default class Game implements JSONable {
 		})
 
 		if (save) {
-			this.atomsCount = new BigFloat((save.c as string) ?? 0)
-			this.totalAtomsProduced = new BigFloat((save.ta as string) ?? 0)
-			this.atomsPerClicks = Number(save.bb ?? 1)
-			this.atomsPerClicksAPSBoost = Number(save.acb ?? 0)
-			this.totalClicks = Number(save.t ?? 0)
-			this.buildingsGlobalBoost = Number(save.bb ?? 1)
-
-			;(save.b as any[]).forEach(b => {
-				const building: Building = Game.getBuyableFromName(b.i) as Building
-				building.ownedCount = b.o ?? 0
-				building.boost = b.b ?? 1
-				this.addBuilding(building)
-			})
-
-			;(save.cb as any[])?.forEach(cb => {
-				const building = new Building({
-					name: cb.n,
-					description: cb.d ?? '',
-					atomsPerSecond: cb.a,
-					startingPrice: cb.s,
-					priceMultiplier: cb.p ?? 1.2,
-				})
-
-				building.ownedCount = cb.o ?? 0
-				building.boost = cb.b ?? 1
-				this.addBuilding(building)
-			})
-
-			;(save.u as any[]).forEach(u => {
-				const upgrade = Game.getBuyableFromName(u.i) as Upgrade<UpgradeType, ConditionType>
-
-				upgrade.unlocked = u.hasOwnProperty('u') ? !!u.u : true
-				upgrade.owned = u.hasOwnProperty('o') ? !!u.o : false
-				this.addUpgrade(upgrade)
-			})
-
-			;(save.cu as any[])?.forEach(u => {
-				const upgrade = new Upgrade<UpgradeType, ConditionType>(
-					{
-						name: u.i,
-						description: u.d ?? '',
-						price: u.p,
-					},
-					u.e,
-					u.c
-				)
-				upgrade.unlocked = u.hasOwnProperty('u') ? !!u.u : true
-				upgrade.owned = u.hasOwnProperty('o') ? !!u.o : false
-				this.addUpgrade(upgrade)
-			})
+			this.applySaveGame(save)
 		} else {
 			Game.defaultBuyables[0].forEach(b => this.addBuilding(b))
 			Game.defaultBuyables[1].forEach(u => this.addUpgrade(u))
@@ -202,7 +153,7 @@ export default class Game implements JSONable {
 		Game.defaultBuyables[0].forEach(building => {
 			const levels = [15, 25, 50, 100, 200, 300, 400, 500, 750, 1000, 1500, 2000]
 
-			for (let level of levels) {
+			for (const level of levels) {
 				Game.defaultBuyables[1].push(
 					new Upgrade(
 						{
@@ -294,6 +245,55 @@ export default class Game implements JSONable {
 		return this.atomsPerSecond.add(this.atomsPerClicks * this.gui.clicksPerSeconds)
 	}
 
+	private applySaveGame(save: JSONObject): void {
+		this.atomsCount = new BigFloat((save.c as string) ?? 0)
+		this.totalAtomsProduced = new BigFloat((save.ta as string) ?? 0)
+		this.atomsPerClicks = Number(save.bb ?? 1)
+		this.atomsPerClicksAPSBoost = Number(save.acb ?? 0)
+		this.totalClicks = Number(save.t ?? 0)
+		this.buildingsGlobalBoost = Number(save.bb ?? 1)
+		;(save.b as any[]).forEach(b => {
+			const building: Building = Game.getBuyableFromName(b.i) as Building
+			building.ownedCount = b.o ?? 0
+			building.boost = b.b ?? 1
+			this.addBuilding(building)
+		})
+		;(save.cb as any[])?.forEach(cb => {
+			const building = new Building({
+				name: cb.n,
+				description: cb.d ?? '',
+				atomsPerSecond: cb.a,
+				startingPrice: cb.s,
+				priceMultiplier: cb.p ?? 1.2,
+			})
+
+			building.ownedCount = cb.o ?? 0
+			building.boost = cb.b ?? 1
+			this.addBuilding(building)
+		})
+		;(save.u as any[]).forEach(u => {
+			const upgrade = Game.getBuyableFromName(u.i) as Upgrade<UpgradeType, ConditionType>
+
+			upgrade.unlocked = u.hasOwnProperty('u') ? !!u.u : true
+			upgrade.owned = u.hasOwnProperty('o') ? !!u.o : false
+			this.addUpgrade(upgrade)
+		})
+		;(save.cu as any[])?.forEach(u => {
+			const upgrade = new Upgrade<UpgradeType, ConditionType>(
+				{
+					name: u.i,
+					description: u.d ?? '',
+					price: u.p,
+				},
+				u.e,
+				u.c
+			)
+			upgrade.unlocked = u.hasOwnProperty('u') ? !!u.u : true
+			upgrade.owned = u.hasOwnProperty('o') ? !!u.o : false
+			this.addUpgrade(upgrade)
+		})
+	}
+
 	public addBuilding(building: Building) {
 		this.buildings.push(building)
 		app.stage.addChild(building.container)
@@ -341,7 +341,7 @@ export default class Game implements JSONable {
 		this.atomsCount = this.atomsCount.add(this.atomsPerSecond.dividedBy(PIXI.Ticker.shared.FPS))
 		this.totalAtomsProduced = this.totalAtomsProduced.add(this.atomsPerSecond.dividedBy(PIXI.Ticker.shared.FPS))
 
-		if (Math.floor(Math.random() * 300) === 42) await random(Boost.savedBoosts.filter(b => !b.spawned))?.spawn()
+		if (Math.floor(Math.random() * 2000) === 42) await random(Boost.savedBoosts.filter(b => !b.spawned))?.spawn()
 	}
 
 	public updateVisibleBuildings() {
@@ -349,7 +349,6 @@ export default class Game implements JSONable {
 			building.container.x = window.innerWidth - building.container.width
 			building.container.y = index * (building.container.height + 5) + window.innerHeight / 4
 		})
-
 		;[...this.buildings, ...this.upgrades].forEach(b => b.update())
 
 		const upgrades = this.upgrades.filter(u => u.container.visible).sort((u1, u2) => u1.price - u2.price)

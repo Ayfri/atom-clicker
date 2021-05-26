@@ -49,11 +49,11 @@ export default class LoadGUI extends ClosableGUI {
 			decompressSave = JSON.parse(save)
 			decompressSave.b = (decompressSave.b as JSONObject[]).map((b, index) => {
 				const building = Game.getBuyableFromIndex(typeof b === 'number' ? b : index, 'building')
-				return {i: building?.name}
+				return {i: building?.name, ...b}
 			}) as JSONObject[]
 			decompressSave.u = (decompressSave.u as JSONObject[]).map((u, index) => {
 				const upgrade = Game.getBuyableFromIndex(typeof u === 'number' ? u : index, 'upgrade')
-				return {i: upgrade?.name}
+				return {i: upgrade?.name, ...u}
 			}) as JSONObject[]
 			resetGame(decompressSave)
 		} catch (ignored) {}
