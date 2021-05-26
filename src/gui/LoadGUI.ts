@@ -56,7 +56,10 @@ export default class LoadGUI extends ClosableGUI {
 				return {i: upgrade?.name, ...u}
 			}) as JSONObject[]
 			resetGame(decompressSave)
-		} catch (ignored) {}
+		} catch (ignored) {
+			alert('Old save is corrupted or invalid, cannot load it.')
+			resetGame()
+		}
 	}
 
 	public close() {
