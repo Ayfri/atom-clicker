@@ -1,6 +1,6 @@
-const gulp = require('gulp');
-const esbuild = require('gulp-esbuild');
-const {exec} = require('child_process');
+const gulp = require('gulp')
+const esbuild = require('gulp-esbuild')
+const {exec} = require('child_process')
 
 function bundle() {
 	return gulp
@@ -17,26 +17,26 @@ function bundle() {
 				},
 			})
 		)
-		.pipe(gulp.dest('./dist/'));
+		.pipe(gulp.dest('./dist/'))
 }
 
 function copyPublic() {
-	return gulp.src(['./public/index.html', './public/style.css', './public/manifest.json']).pipe(gulp.dest('./dist'));
+	return gulp.src(['./public/index.html', './public/style.css', './public/manifest.json']).pipe(gulp.dest('./dist'))
 }
 
 function copyTextures() {
-	return gulp.src('./src/assets/textures/**').pipe(gulp.dest('./dist/textures'));
+	return gulp.src('./src/assets/textures/**').pipe(gulp.dest('./dist/textures'))
 }
 
-const copyAndBundle = gulp.series(copyPublic, copyTextures, bundle);
+const copyAndBundle = gulp.series(copyPublic, copyTextures, bundle)
 
 function watch() {
 	exec('reload --browser --dir=dist --port=5000', err => {
-		if (err) throw err;
-	});
+		if (err) throw err
+	})
 
-	return gulp.watch(['src/**/*.*', 'public/**.*'], copyAndBundle);
+	return gulp.watch(['src/**/*.*', 'public/**.*'], copyAndBundle)
 }
 
-exports.bundle = copyAndBundle;
-exports.watch = watch;
+exports.bundle = copyAndBundle
+exports.watch = watch
