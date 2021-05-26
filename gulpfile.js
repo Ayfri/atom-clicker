@@ -10,7 +10,7 @@ function bundle() {
 				outfile: 'bundle.js',
 				sourcemap: 'both',
 				bundle: true,
-				target: ['chrome58', 'firefox57', 'safari11', 'edge16'],
+				target: ['chrome61', 'firefox79', 'safari11', 'edge18'],
 				loader: {
 					'.ts': 'ts',
 					'.json': 'json',
