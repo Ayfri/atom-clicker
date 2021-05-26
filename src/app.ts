@@ -85,7 +85,7 @@ export function resetGame(save?: JSONObject) {
 	game?.buildings.forEach(building => building.overlay.hide());
 
 	app.stage.removeChildren();
-	game?.resetDefaultBuyables();
+	Game.resetDefaultBuyables();
 	Game.setDefaultBuyables();
 	game = new Game(save);
 	(window as any).game = game;
