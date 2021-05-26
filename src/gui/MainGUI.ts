@@ -152,7 +152,7 @@ export default class MainGUI extends GUI {
 		this.atomsCountText.text = `${game.atomsCount.greaterThan(1e6) ? floatNumberWithExtension(game.atomsCount) : game.atomsCount.toString().split('.')[0]} atoms`
 		this.APSText.text = `per second: ${floatNumberWithExtension(game.totalAtomsPerSecond)}`
 		this.atomsPerClicksText.text = `Atoms per clicks: ${this.atomsPerClicks}`
-		this.CPSText.text = `Clicks per second: ${this.clicksPerSeconds}`
+		this.CPSText.text = `Clicks per second: ${this.clicksPerSeconds.toFixed(2)}`
 		this.setFPS()
 
 		this.saveButton.update()
