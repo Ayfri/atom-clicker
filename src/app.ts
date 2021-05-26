@@ -6,13 +6,33 @@ import LoadGUI from './gui/LoadGUI'
 import SaveGUI from './gui/SaveGUI'
 import {JSONObject} from './types'
 
-export let game: Game
+export let game: Game | undefined
 
 export const app = new PIXI.Application({
 	antialias: true,
 	resizeTo: window,
 	backgroundColor: 0xaaaaaa,
 })
+
+export const locale = new Intl.Locale(navigator.languages[0] ?? navigator.language)
+
+window.onload = () => {
+	const localeTag = document.createElement('script')
+	const durationTag = document.createElement('script')
+	const relativeTimeTag = document.createElement('script')
+	localeTag.src = `https://unpkg.com/dayjs@1.10.5/locale/${locale.language}.js`
+	durationTag.src = `https://unpkg.com/dayjs@1.10.5/plugin/duration.js`
+	relativeTimeTag.src = `https://unpkg.com/dayjs@1.10.5/plugin/relativeTime.js`
+	document.head.appendChild(localeTag)
+	document.head.appendChild(durationTag)
+	document.head.appendChild(relativeTimeTag)
+
+	relativeTimeTag.onload = () => {
+		;(window as any).dayjs.locale(locale.language)
+		;(window as any).dayjs.extend((window as any).dayjs_plugin_duration)
+		;(window as any).dayjs.extend((window as any).dayjs_plugin_relativeTime)
+	}
+}
 
 document.body.appendChild(app.view)
 
