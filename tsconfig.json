@@ -12,6 +12,5 @@
 		"sourceMap": true,
 		"target": "ESNext"
 	},
-	"exclude": ["node_modules"],
-	"files": ["src/**/*.ts"]
+	"exclude": ["node_modules"]
 }

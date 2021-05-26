@@ -28,17 +28,15 @@ function copyTextures() {
 	return gulp.src('./src/assets/textures/**').pipe(gulp.dest('./dist/textures'));
 }
 
+const copyAndBundle = gulp.series(copyPublic, copyTextures, bundle);
+
 function watch() {
 	exec('reload --browser --dir=dist --port=5000', err => {
 		if (err) throw err;
 	});
 
-	return gulp.watch(['src/**/*.*', 'public/**.*'], copyAndBundle());
+	return gulp.watch(['src/**/*.*', 'public/**.*'], copyAndBundle);
 }
 
-function copyAndBundle() {
-	return gulp.series(copyPublic, copyTextures, bundle);
-}
-
-exports.bundle = copyAndBundle();
+exports.bundle = copyAndBundle;
 exports.watch = watch;
